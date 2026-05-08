@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Aetheria AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -19,15 +22,55 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
 .orb2{width:300px;height:300px;background:rgba(6,182,212,.07);bottom:10%;left:-100px}
 canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-#appPage{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;max-width:800px;margin:0 auto}
+/* ── LOGIN PAGE ── */
+#loginPage{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-card{background:rgba(10,5,32,.92);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:380px;backdrop-filter:blur(30px);box-shadow:0 0 60px rgba(168,85,247,.15);text-align:center}
+.login-logo{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem}
+.login-sub{font-size:.7rem;letter-spacing:.25em;color:var(--text2);margin-bottom:2rem}
+.login-title{font-family:'Orbitron',sans-serif;font-size:.95rem;color:#fff;margin-bottom:.4rem}
+.login-desc{font-size:.8rem;color:var(--text2);margin-bottom:1.8rem;line-height:1.5}
+
+/* divider */
+.divider{display:flex;align-items:center;gap:.75rem;margin:1.2rem 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{font-size:.7rem;color:var(--text2);white-space:nowrap}
+
+/* google btn */
+.btn-google{width:100%;padding:.75rem;background:#fff;border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:.7rem;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;color:#1f1f1f;cursor:pointer;transition:.3s;margin-bottom:.75rem}
+.btn-google:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,255,255,.15)}
+.google-icon{width:20px;height:20px}
+
+/* email form */
+.input-group{margin-bottom:.75rem;text-align:left}
+.input-group label{font-size:.72rem;letter-spacing:.1em;color:var(--text2);display:block;margin-bottom:.35rem}
+.input-group input{width:100%;padding:.65rem .9rem;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:9px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.9rem;outline:none;transition:.3s}
+.input-group input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(168,85,247,.2)}
+.input-group input::placeholder{color:var(--text2)}
+.btn-primary{width:100%;padding:.75rem;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:10px;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;letter-spacing:.05em;box-shadow:0 0 20px rgba(168,85,247,.3);transition:.3s}
+.btn-primary:hover{box-shadow:0 0 30px rgba(168,85,247,.6);transform:translateY(-2px)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.toggle-mode{font-size:.78rem;color:var(--text2);margin-top:.9rem}
+.toggle-mode a{color:var(--neon);cursor:pointer;text-decoration:underline}
+.err-msg{font-size:.75rem;color:#f87171;margin-top:.5rem;min-height:1rem}
+
+/* ── MAIN APP ── */
+#appPage{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;max-width:800px;margin:0 auto}
 .header{padding:.75rem 1.2rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0}
 .logo{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:900;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .logo-sub{font-size:.55rem;letter-spacing:.2em;color:var(--text2);font-family:'Rajdhani',sans-serif;-webkit-text-fill-color:var(--text2)}
 .status-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.user-info{margin-left:auto;display:flex;align-items:center;gap:.6rem}
+.user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);object-fit:cover;background:var(--glass)}
+.user-avatar-placeholder{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--neon2),var(--neon));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:.75rem;color:var(--text2);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.logout-btn{padding:.25rem .6rem;background:var(--glass);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:.65rem;cursor:pointer;font-family:'Rajdhani',sans-serif;transition:.3s}
+.logout-btn:hover{border-color:#f87171;color:#f87171}
+
 .chat-body{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.8rem}
 .chat-body::-webkit-scrollbar{width:3px}
 .chat-body::-webkit-scrollbar-thumb{background:var(--neon);border-radius:2px}
+
 .msg{display:flex;flex-direction:column;gap:.22rem;max-width:82%}
 .msg.bot{align-self:flex-start}
 .msg.user{align-self:flex-end}
@@ -36,14 +79,17 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 .msg.user .bubble{background:linear-gradient(135deg,var(--neon2),var(--neon));color:#fff;border-radius:12px 4px 12px 12px}
 .msg-time{font-size:.58rem;color:var(--text2);font-family:'JetBrains Mono',monospace}
 .msg.user .msg-time{align-self:flex-end}
+
 .typing-wrap{display:flex;align-items:center;gap:.4rem;padding:.6rem 1rem;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.22);border-radius:4px 12px 12px 12px;width:fit-content}
 .typing-wrap span{width:6px;height:6px;background:var(--neon);border-radius:50%;animation:bounce .8s ease-in-out infinite}
 .typing-wrap span:nth-child(2){animation-delay:.15s}
 .typing-wrap span:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
 .suggestions{display:flex;gap:.5rem;flex-wrap:wrap;padding:.5rem 1rem 0;flex-shrink:0}
 .sug-btn{padding:.3rem .7rem;background:var(--glass);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text2);cursor:pointer;font-family:'Rajdhani',sans-serif;transition:.3s;white-space:nowrap}
 .sug-btn:hover{border-color:var(--neon);color:var(--neon);background:var(--glass2)}
+
 .input-area{padding:.75rem 1rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;gap:.6rem;align-items:flex-end;flex-shrink:0}
 .input-wrap{flex:1;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:10px;display:flex;align-items:flex-end;padding:.5rem .75rem;transition:.3s}
 .input-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 10px rgba(168,85,247,.25)}
@@ -52,10 +98,15 @@ textarea::placeholder{color:var(--text2)}
 .send-btn{width:38px;height:38px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.3s;flex-shrink:0}
 .send-btn:hover{box-shadow:0 0 16px rgba(168,85,247,.6);transform:scale(1.05)}
 .send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
 .welcome{text-align:center;padding:2rem 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;flex:1}
 .welcome-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--neon2),var(--neon));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 30px rgba(168,85,247,.4)}
 .welcome h2{font-family:'Orbitron',sans-serif;font-size:1.1rem;background:linear-gradient(135deg,#fff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .welcome p{font-size:.82rem;color:var(--text2);max-width:300px;line-height:1.6}
+
+/* loading spinner kecil */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:.4rem}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -64,6 +115,47 @@ textarea::placeholder{color:var(--text2)}
 <div class="orb orb2"></div>
 <canvas id="c"></canvas>
 
+<!-- ══ LOGIN PAGE ══ -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">AETHERIA AI</div>
+    <div class="login-sub">NEXT-GEN INTELLIGENCE</div>
+    <div class="login-title" id="loginTitle">Selamat Datang</div>
+    <div class="login-desc" id="loginDesc">Login untuk mulai menggunakan Aetheria AI</div>
+
+    <!-- Google -->
+    <button class="btn-google" onclick="loginGoogle()">
+      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Lanjutkan dengan Google
+    </button>
+
+    <div class="divider"><span>atau pakai email</span></div>
+
+    <!-- Email form -->
+    <div id="emailForm">
+      <div class="input-group">
+        <label>EMAIL</label>
+        <input type="email" id="emailInp" placeholder="kamu@email.com" onkeydown="if(event.key==='Enter')submitEmail()"/>
+      </div>
+      <div class="input-group">
+        <label>PASSWORD</label>
+        <input type="password" id="passInp" placeholder="Min. 6 karakter" onkeydown="if(event.key==='Enter')submitEmail()"/>
+      </div>
+      <div id="nameGroup" class="input-group" style="display:none">
+        <label>NAMA</label>
+        <input type="text" id="nameInp" placeholder="Nama kamu" onkeydown="if(event.key==='Enter')submitEmail()"/>
+      </div>
+      <div class="err-msg" id="errMsg"></div>
+      <button class="btn-primary" id="emailBtn" onclick="submitEmail()">Masuk →</button>
+      <div class="toggle-mode">
+        <span id="toggleTxt">Belum punya akun?</span>
+        <a onclick="toggleMode()" id="toggleLink">Daftar sekarang</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP PAGE ══ -->
 <div id="appPage">
   <div class="header">
     <div>
@@ -71,13 +163,20 @@ textarea::placeholder{color:var(--text2)}
       <div class="logo-sub">NEXT-GEN INTELLIGENCE</div>
     </div>
     <div class="status-dot"></div>
+    <div class="user-info">
+      <div id="userAvatar" class="user-avatar-placeholder">?</div>
+      <div class="user-name" id="userName">...</div>
+      <button class="logout-btn" onclick="logout()">Keluar</button>
+    </div>
   </div>
+
   <div class="suggestions" id="sugs">
     <button class="sug-btn" onclick="useSug(this)">Buatkan REST API Node.js</button>
     <button class="sug-btn" onclick="useSug(this)">Jelaskan async/await</button>
     <button class="sug-btn" onclick="useSug(this)">Debug kode saya</button>
     <button class="sug-btn" onclick="useSug(this)">Tulis caption Instagram</button>
   </div>
+
   <div class="chat-body" id="chatBody">
     <div class="welcome" id="welcome">
       <div class="welcome-icon">⬡</div>
@@ -85,6 +184,7 @@ textarea::placeholder{color:var(--text2)}
       <p>AI asisten canggih yang beneran bisa ngobrol, nulis kode, dan bantu kerjaan kamu.</p>
     </div>
   </div>
+
   <div class="input-area">
     <div class="input-wrap">
       <textarea id="inp" placeholder="Tanya Aetheria apa saja..." rows="1"
@@ -95,7 +195,7 @@ textarea::placeholder{color:var(--text2)}
 </div>
 
 <script>
-// PARTICLES
+// ── PARTICLES ──
 const cv=document.getElementById('c'),cx=cv.getContext('2d');
 let W,H,ps=[];
 function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
@@ -104,7 +204,103 @@ function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random(
 for(let i=0;i<60;i++)ps.push(new P());
 (function loop(){cx.clearRect(0,0,W,H);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(168,85,247,${p.a*.3})`;cx.fill()});requestAnimationFrame(loop)})();
 
-// CHAT
+// ══════════════════════════════════════
+// ── FIREBASE CONFIG ──
+// Ganti dengan config Firebase kamu!
+// ══════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "GANTI_API_KEY",
+  authDomain: "GANTI_PROJECT_ID.firebaseapp.com",
+  projectId: "GANTI_PROJECT_ID",
+  storageBucket: "GANTI_PROJECT_ID.appspot.com",
+  messagingSenderId: "GANTI_SENDER_ID",
+  appId: "GANTI_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+// ── AUTH STATE ──
+auth.onAuthStateChanged(user => {
+  if(user){
+    showApp(user);
+  } else {
+    document.getElementById('loginPage').style.display='flex';
+    document.getElementById('appPage').style.display='none';
+  }
+});
+
+function showApp(user){
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('appPage').style.display='flex';
+  // set nama & avatar
+  const name = user.displayName || user.email.split('@')[0];
+  document.getElementById('userName').textContent = name;
+  const av = document.getElementById('userAvatar');
+  if(user.photoURL){
+    av.outerHTML=`<img id="userAvatar" class="user-avatar" src="${user.photoURL}" referrerpolicy="no-referrer"/>`;
+  } else {
+    av.textContent = name[0].toUpperCase();
+  }
+}
+
+// ── GOOGLE LOGIN ──
+async function loginGoogle(){
+  try{
+    await auth.signInWithPopup(provider);
+  } catch(e){
+    showErr(e.message);
+  }
+}
+
+// ── EMAIL LOGIN / REGISTER ──
+let isRegister = false;
+function toggleMode(){
+  isRegister = !isRegister;
+  document.getElementById('loginTitle').textContent = isRegister?'Buat Akun':'Selamat Datang';
+  document.getElementById('loginDesc').textContent = isRegister?'Daftar gratis, tidak perlu kartu kredit':'Login untuk mulai menggunakan Aetheria AI';
+  document.getElementById('emailBtn').textContent = isRegister?'Daftar →':'Masuk →';
+  document.getElementById('toggleTxt').textContent = isRegister?'Sudah punya akun?':'Belum punya akun?';
+  document.getElementById('toggleLink').textContent = isRegister?'Masuk di sini':'Daftar sekarang';
+  document.getElementById('nameGroup').style.display = isRegister?'block':'none';
+  showErr('');
+}
+
+async function submitEmail(){
+  const email = document.getElementById('emailInp').value.trim();
+  const pass = document.getElementById('passInp').value;
+  const btn = document.getElementById('emailBtn');
+  if(!email||!pass){showErr('Email dan password wajib diisi');return}
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>Memproses...';
+  showErr('');
+  try{
+    if(isRegister){
+      const name = document.getElementById('nameInp').value.trim()||email.split('@')[0];
+      const cred = await auth.createUserWithEmailAndPassword(email,pass);
+      await cred.user.updateProfile({displayName:name});
+    } else {
+      await auth.signInWithEmailAndPassword(email,pass);
+    }
+  } catch(e){
+    const msgs={'auth/user-not-found':'Email tidak ditemukan','auth/wrong-password':'Password salah','auth/email-already-in-use':'Email sudah terdaftar','auth/weak-password':'Password minimal 6 karakter','auth/invalid-email':'Format email tidak valid'};
+    showErr(msgs[e.code]||e.message);
+  }
+  btn.disabled=false;
+  btn.textContent = isRegister?'Daftar →':'Masuk →';
+}
+
+function showErr(msg){document.getElementById('errMsg').textContent=msg}
+
+async function logout(){
+  chatHistory=[];
+  document.getElementById('chatBody').innerHTML=`<div class="welcome" id="welcome"><div class="welcome-icon">⬡</div><h2>AETHERIA AI</h2><p>AI asisten canggih yang beneran bisa ngobrol, nulis kode, dan bantu kerjaan kamu.</p></div>`;
+  document.getElementById('sugs').style.display='flex';
+  await auth.signOut();
+}
+
+// ── CHAT ──
 let chatHistory=[], busy=false;
 function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px'}
