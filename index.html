@@ -1,95 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Aetheria AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --neon:#a855f7;--neon2:#7c3aed;--neon3:#06b6d4;
-  --bg:#030014;--glass:rgba(168,85,247,.08);--glass2:rgba(168,85,247,.15);
+  --bg:#030014;--bg2:#0a0520;
+  --glass:rgba(168,85,247,.08);--glass2:rgba(168,85,247,.15);
   --border:rgba(168,85,247,.3);--text:#e2d9f3;--text2:#9d8bb0;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow:hidden}
+
 .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
 .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
 .orb1{width:400px;height:400px;background:rgba(168,85,247,.1);top:-100px;right:-100px}
 .orb2{width:300px;height:300px;background:rgba(6,182,212,.07);bottom:10%;left:-100px}
 canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-#loginPage{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:1rem}
-.login-card{background:rgba(10,5,32,.92);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:380px;backdrop-filter:blur(30px);box-shadow:0 0 60px rgba(168,85,247,.15);text-align:center}
-.login-logo{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem}
-.login-sub{font-size:.7rem;letter-spacing:.25em;color:var(--text2);margin-bottom:2rem}
-.login-title{font-family:'Orbitron',sans-serif;font-size:.95rem;color:#fff;margin-bottom:.4rem}
-.login-desc{font-size:.8rem;color:var(--text2);margin-bottom:1.8rem;line-height:1.5}
-.divider{display:flex;align-items:center;gap:.75rem;margin:1.2rem 0}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.divider span{font-size:.7rem;color:var(--text2);white-space:nowrap}
-.btn-google{width:100%;padding:.75rem;background:#fff;border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:.7rem;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;color:#1f1f1f;cursor:pointer;transition:.3s;margin-bottom:.75rem}
-.btn-google:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,255,255,.15)}
-.google-icon{width:20px;height:20px}
-.input-group{margin-bottom:.75rem;text-align:left}
-.input-group label{font-size:.72rem;letter-spacing:.1em;color:var(--text2);display:block;margin-bottom:.35rem}
-.input-group input{width:100%;padding:.65rem .9rem;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:9px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.9rem;outline:none;transition:.3s}
-.input-group input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(168,85,247,.2)}
-.input-group input::placeholder{color:var(--text2)}
-.btn-primary{width:100%;padding:.75rem;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:10px;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;letter-spacing:.05em;box-shadow:0 0 20px rgba(168,85,247,.3);transition:.3s}
-.btn-primary:hover{box-shadow:0 0 30px rgba(168,85,247,.6);transform:translateY(-2px)}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.toggle-mode{font-size:.78rem;color:var(--text2);margin-top:.9rem}
-.toggle-mode a{color:var(--neon);cursor:pointer;text-decoration:underline}
-.err-msg{font-size:.75rem;color:#f87171;margin-top:.5rem;min-height:1rem}
+.app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;max-width:860px;margin:0 auto}
 
-#appPage{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;max-width:800px;margin:0 auto}
-.header{padding:.75rem 1.2rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0}
-.logo{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:900;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.logo-sub{font-size:.55rem;letter-spacing:.2em;color:var(--text2);font-family:'Rajdhani',sans-serif;-webkit-text-fill-color:var(--text2)}
-.status-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80;animation:pulse 1.5s infinite}
+/* HEADER */
+.header{padding:.8rem 1.2rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0}
+.logo-wrap{display:flex;flex-direction:column}
+.logo{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:.58rem;letter-spacing:.2em;color:var(--text2);font-family:'Rajdhani',sans-serif}
+.status-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80;animation:pulse 1.5s infinite;flex-shrink:0}
+.status-txt{font-size:.7rem;color:#4ade80;font-family:'JetBrains Mono',monospace}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:.6rem}
+.model-tag{font-size:.6rem;font-family:'JetBrains Mono',monospace;color:var(--text2);background:var(--glass);border:1px solid var(--border);padding:.2rem .5rem;border-radius:4px}
+.clear-btn{background:var(--glass);border:1px solid var(--border);color:var(--text2);font-size:.6rem;font-family:'JetBrains Mono',monospace;padding:.25rem .55rem;border-radius:4px;cursor:pointer;transition:.2s}
+.clear-btn:hover{border-color:var(--neon);color:var(--neon)}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
-.user-info{margin-left:auto;display:flex;align-items:center;gap:.6rem}
-.user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);object-fit:cover}
-.user-avatar-placeholder{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--neon2),var(--neon));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
-.user-name{font-size:.75rem;color:var(--text2);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.logout-btn{padding:.25rem .6rem;background:var(--glass);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:.65rem;cursor:pointer;font-family:'Rajdhani',sans-serif;transition:.3s}
-.logout-btn:hover{border-color:#f87171;color:#f87171}
-.chat-body{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.8rem}
+
+/* CHAT */
+.chat-body{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.85rem;scroll-behavior:smooth}
 .chat-body::-webkit-scrollbar{width:3px}
 .chat-body::-webkit-scrollbar-thumb{background:var(--neon);border-radius:2px}
-.msg{display:flex;flex-direction:column;gap:.22rem;max-width:82%}
+
+.msg{display:flex;flex-direction:column;gap:.3rem;max-width:82%}
 .msg.bot{align-self:flex-start}
 .msg.user{align-self:flex-end}
-.bubble{padding:.65rem 1rem;border-radius:12px;font-size:.87rem;line-height:1.55}
-.msg.bot .bubble{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.22);color:var(--text);border-radius:4px 12px 12px 12px}
+.bubble{padding:.7rem 1rem;border-radius:12px;font-size:.88rem;line-height:1.6}
+.msg.bot .bubble{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);color:var(--text);border-radius:4px 12px 12px 12px}
 .msg.user .bubble{background:linear-gradient(135deg,var(--neon2),var(--neon));color:#fff;border-radius:12px 4px 12px 12px}
-.msg-time{font-size:.58rem;color:var(--text2);font-family:'JetBrains Mono',monospace}
-.msg.user .msg-time{align-self:flex-end}
-.typing-wrap{display:flex;align-items:center;gap:.4rem;padding:.6rem 1rem;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.22);border-radius:4px 12px 12px 12px;width:fit-content}
+.msg-meta{font-size:.58rem;color:var(--text2);font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:.4rem}
+.msg.user .msg-meta{justify-content:flex-end}
+.copy-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:.65rem;padding:0;transition:.2s;opacity:0}
+.msg.bot:hover .copy-btn{opacity:1}
+.copy-btn:hover{color:var(--neon)}
+
+/* TYPING */
+.typing-wrap{display:flex;align-items:center;gap:.4rem;padding:.65rem 1rem;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:4px 12px 12px 12px;width:fit-content}
 .typing-wrap span{width:6px;height:6px;background:var(--neon);border-radius:50%;animation:bounce .8s ease-in-out infinite}
 .typing-wrap span:nth-child(2){animation-delay:.15s}
 .typing-wrap span:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-.suggestions{display:flex;gap:.5rem;flex-wrap:wrap;padding:.5rem 1rem 0;flex-shrink:0}
+
+/* FILE PREVIEW */
+.file-preview{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:.5rem .75rem;margin:.25rem 0;font-size:.75rem;font-family:'JetBrains Mono',monospace;color:var(--text2);display:flex;align-items:center;gap:.5rem}
+.file-preview .fi{font-size:1rem}
+
+/* INPUT */
+.input-area{padding:.75rem 1rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem;flex-shrink:0}
+.attached-files{display:flex;flex-wrap:wrap;gap:.4rem}
+.attached-tag{background:var(--glass);border:1px solid var(--border);border-radius:6px;padding:.2rem .5rem;font-size:.65rem;font-family:'JetBrains Mono',monospace;color:var(--text2);display:flex;align-items:center;gap:.3rem}
+.attached-tag button{background:none;border:none;color:var(--text2);cursor:pointer;font-size:.75rem;padding:0;line-height:1;transition:.2s}
+.attached-tag button:hover{color:#f87171}
+.input-row{display:flex;gap:.6rem;align-items:flex-end}
+.input-wrap{flex:1;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:10px;display:flex;align-items:flex-end;padding:.5rem .75rem;gap:.5rem;transition:.3s}
+.input-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 10px rgba(168,85,247,.25)}
+textarea{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.9rem;resize:none;max-height:120px;line-height:1.4;min-height:22px}
+textarea::placeholder{color:var(--text2)}
+.attach-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.1rem;padding:.15rem .3rem;transition:.2s;flex-shrink:0}
+.attach-btn:hover{color:var(--neon)}
+.send-btn{width:40px;height:40px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:.3s;flex-shrink:0}
+.send-btn:hover:not(:disabled){box-shadow:0 0 20px rgba(168,85,247,.6);transform:scale(1.05)}
+.send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.input-hint{font-size:.6rem;color:var(--text2);font-family:'JetBrains Mono',monospace;opacity:.6}
+
+/* SUGGESTIONS */
+.suggestions{display:flex;gap:.45rem;flex-wrap:wrap;padding:.5rem 1rem 0;flex-shrink:0}
 .sug-btn{padding:.3rem .7rem;background:var(--glass);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text2);cursor:pointer;font-family:'Rajdhani',sans-serif;transition:.3s;white-space:nowrap}
 .sug-btn:hover{border-color:var(--neon);color:var(--neon);background:var(--glass2)}
-.input-area{padding:.75rem 1rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;gap:.6rem;align-items:flex-end;flex-shrink:0}
-.input-wrap{flex:1;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:10px;display:flex;align-items:flex-end;padding:.5rem .75rem;transition:.3s}
-.input-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 10px rgba(168,85,247,.25)}
-textarea{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.9rem;resize:none;max-height:100px;line-height:1.4;min-height:22px}
-textarea::placeholder{color:var(--text2)}
-.send-btn{width:38px;height:38px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.3s;flex-shrink:0}
-.send-btn:hover{box-shadow:0 0 16px rgba(168,85,247,.6);transform:scale(1.05)}
-.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.welcome{text-align:center;padding:2rem 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;flex:1}
-.welcome-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--neon2),var(--neon));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 30px rgba(168,85,247,.4)}
-.welcome h2{font-family:'Orbitron',sans-serif;font-size:1.1rem;background:linear-gradient(135deg,#fff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.welcome p{font-size:.82rem;color:var(--text2);max-width:300px;line-height:1.6}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:.4rem}
-@keyframes spin{to{transform:rotate(360deg)}}
+
+/* WELCOME */
+.welcome{text-align:center;padding:2rem 1rem;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem}
+.welcome-icon{width:68px;height:68px;background:linear-gradient(135deg,var(--neon2),var(--neon));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;box-shadow:0 0 30px rgba(168,85,247,.4)}
+.welcome h2{font-family:'Orbitron',sans-serif;font-size:1.3rem;background:linear-gradient(135deg,#fff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.welcome p{font-size:.85rem;color:var(--text2);max-width:340px;line-height:1.65}
+.caps{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem}
+.cap{padding:.25rem .65rem;background:var(--glass);border:1px solid var(--border);border-radius:20px;font-size:.68rem;color:var(--text2)}
+
+/* CODE BLOCKS */
+.code-block{background:rgba(0,0,0,.5);border:1px solid rgba(168,85,247,.2);border-radius:10px;margin:.5rem 0;overflow:hidden}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:.35rem .75rem;background:rgba(168,85,247,.1);border-bottom:1px solid rgba(168,85,247,.15)}
+.code-lang{font-size:.6rem;font-family:'JetBrains Mono',monospace;color:var(--neon);letter-spacing:.1em}
+.code-copy{background:none;border:none;color:var(--text2);cursor:pointer;font-size:.65rem;font-family:'JetBrains Mono',monospace;transition:.2s;padding:.1rem .3rem;border-radius:3px}
+.code-copy:hover{color:var(--neon);background:var(--glass)}
+.code-block pre{padding:.75rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:#a3e635;line-height:1.6;white-space:pre}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.4);color:#4ade80;padding:.4rem 1rem;border-radius:20px;font-size:.72rem;font-family:'JetBrains Mono',monospace;pointer-events:none;opacity:0;transition:.3s;z-index:100}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ERROR */
+.error-bubble{padding:.7rem 1rem;border-radius:4px 12px 12px 12px;font-size:.83rem;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:#fca5a5}
+
+/* SCROLL ANCHOR */
+#scrollAnchor{height:1px}
 </style>
 </head>
 <body>
@@ -97,242 +119,384 @@ textarea::placeholder{color:var(--text2)}
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 <canvas id="c"></canvas>
+<div class="toast" id="toast"></div>
+<input type="file" id="fileInput" style="display:none" multiple accept=".txt,.js,.ts,.jsx,.tsx,.html,.css,.py,.java,.cpp,.c,.cs,.go,.rs,.php,.rb,.json,.xml,.yaml,.yml,.md,.sql,.sh,.env,.png,.jpg,.jpeg,.gif,.webp,.pdf"/>
 
-<div id="loginPage">
-  <div class="login-card">
-    <div class="login-logo">AETHERIA AI</div>
-    <div class="login-sub">NEXT-GEN INTELLIGENCE</div>
-    <div class="login-title" id="loginTitle">Selamat Datang</div>
-    <div class="login-desc" id="loginDesc">Login untuk mulai menggunakan Aetheria AI</div>
-    <button class="btn-google" onclick="loginGoogle()">
-      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Lanjutkan dengan Google
-    </button>
-    <div class="divider"><span>atau pakai email</span></div>
-    <div id="emailForm">
-      <div class="input-group">
-        <label>EMAIL</label>
-        <input type="email" id="emailInp" placeholder="kamu@email.com" onkeydown="if(event.key==='Enter')submitEmail()"/>
-      </div>
-      <div class="input-group">
-        <label>PASSWORD</label>
-        <input type="password" id="passInp" placeholder="Min. 6 karakter" onkeydown="if(event.key==='Enter')submitEmail()"/>
-      </div>
-      <div id="nameGroup" class="input-group" style="display:none">
-        <label>NAMA</label>
-        <input type="text" id="nameInp" placeholder="Nama kamu" onkeydown="if(event.key==='Enter')submitEmail()"/>
-      </div>
-      <div class="err-msg" id="errMsg"></div>
-      <button class="btn-primary" id="emailBtn" onclick="submitEmail()">Masuk →</button>
-      <div class="toggle-mode">
-        <span id="toggleTxt">Belum punya akun?</span>
-        <a onclick="toggleMode()" id="toggleLink">Daftar sekarang</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="appPage">
+<div class="app">
   <div class="header">
-    <div>
+    <div class="logo-wrap">
       <div class="logo">AETHERIA AI</div>
       <div class="logo-sub">NEXT-GEN INTELLIGENCE</div>
     </div>
     <div class="status-dot"></div>
-    <div class="user-info">
-      <div id="userAvatar" class="user-avatar-placeholder">?</div>
-      <div class="user-name" id="userName">...</div>
-      <button class="logout-btn" onclick="logout()">Keluar</button>
+    <div class="status-txt">Online</div>
+    <div class="header-right">
+      <div class="model-tag">aetheria-sonnet-4</div>
+      <button class="clear-btn" onclick="clearChat()">⌫ Clear</button>
     </div>
   </div>
+
   <div class="suggestions" id="sugs">
-    <button class="sug-btn" onclick="useSug(this)">Buatkan REST API Node.js</button>
-    <button class="sug-btn" onclick="useSug(this)">Jelaskan async/await</button>
-    <button class="sug-btn" onclick="useSug(this)">Debug kode saya</button>
-    <button class="sug-btn" onclick="useSug(this)">Tulis caption Instagram</button>
+    <button class="sug-btn" onclick="useSug(this)">🔧 Buatkan REST API Node.js</button>
+    <button class="sug-btn" onclick="useSug(this)">🐛 Debug kode saya</button>
+    <button class="sug-btn" onclick="useSug(this)">🌐 Bikin landing page HTML</button>
+    <button class="sug-btn" onclick="useSug(this)">📝 Jelaskan async/await</button>
+    <button class="sug-btn" onclick="useSug(this)">⚡ Optimasi query SQL</button>
   </div>
+
   <div class="chat-body" id="chatBody">
     <div class="welcome" id="welcome">
       <div class="welcome-icon">⬡</div>
       <h2>AETHERIA AI</h2>
-      <p>AI asisten canggih yang beneran bisa ngobrol, nulis kode, dan bantu kerjaan kamu.</p>
+      <p>AI asisten canggih yang bisa ngobrol, nulis kode, debug, bikin web, dan benerin source code kamu. Powered by Aetheria Official.</p>
+      <div class="caps">
+        <span class="cap">💬 Ngobrol bebas</span>
+        <span class="cap">💻 Coding & Debug</span>
+        <span class="cap">🌐 Bikin Web</span>
+        <span class="cap">📁 Upload File</span>
+        <span class="cap">🔍 Code Review</span>
+      </div>
     </div>
+    <div id="scrollAnchor"></div>
   </div>
+
   <div class="input-area">
-    <div class="input-wrap">
-      <textarea id="inp" placeholder="Tanya Aetheria apa saja..." rows="1"
-        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <div class="attached-files" id="attachedFiles"></div>
+    <div class="input-row">
+      <div class="input-wrap">
+        <button class="attach-btn" onclick="document.getElementById('fileInput').click()" title="Upload file / kode">📎</button>
+        <textarea id="inp" placeholder="Tanya apa saja, paste kode, atau upload file..." rows="1"
+          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      </div>
+      <button class="send-btn" id="sendBtn" onclick="send()" title="Kirim (Enter)">➤</button>
     </div>
-    <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
+    <div class="input-hint">Enter = kirim • Shift+Enter = baris baru • 📎 = upload file/kode</div>
   </div>
 </div>
 
 <script>
-// PARTICLES
+// ─── PARTICLES ─────────────────────────────────────────────
 const cv=document.getElementById('c'),cx=cv.getContext('2d');
 let W,H,ps=[];
 function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
 resize();window.addEventListener('resize',resize);
 function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()+.3;this.a=Math.random()*.5}
 for(let i=0;i<60;i++)ps.push(new P());
-(function loop(){cx.clearRect(0,0,W,H);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(168,85,247,${p.a*.3})`;cx.fill()});requestAnimationFrame(loop)})();
-
-// FIREBASE CONFIG - UPDATED
-const firebaseConfig = {
-  apiKey: "AIzaSyA1O4G5O-NHh74Jk2hNBJdwzIH7i1yddj4",
-  authDomain: "aetheria-db.firebaseapp.com",
-  projectId: "aetheria-db",
-  storageBucket: "aetheria-db.firebasestorage.app",
-  messagingSenderId: "35737276223",
-  appId: "1:35737276223:web:97cb525df2c1b1f5a18d8a",
-  measurementId: "G-1NDHN7KE9L"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
-
-auth.onAuthStateChanged(user => {
-  if(user){ showApp(user); }
-  else {
-    document.getElementById('loginPage').style.display='flex';
-    document.getElementById('appPage').style.display='none';
+(function loop(){
+  cx.clearRect(0,0,W,H);
+  ps.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    cx.fillStyle=`rgba(168,85,247,${p.a*.3})`;cx.fill();
+  });
+  for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++){
+    const dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<100){cx.beginPath();cx.moveTo(ps[i].x,ps[i].y);cx.lineTo(ps[j].x,ps[j].y);cx.strokeStyle=`rgba(168,85,247,${(1-d/100)*.1})`;cx.lineWidth=.5;cx.stroke()}
   }
+  requestAnimationFrame(loop);
+})();
+
+// ─── STATE ─────────────────────────────────────────────────
+const history=[];
+let busy=false;
+let attachedFiles=[]; // {name, content, type}
+
+// ─── FILE UPLOAD ───────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change',async function(){
+  const files=Array.from(this.files);
+  for(const file of files){
+    const isImage=file.type.startsWith('image/');
+    if(isImage){
+      const data=await readFileAsBase64(file);
+      attachedFiles.push({name:file.name,content:data,type:'image',mediaType:file.type});
+    } else {
+      const text=await readFileAsText(file);
+      attachedFiles.push({name:file.name,content:text,type:'text'});
+    }
+  }
+  renderAttachedFiles();
+  this.value='';
 });
 
-function showApp(user){
-  document.getElementById('loginPage').style.display='none';
-  document.getElementById('appPage').style.display='flex';
-  const name = user.displayName || user.email.split('@')[0];
-  document.getElementById('userName').textContent = name;
-  const av = document.getElementById('userAvatar');
-  if(user.photoURL){
-    av.outerHTML=`<img id="userAvatar" class="user-avatar" src="${user.photoURL}" referrerpolicy="no-referrer"/>`;
-  } else {
-    av.textContent = name[0].toUpperCase();
-  }
+function readFileAsText(f){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>res(e.target.result);
+    r.onerror=()=>rej(new Error('Read failed'));
+    r.readAsText(f);
+  });
+}
+function readFileAsBase64(f){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>res(e.target.result.split(',')[1]);
+    r.onerror=()=>rej(new Error('Read failed'));
+    r.readAsDataURL(f);
+  });
 }
 
-async function loginGoogle(){
-  try{ await auth.signInWithPopup(provider); }
-  catch(e){ showErr(e.message); }
+function renderAttachedFiles(){
+  const c=document.getElementById('attachedFiles');
+  c.innerHTML='';
+  attachedFiles.forEach((f,i)=>{
+    const tag=document.createElement('div');
+    tag.className='attached-tag';
+    tag.innerHTML=`<span>${f.type==='image'?'🖼':'📄'} ${f.name}</span><button onclick="removeFile(${i})">×</button>`;
+    c.appendChild(tag);
+  });
 }
 
-let isRegister = false;
-function toggleMode(){
-  isRegister = !isRegister;
-  document.getElementById('loginTitle').textContent = isRegister?'Buat Akun':'Selamat Datang';
-  document.getElementById('loginDesc').textContent = isRegister?'Daftar gratis, tidak perlu kartu kredit':'Login untuk mulai menggunakan Aetheria AI';
-  document.getElementById('emailBtn').textContent = isRegister?'Daftar →':'Masuk →';
-  document.getElementById('toggleTxt').textContent = isRegister?'Sudah punya akun?':'Belum punya akun?';
-  document.getElementById('toggleLink').textContent = isRegister?'Masuk di sini':'Daftar sekarang';
-  document.getElementById('nameGroup').style.display = isRegister?'block':'none';
-  showErr('');
+function removeFile(i){
+  attachedFiles.splice(i,1);
+  renderAttachedFiles();
 }
 
-async function submitEmail(){
-  const email = document.getElementById('emailInp').value.trim();
-  const pass = document.getElementById('passInp').value;
-  const btn = document.getElementById('emailBtn');
-  if(!email||!pass){showErr('Email dan password wajib diisi');return}
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span>Memproses...';
-  showErr('');
-  try{
-    if(isRegister){
-      const name = document.getElementById('nameInp').value.trim()||email.split('@')[0];
-      const cred = await auth.createUserWithEmailAndPassword(email,pass);
-      await cred.user.updateProfile({displayName:name});
-    } else {
-      await auth.signInWithEmailAndPassword(email,pass);
-    }
-  } catch(e){
-    const msgs={
-      'auth/user-not-found':'Email tidak ditemukan',
-      'auth/wrong-password':'Password salah',
-      'auth/email-already-in-use':'Email sudah terdaftar',
-      'auth/weak-password':'Password minimal 6 karakter',
-      'auth/invalid-email':'Format email tidak valid',
-      'auth/invalid-credential':'Email atau password salah'
-    };
-    showErr(msgs[e.code]||e.message);
-  }
-  btn.disabled=false;
-  btn.textContent = isRegister?'Daftar →':'Masuk →';
-}
-
-function showErr(msg){document.getElementById('errMsg').textContent=msg}
-
-async function logout(){
-  chatHistory=[];
-  document.getElementById('chatBody').innerHTML=`<div class="welcome" id="welcome"><div class="welcome-icon">⬡</div><h2>AETHERIA AI</h2><p>AI asisten canggih yang beneran bisa ngobrol, nulis kode, dan bantu kerjaan kamu.</p></div>`;
-  document.getElementById('sugs').style.display='flex';
-  await auth.signOut();
-}
-
-// CHAT
-let chatHistory=[], busy=false;
+// ─── UTILS ─────────────────────────────────────────────────
 function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px'}
-function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}}
-function useSug(btn){document.getElementById('inp').value=btn.textContent;document.getElementById('sugs').style.display='none';sendMsg()}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px'}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}
+function useSug(btn){
+  document.getElementById('inp').value=btn.textContent.replace(/^[^\s]+\s/,'');
+  hideSugs();send();
+}
+function hideSugs(){document.getElementById('sugs').style.display='none'}
+function scrollBottom(){
+  const cb=document.getElementById('chatBody');
+  cb.scrollTop=cb.scrollHeight;
+}
 
-function addMsg(role,html){
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function clearChat(){
+  history.length=0;
+  attachedFiles=[];
+  renderAttachedFiles();
+  const cb=document.getElementById('chatBody');
+  cb.innerHTML='<div id="scrollAnchor" style="height:1px"></div>';
+  // re-show welcome
+  const w=document.createElement('div');
+  w.className='welcome';w.id='welcome';
+  w.innerHTML=`<div class="welcome-icon">⬡</div><h2>AETHERIA AI</h2><p>AI asisten canggih yang bisa ngobrol, nulis kode, debug, bikin web, dan benerin source code kamu. Powered by Aetheria Official.</p><div class="caps"><span class="cap">💬 Ngobrol bebas</span><span class="cap">💻 Coding & Debug</span><span class="cap">🌐 Bikin Web</span><span class="cap">📁 Upload File</span><span class="cap">🔍 Code Review</span></div>`;
+  cb.insertBefore(w,cb.querySelector('#scrollAnchor'));
+  document.getElementById('sugs').style.display='flex';
+  showToast('✓ Chat dihapus');
+}
+
+// ─── MESSAGE RENDERING ─────────────────────────────────────
+function addMsg(role,html,rawText=''){
   const w=document.getElementById('welcome');if(w)w.remove();
   const cb=document.getElementById('chatBody');
-  const d=document.createElement('div');d.className=`msg ${role}`;
-  d.innerHTML=`<div class="bubble">${html}</div><div class="msg-time">${role==='user'?'You':'Aetheria'} • ${now()}</div>`;
-  cb.appendChild(d);cb.scrollTop=cb.scrollHeight;return d;
+  const anchor=document.getElementById('scrollAnchor');
+  const wrap=document.createElement('div');
+  wrap.className=`msg ${role}`;
+
+  if(role==='bot'){
+    wrap.innerHTML=`<div class="bubble">${html}</div>
+      <div class="msg-meta">
+        <span>Aetheria • ${now()}</span>
+        <button class="copy-btn" onclick="copyText(this,'${encodeURIComponent(rawText||html)}')">📋 copy</button>
+      </div>`;
+  } else {
+    wrap.innerHTML=`<div class="bubble">${html}</div><div class="msg-meta">${now()}</div>`;
+  }
+  cb.insertBefore(wrap,anchor);
+  scrollBottom();
+  return wrap;
 }
+
+function copyText(btn,encoded){
+  const text=decodeURIComponent(encoded);
+  navigator.clipboard.writeText(text).then(()=>showToast('✓ Disalin!'));
+}
+
 function addTyping(){
   const w=document.getElementById('welcome');if(w)w.remove();
   const cb=document.getElementById('chatBody');
-  const d=document.createElement('div');d.className='msg bot';
-  d.innerHTML=`<div class="typing-wrap"><span></span><span></span><span></span></div><div class="msg-time" style="font-size:.58rem;color:var(--text2);font-family:'JetBrains Mono',monospace">Aetheria mengetik...</div>`;
-  cb.appendChild(d);cb.scrollTop=cb.scrollHeight;return d;
+  const anchor=document.getElementById('scrollAnchor');
+  const wrap=document.createElement('div');
+  wrap.className='msg bot';
+  wrap.id='typingMsg';
+  wrap.innerHTML=`<div class="typing-wrap"><span></span><span></span><span></span></div><div class="msg-meta" style="font-size:.58rem;color:var(--text2);font-family:'JetBrains Mono',monospace">Aetheria sedang mengetik...</div>`;
+  cb.insertBefore(wrap,anchor);
+  scrollBottom();
+  return wrap;
 }
 
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function fmt(s){
-  s=s.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,l,c)=>`<pre style="background:rgba(0,0,0,.4);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:.75rem;margin:.5rem 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#4ade80;white-space:pre">${escHtml(c.trim())}</pre>`);
-  s=s.replace(/`([^`]+)`/g,'<code style="background:rgba(168,85,247,.2);padding:.1em .3em;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:.85em">$1</code>');
+// ─── FORMAT REPLY ──────────────────────────────────────────
+function formatReply(s){
+  // code blocks with language
+  s=s.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,lang,code)=>{
+    const l=lang||'code';
+    const id='cb_'+Math.random().toString(36).slice(2);
+    const escaped=escHtml(code.trim());
+    return `<div class="code-block"><div class="code-header"><span class="code-lang">${l.toUpperCase()}</span><button class="code-copy" onclick="copyCode('${id}')">📋 copy</button></div><pre id="${id}">${escaped}</pre></div>`;
+  });
+  // inline code
+  s=s.replace(/`([^`\n]+)`/g,'<code style="background:rgba(168,85,247,.2);padding:.1em .35em;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:.82em">$1</code>');
+  // bold
   s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  // italic
+  s=s.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  // headers
+  s=s.replace(/^### (.+)$/gm,'<div style="font-family:\'Orbitron\',sans-serif;font-size:.8rem;color:var(--neon);margin:.6rem 0 .3rem;letter-spacing:.05em">$1</div>');
+  s=s.replace(/^## (.+)$/gm,'<div style="font-family:\'Orbitron\',sans-serif;font-size:.9rem;color:var(--neon);margin:.7rem 0 .3rem;letter-spacing:.05em">$1</div>');
+  s=s.replace(/^# (.+)$/gm,'<div style="font-family:\'Orbitron\',sans-serif;font-size:1rem;color:var(--neon);margin:.8rem 0 .4rem;letter-spacing:.08em">$1</div>');
+  // unordered list
+  s=s.replace(/^[\-\*] (.+)$/gm,'<div style="padding-left:.8rem;position:relative;margin:.15rem 0"><span style="position:absolute;left:0;color:var(--neon)">▸</span> $1</div>');
+  // ordered list
+  s=s.replace(/^\d+\. (.+)$/gm,'<div style="padding-left:.8rem;position:relative;margin:.15rem 0"><span style="color:var(--neon)">→</span> $1</div>');
+  // horizontal rule
+  s=s.replace(/^---$/gm,'<hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">');
+  // newlines
   s=s.replace(/\n/g,'<br>');
   return s;
 }
 
-async function sendMsg(){
+function copyCode(id){
+  const el=document.getElementById(id);
+  if(el)navigator.clipboard.writeText(el.textContent).then(()=>showToast('✓ Kode disalin!'));
+}
+
+// ─── BUILD API MESSAGES ────────────────────────────────────
+function buildUserContent(text, files){
+  if(!files||files.length===0) return text;
+
+  const content=[];
+  // add text files as text blocks
+  const textFiles=files.filter(f=>f.type==='text');
+  const imageFiles=files.filter(f=>f.type==='image');
+
+  let combinedText=text;
+  if(textFiles.length>0){
+    const fileParts=textFiles.map(f=>`\n\n--- FILE: ${f.name} ---\n${f.content}\n--- END FILE ---`).join('');
+    combinedText=text+fileParts;
+  }
+
+  if(imageFiles.length===0){
+    return combinedText;
+  }
+
+  // mixed: text + images
+  content.push({type:'text',text:combinedText});
+  imageFiles.forEach(f=>{
+    content.push({type:'image',source:{type:'base64',media_type:f.mediaType,data:f.content}});
+  });
+  return content;
+}
+
+// ─── SEND ──────────────────────────────────────────────────
+async function send(){
   if(busy)return;
   const inp=document.getElementById('inp');
-  const txt=inp.value.trim();if(!txt)return;
-  document.getElementById('sugs').style.display='none';
+  const txt=inp.value.trim();
+  if(!txt&&attachedFiles.length===0)return;
+
+  hideSugs();
+  const userText=txt||(attachedFiles.length>0?`[${attachedFiles.length} file dilampirkan]`:'');
+
+  // display user message
+  let displayHtml=escHtml(userText).replace(/\n/g,'<br>');
+  if(attachedFiles.length>0){
+    const fileList=attachedFiles.map(f=>`<div class="file-preview"><span class="fi">${f.type==='image'?'🖼':'📄'}</span>${escHtml(f.name)}</div>`).join('');
+    displayHtml=fileList+(txt?`<div style="margin-top:.3rem">${escHtml(txt).replace(/\n/g,'<br>')}</div>`:'');
+  }
+
   inp.value='';inp.style.height='auto';
-  busy=true;document.getElementById('sendBtn').disabled=true;
-  addMsg('user',escHtml(txt));
-  chatHistory.push({role:'user',content:txt});
+  busy=true;
+  document.getElementById('sendBtn').disabled=true;
+
+  addMsg('user',displayHtml);
+
+  // build API content
+  const userContent=buildUserContent(userText,attachedFiles);
+  history.push({role:'user',content:userContent});
+
+  // clear attached files
+  attachedFiles=[];
+  renderAttachedFiles();
+
   const typEl=addTyping();
+
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:'Kamu adalah Aetheria AI, asisten AI canggih yang helpful, cerdas, dan sedikit futuristik. Bantu user dengan coding, menulis, menjawab pertanyaan, dll. Jawab dalam bahasa yang sama dengan user (Indonesia atau Inggris). Untuk kode, format dengan rapi.',
-        messages:chatHistory
+        model:'aetheria-sonnet-4-20250514',
+        max_tokens:8000,
+        system:`Kamu adalah Aetheria AI, asisten AI canggih yang sangat capable dan helpful. Kamu adalah expert dalam:
+
+PROGRAMMING & CODING:
+- Semua bahasa: JavaScript, TypeScript, Python, Java, C/C++, Go, Rust, PHP, Ruby, Swift, Kotlin, dll
+- Framework & library: React, Vue, Angular, Node.js, Express, Django, FastAPI, Spring, dll
+- Database: SQL, PostgreSQL, MySQL, MongoDB, Redis, dll
+- DevOps: Docker, Kubernetes, CI/CD, cloud services
+- Debugging: temukan & perbaiki bug dengan penjelasan jelas
+- Code review: analisis kode dan berikan saran improvement
+- Bikin project dari scratch: REST API, web app, mobile app, dll
+
+WEB DEVELOPMENT:
+- HTML, CSS, JavaScript murni
+- Responsive design, animations, UI/UX
+- Bikin website/landing page lengkap dengan kode yang bisa langsung dipakai
+
+GENERAL KNOWLEDGE:
+- Matematika, sains, sejarah, bahasa, dll
+- Penjelasan konsep yang kompleks dengan cara yang mudah dipahami
+- Analisis dan problem solving
+
+CARA MERESPONS:
+- Jawab dalam bahasa yang sama dengan user (Indonesia atau Inggris)
+- Untuk kode: selalu gunakan code block dengan bahasa yang benar (contoh: \`\`\`javascript)
+- Kode harus lengkap, bisa langsung dipakai (bukan potongan)
+- Kalau ada file/kode yang diupload: analisis dengan teliti dan berikan feedback/perbaikan konkret
+- Kalau diminta debug: jelaskan bug-nya dan berikan solusi yang diperbaiki
+- Kalau diminta bikin web: berikan kode HTML/CSS/JS yang lengkap
+- Selalu tambahkan penjelasan singkat setelah kode
+- Gunakan emoji secukupnya untuk mempercantik respons tapi jangan berlebihan`,
+        messages:history
       })
     });
+
     const data=await res.json();
-    const reply=data.content?.[0]?.text||'Maaf, terjadi kesalahan.';
-    chatHistory.push({role:'assistant',content:reply});
-    typEl.querySelector('.typing-wrap').outerHTML=`<div class="bubble">${fmt(reply)}</div>`;
-    typEl.querySelectorAll('div')[1].textContent=`Aetheria • ${now()}`;
+
+    if(data.error){
+      const errMsg=data.error.message||'Terjadi error dari API.';
+      typEl.querySelector('.typing-wrap').outerHTML=`<div class="error-bubble">⚠ ${escHtml(errMsg)}</div>`;
+      typEl.querySelector('.msg-meta').textContent=`Error • ${now()}`;
+      history.pop(); // remove failed message
+    } else {
+      const reply=data.content?.map(b=>b.type==='text'?b.text:'').filter(Boolean).join('\n')||'Maaf, tidak ada respons.';
+      history.push({role:'assistant',content:reply});
+      const formatted=formatReply(reply);
+      typEl.querySelector('.typing-wrap').outerHTML=`<div class="bubble">${formatted}</div>`;
+      const metaEl=typEl.querySelector('.msg-meta');
+      if(metaEl){
+        metaEl.innerHTML=`<span>Aetheria • ${now()}</span><button class="copy-btn" onclick="copyText(this,'${encodeURIComponent(reply)}')">📋 copy</button>`;
+      }
+    }
+
   } catch(e){
-    typEl.querySelector('.typing-wrap').outerHTML=`<div class="bubble">⚠ Koneksi error. Coba lagi.</div>`;
+    typEl.querySelector('.typing-wrap').outerHTML=`<div class="error-bubble">⚠ Koneksi gagal: ${escHtml(e.message||'Network error')}. Pastikan kamu online dan coba lagi.</div>`;
+    const metaEl=typEl.querySelector('.msg-meta');
+    if(metaEl)metaEl.textContent=`Error • ${now()}`;
+    history.pop();
   }
-  document.getElementById('chatBody').scrollTop=9999;
-  busy=false;document.getElementById('sendBtn').disabled=false;
-  document.getElementById('inp').focus();
+
+  scrollBottom();
+  busy=false;
+  document.getElementById('sendBtn').disabled=false;
+  inp.focus();
 }
 </script>
 </body>
