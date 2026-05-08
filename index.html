@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aetheria AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --neon:#a855f7;--neon2:#7c3aed;--neon3:#06b6d4;
+  --bg:#030014;--glass:rgba(168,85,247,.08);--glass2:rgba(168,85,247,.15);
+  --border:rgba(168,85,247,.3);--text:#e2d9f3;--text2:#9d8bb0;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow:hidden}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.orb1{width:400px;height:400px;background:rgba(168,85,247,.1);top:-100px;right:-100px}
+.orb2{width:300px;height:300px;background:rgba(6,182,212,.07);bottom:10%;left:-100px}
+canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+#appPage{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;max-width:800px;margin:0 auto}
+.header{padding:.75rem 1.2rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0}
+.logo{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:900;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:.55rem;letter-spacing:.2em;color:var(--text2);font-family:'Rajdhani',sans-serif;-webkit-text-fill-color:var(--text2)}
+.status-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.chat-body{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.8rem}
+.chat-body::-webkit-scrollbar{width:3px}
+.chat-body::-webkit-scrollbar-thumb{background:var(--neon);border-radius:2px}
+.msg{display:flex;flex-direction:column;gap:.22rem;max-width:82%}
+.msg.bot{align-self:flex-start}
+.msg.user{align-self:flex-end}
+.bubble{padding:.65rem 1rem;border-radius:12px;font-size:.87rem;line-height:1.55}
+.msg.bot .bubble{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.22);color:var(--text);border-radius:4px 12px 12px 12px}
+.msg.user .bubble{background:linear-gradient(135deg,var(--neon2),var(--neon));color:#fff;border-radius:12px 4px 12px 12px}
+.msg-time{font-size:.58rem;color:var(--text2);font-family:'JetBrains Mono',monospace}
+.msg.user .msg-time{align-self:flex-end}
+.typing-wrap{display:flex;align-items:center;gap:.4rem;padding:.6rem 1rem;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.22);border-radius:4px 12px 12px 12px;width:fit-content}
+.typing-wrap span{width:6px;height:6px;background:var(--neon);border-radius:50%;animation:bounce .8s ease-in-out infinite}
+.typing-wrap span:nth-child(2){animation-delay:.15s}
+.typing-wrap span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.suggestions{display:flex;gap:.5rem;flex-wrap:wrap;padding:.5rem 1rem 0;flex-shrink:0}
+.sug-btn{padding:.3rem .7rem;background:var(--glass);border:1px solid var(--border);border-radius:20px;font-size:.72rem;color:var(--text2);cursor:pointer;font-family:'Rajdhani',sans-serif;transition:.3s;white-space:nowrap}
+.sug-btn:hover{border-color:var(--neon);color:var(--neon);background:var(--glass2)}
+.input-area{padding:.75rem 1rem;background:rgba(3,0,20,.85);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;gap:.6rem;align-items:flex-end;flex-shrink:0}
+.input-wrap{flex:1;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:10px;display:flex;align-items:flex-end;padding:.5rem .75rem;transition:.3s}
+.input-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 10px rgba(168,85,247,.25)}
+textarea{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.9rem;resize:none;max-height:100px;line-height:1.4;min-height:22px}
+textarea::placeholder{color:var(--text2)}
+.send-btn{width:38px;height:38px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.3s;flex-shrink:0}
+.send-btn:hover{box-shadow:0 0 16px rgba(168,85,247,.6);transform:scale(1.05)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.welcome{text-align:center;padding:2rem 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;flex:1}
+.welcome-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--neon2),var(--neon));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 30px rgba(168,85,247,.4)}
+.welcome h2{font-family:'Orbitron',sans-serif;font-size:1.1rem;background:linear-gradient(135deg,#fff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.welcome p{font-size:.82rem;color:var(--text2);max-width:300px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<canvas id="c"></canvas>
+
+<div id="appPage">
+  <div class="header">
+    <div>
+      <div class="logo">AETHERIA AI</div>
+      <div class="logo-sub">NEXT-GEN INTELLIGENCE</div>
+    </div>
+    <div class="status-dot"></div>
+  </div>
+  <div class="suggestions" id="sugs">
+    <button class="sug-btn" onclick="useSug(this)">Buatkan REST API Node.js</button>
+    <button class="sug-btn" onclick="useSug(this)">Jelaskan async/await</button>
+    <button class="sug-btn" onclick="useSug(this)">Debug kode saya</button>
+    <button class="sug-btn" onclick="useSug(this)">Tulis caption Instagram</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="welcome" id="welcome">
+      <div class="welcome-icon">⬡</div>
+      <h2>AETHERIA AI</h2>
+      <p>AI asisten canggih yang beneran bisa ngobrol, nulis kode, dan bantu kerjaan kamu.</p>
+    </div>
+  </div>
+  <div class="input-area">
+    <div class="input-wrap">
+      <textarea id="inp" placeholder="Tanya Aetheria apa saja..." rows="1"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    </div>
+    <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<script>
+// PARTICLES
+const cv=document.getElementById('c'),cx=cv.getContext('2d');
+let W,H,ps=[];
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()+.3;this.a=Math.random()*.5}
+for(let i=0;i<60;i++)ps.push(new P());
+(function loop(){cx.clearRect(0,0,W,H);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(168,85,247,${p.a*.3})`;cx.fill()});requestAnimationFrame(loop)})();
+
+// CHAT
+let chatHistory=[], busy=false;
+function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px'}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}}
+function useSug(btn){document.getElementById('inp').value=btn.textContent;document.getElementById('sugs').style.display='none';sendMsg()}
+
+function addMsg(role,html){
+  const w=document.getElementById('welcome');if(w)w.remove();
+  const cb=document.getElementById('chatBody');
+  const d=document.createElement('div');d.className=`msg ${role}`;
+  d.innerHTML=`<div class="bubble">${html}</div><div class="msg-time">${role==='user'?'You':'Aetheria'} • ${now()}</div>`;
+  cb.appendChild(d);cb.scrollTop=cb.scrollHeight;return d;
+}
+function addTyping(){
+  const w=document.getElementById('welcome');if(w)w.remove();
+  const cb=document.getElementById('chatBody');
+  const d=document.createElement('div');d.className='msg bot';
+  d.innerHTML=`<div class="typing-wrap"><span></span><span></span><span></span></div><div class="msg-time" style="font-size:.58rem;color:var(--text2);font-family:'JetBrains Mono',monospace">Aetheria mengetik...</div>`;
+  cb.appendChild(d);cb.scrollTop=cb.scrollHeight;return d;
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmt(s){
+  s=s.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,l,c)=>`<pre style="background:rgba(0,0,0,.4);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:.75rem;margin:.5rem 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#4ade80;white-space:pre">${escHtml(c.trim())}</pre>`);
+  s=s.replace(/`([^`]+)`/g,'<code style="background:rgba(168,85,247,.2);padding:.1em .3em;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:.85em">$1</code>');
+  s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/\n/g,'<br>');
+  return s;
+}
+
+async function sendMsg(){
+  if(busy)return;
+  const inp=document.getElementById('inp');
+  const txt=inp.value.trim();if(!txt)return;
+  document.getElementById('sugs').style.display='none';
+  inp.value='';inp.style.height='auto';
+  busy=true;document.getElementById('sendBtn').disabled=true;
+  addMsg('user',escHtml(txt));
+  chatHistory.push({role:'user',content:txt});
+  const typEl=addTyping();
+  try{
+    const res=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'Kamu adalah Aetheria AI, asisten AI canggih yang helpful, cerdas, dan sedikit futuristik. Bantu user dengan coding, menulis, menjawab pertanyaan, dll. Jawab dalam bahasa yang sama dengan user (Indonesia atau Inggris). Untuk kode, format dengan rapi.',
+        messages:chatHistory
+      })
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'Maaf, terjadi kesalahan.';
+    chatHistory.push({role:'assistant',content:reply});
+    typEl.querySelector('.typing-wrap').outerHTML=`<div class="bubble">${fmt(reply)}</div>`;
+    typEl.querySelectorAll('div')[1].textContent=`Aetheria • ${now()}`;
+  } catch(e){
+    typEl.querySelector('.typing-wrap').outerHTML=`<div class="bubble">⚠ Koneksi error. Coba lagi.</div>`;
+  }
+  document.getElementById('chatBody').scrollTop=9999;
+  busy=false;document.getElementById('sendBtn').disabled=false;
+  document.getElementById('inp').focus();
+}
+</script>
+</body>
+</html>
