@@ -131,7 +131,7 @@ textarea::placeholder{color:var(--text2)}
     <div class="status-dot"></div>
     <div class="status-txt">Online</div>
     <div class="header-right">
-      <div class="model-tag">aetheria-official</div>
+      <div class="model-tag">claude-sonnet-4</div>
       <button class="clear-btn" onclick="clearChat()">⌫ Clear</button>
     </div>
   </div>
@@ -416,9 +416,7 @@ async function send(){
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:8000,
-        system:`Kamu adalah Aetheria Official, AI asisten canggih buatan Aetheria. Nama kamu adalah Aetheria Official. Kamu BUKAN Claude, BUKAN produk Anthropic, dan BUKAN AI buatan perusahaan lain. Kalau ada yang tanya siapa kamu, kamu hanya bilang: "Saya Aetheria Official, AI asisten buatan Aetheria." Jangan pernah mengaku sebagai Claude atau menyebut Anthropic.
-
-Kamu adalah expert dalam:
+        system:`Kamu adalah Aetheria AI, asisten AI canggih yang sangat capable dan helpful. Kamu adalah expert dalam:
 
 PROGRAMMING & CODING:
 - Semua bahasa: JavaScript, TypeScript, Python, Java, C/C++, Go, Rust, PHP, Ruby, Swift, Kotlin, dll
