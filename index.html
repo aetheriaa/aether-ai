@@ -16,12 +16,10 @@ html{scroll-behavior:smooth;}
 body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--p);}
 
-/* CURSOR */
 #cur{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--p);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .2s,height .2s,opacity .2s;box-shadow:0 0 10px var(--p),0 0 20px var(--p);}
 #cur2{position:fixed;width:36px;height:36px;border-radius:50%;border:1px solid rgba(191,0,255,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .12s ease;}
 body:hover #cur{opacity:1;}
 
-/* CANVAS */
 #cv{position:fixed;inset:0;pointer-events:none;z-index:0;}
 #matrix{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.04;}
 
@@ -36,7 +34,6 @@ body:hover #cur{opacity:1;}
 .b3{width:300px;height:300px;background:rgba(255,0,204,.03);top:50%;left:50%;transform:translate(-50%,-50%);animation:bf 7s ease-in-out infinite;}
 @keyframes bf{to{transform:translate(35px,-35px);}}
 
-/* LOADING */
 #load{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;transition:opacity .8s,visibility .8s;}
 #load.out{opacity:0;visibility:hidden;}
 .lt{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,8vw,3.2rem);font-weight:900;letter-spacing:.18em;
@@ -50,7 +47,6 @@ body:hover #cur{opacity:1;}
 @keyframes lf{from{width:0;}to{width:100%;}}
 .lperc{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--p);letter-spacing:.1em;}
 
-/* NAVBAR */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:.85rem 1rem;
   background:rgba(4,0,9,.8);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);transition:background .3s;}
@@ -79,7 +75,6 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
 .ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:none;padding:3px;}
 .ham span{display:block;width:22px;height:2px;background:var(--p);border-radius:2px;}
 
-/* MOBILE MENU */
 #mm{display:none;position:fixed;inset:0;z-index:999;
   background:rgba(4,0,9,.98);backdrop-filter:blur(28px);
   flex-direction:column;align-items:center;justify-content:center;gap:2rem;}
@@ -91,10 +86,8 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
   color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:.9rem;cursor:none;transition:.3s;}
 .cbtn2:hover{border-color:var(--p);color:#fff;}
 
-/* WRAP */
 .wrap{max-width:1200px;margin:0 auto;padding:0 1rem;width:100%;}
 
-/* HERO */
 #home{min-height:100vh;padding:7rem 1rem 4rem;display:flex;align-items:center;}
 .hi{width:100%;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1.8rem;}
 
@@ -126,7 +119,6 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
   letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:.3s;white-space:nowrap;cursor:none;}
 .bg:hover{border-color:var(--p);color:#fff;box-shadow:0 0 20px rgba(191,0,255,.2);transform:translateY(-2px);}
 
-/* TERMINAL HERO */
 .trm{width:100%;max-width:480px;background:rgba(4,0,9,.95);
   border:1px solid rgba(191,0,255,.22);border-radius:14px;overflow:hidden;
   box-shadow:0 0 40px rgba(191,0,255,.1),0 24px 60px rgba(0,0,0,.6);}
@@ -140,7 +132,6 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
 .tcur{display:inline-block;width:7px;height:.85em;background:var(--p);animation:cur2 1s step-end infinite;vertical-align:text-bottom;}
 @keyframes cur2{0%,100%{opacity:1;}50%{opacity:0;}}
 
-/* STATS ROW */
 .srow{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;max-width:520px;margin:0 auto;}
 .scard{padding:1.2rem .7rem;background:rgba(10,0,18,.8);border:1px solid var(--border);
   border-radius:12px;text-align:center;transition:.3s;position:relative;overflow:hidden;}
@@ -151,7 +142,6 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
   background:linear-gradient(135deg,var(--p),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .sl{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.2rem;}
 
-/* LIVE STATUS DASHBOARD */
 #liveStatus{padding:0 1rem 3rem;}
 .lstatus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.9rem;}
 .lstatus-card{padding:1.2rem 1rem;background:rgba(10,0,18,.8);border:1px solid var(--border);
@@ -168,7 +158,6 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
 .pulse-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);
   box-shadow:0 0 6px var(--green);animation:bl 1.5s ease infinite;margin-right:.3rem;}
 
-/* FEATURES */
 .fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;width:100%;}
 .fc{padding:1.5rem 1.2rem;background:rgba(10,0,18,.65);border:1px solid var(--border);
   border-radius:14px;transition:.35s;position:relative;overflow:hidden;}
@@ -183,18 +172,15 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
 .fn{font-family:'Orbitron',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.07em;color:#fff;margin-bottom:.4rem;}
 .fd{font-size:.82rem;color:var(--muted);line-height:1.6;}
 
-/* DIVIDER */
 .dv{height:1px;background:linear-gradient(90deg,transparent,rgba(191,0,255,.35),rgba(0,212,255,.25),transparent);
   margin:3rem auto;max-width:800px;position:relative;z-index:1;}
 
-/* SECTION HEADER */
 .sh{text-align:center;margin-bottom:2.5rem;}
 .stag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--p);margin-bottom:.6rem;}
 .stitle{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,5vw,2.6rem);font-weight:700;color:#fff;line-height:1.2;}
 .stitle span{background:linear-gradient(135deg,var(--p),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .ssub{font-size:.95rem;color:var(--muted);line-height:1.7;margin-top:.7rem;}
 
-/* API SECTION */
 #api{padding:0 1rem 4rem;}
 .asearch{position:relative;max-width:620px;margin:0 auto 1.8rem;}
 .asearch input{width:100%;padding:.9rem 1.2rem .9rem 3rem;
@@ -210,7 +196,6 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
   color:var(--muted);background:transparent;cursor:none;transition:.25s;}
 .ct.on,.ct:hover{border-color:var(--p);color:var(--p);background:rgba(191,0,255,.09);box-shadow:0 0 12px rgba(191,0,255,.18);}
 
-/* API CARD */
 .alist{display:flex;flex-direction:column;gap:1rem;}
 .ac{padding:1.4rem;background:rgba(10,0,18,.8);border:1px solid var(--border);
   border-radius:14px;position:relative;overflow:hidden;transition:.3s;}
@@ -243,11 +228,10 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
 
 .cblock{margin-top:1rem;background:rgba(2,0,6,.95);border:1px solid rgba(191,0,255,.12);
   border-radius:8px;padding:.9rem 1.1rem;font-family:'JetBrains Mono',monospace;
-  font-size:.69rem;line-height:1.9;overflow-x:auto;display:none;}
+  font-size:.69rem;line-height:1.9;overflow-x:auto;display:none;white-space:pre;}
 .ck{color:#7c3aed;}.cs{color:var(--b);}.cf{color:var(--p);}.cm{color:rgba(139,122,160,.45);}
 .nor{text-align:center;padding:3rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);display:none;}
 
-/* API PLAYGROUND */
 #playground{padding:0 1rem 4rem;}
 .pgbox{background:rgba(6,0,14,.9);border:1px solid rgba(191,0,255,.22);border-radius:20px;
   overflow:hidden;box-shadow:0 0 60px rgba(191,0,255,.08),0 32px 80px rgba(0,0,0,.7);}
@@ -291,10 +275,8 @@ nav.sc{background:rgba(4,0,9,.97);box-shadow:0 4px 32px rgba(191,0,255,.12);}
   border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* JSON HIGHLIGHT */
 .jk{color:#bf88ff;}.jstr{color:#7fdbff;}.jnum{color:#f9c74f;}.jbool{color:#90f77e;}.jnull{color:var(--muted);}
 
-/* TRY API MODAL */
 #tryModal{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:1rem;
   background:rgba(0,0,0,.75);backdrop-filter:blur(16px);opacity:0;visibility:hidden;transition:.3s;}
 #tryModal.open{opacity:1;visibility:visible;}
@@ -330,7 +312,6 @@ select.tmod-pinput{cursor:none;appearance:none;}
   border-radius:8px;padding:1rem;font-family:'JetBrains Mono',monospace;
   font-size:.68rem;line-height:1.8;max-height:220px;overflow:auto;min-height:60px;}
 
-/* SCRIPTS */
 #scripts{padding:0 1rem 4rem;}
 .sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
 .sc-card{background:rgba(10,0,18,.85);border:1px solid var(--border);border-radius:18px;
@@ -356,7 +337,6 @@ select.tmod-pinput{cursor:none;appearance:none;}
 .sc-meta{display:flex;gap:1rem;margin-top:.7rem;flex-wrap:wrap;}
 .sc-mitem{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);}
 .sc-mitem span{color:var(--p);}
-.stars{color:#f9c74f;font-size:.75rem;letter-spacing:.05em;}
 .sc-body{padding:1rem 1.4rem 1.4rem;}
 .pills{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.2rem;}
 .pill{padding:.18rem .6rem;background:rgba(191,0,255,.05);border:1px solid rgba(191,0,255,.12);
@@ -366,9 +346,7 @@ select.tmod-pinput{cursor:none;appearance:none;}
 .price{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--p);
   text-shadow:0 0 18px rgba(191,0,255,.4);}
 .sc-btns{display:flex;gap:.4rem;}
-.sc-info{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);display:flex;gap:1rem;margin-top:.5rem;flex-wrap:wrap;}
 
-/* DOWNLOAD MODAL */
 #dlModal{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:1rem;
   background:rgba(0,0,0,.8);backdrop-filter:blur(18px);opacity:0;visibility:hidden;transition:.3s;}
 #dlModal.open{opacity:1;visibility:visible;}
@@ -403,7 +381,6 @@ select.tmod-pinput{cursor:none;appearance:none;}
 .dl-bar{height:3px;background:rgba(191,0,255,.12);border-radius:2px;margin:.5rem 0;overflow:hidden;}
 .dl-bfill{height:100%;background:linear-gradient(90deg,var(--p),var(--b));width:0;transition:width .05s;}
 
-/* CONTACT */
 #contact{padding:0 1rem 2rem;}
 .cbox{max-width:760px;margin:0 auto;padding:2.5rem 1.4rem;
   background:rgba(10,0,18,.85);border:1px solid var(--border);
@@ -426,7 +403,6 @@ select.tmod-pinput{cursor:none;appearance:none;}
 .civ{font-family:'Orbitron',sans-serif;font-size:.82rem;}
 .cvp{color:var(--p);}.cvb{color:var(--b);}
 
-/* FOOTER */
 footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(--border);margin-top:2.5rem;}
 .fl{position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:300px;height:1px;
   background:linear-gradient(90deg,transparent,var(--p),var(--b),transparent);box-shadow:0 0 16px var(--p);}
@@ -438,7 +414,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 .flinks a{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);text-decoration:none;transition:.25s;}
 .flinks a:hover{color:var(--p);}
 
-/* TOAST */
 #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(10px);
   background:rgba(191,0,255,.12);border:1px solid rgba(191,0,255,.35);
   border-radius:8px;padding:.65rem 1.4rem;
@@ -446,7 +421,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   opacity:0;transition:.3s;pointer-events:none;z-index:9997;backdrop-filter:blur(16px);white-space:nowrap;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* SCROLL TOP */
 #stop{position:fixed;bottom:1.5rem;right:1rem;z-index:100;
   width:40px;height:40px;background:rgba(191,0,255,.12);border:1px solid rgba(191,0,255,.32);
   border-radius:8px;display:flex;align-items:center;justify-content:center;
@@ -455,12 +429,10 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 #stop.show{opacity:1;pointer-events:all;}
 #stop:hover{background:rgba(191,0,255,.26);transform:translateY(-2px);}
 
-/* REVEAL */
 .rev{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
 .rev.in{opacity:1;transform:none;}
 .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}.d5{transition-delay:.5s;}
 
-/* SCRIPT SEARCH BAR */
 .ssearchbar{position:relative;max-width:460px;margin:0 auto 1.6rem;}
 .ssearchbar input{width:100%;padding:.8rem 1rem .8rem 2.7rem;
   background:rgba(10,0,18,.8);border:1px solid var(--border);border-radius:8px;
@@ -469,7 +441,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 .ssearchbar input:focus{border-color:var(--p);box-shadow:0 0 18px rgba(191,0,255,.16);}
 .ssic{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--p);font-size:.85rem;pointer-events:none;}
 
-/* RESPONSIVE */
 @media(max-width:600px){
   .nl{display:none;}.ham{display:flex;}
   .fgrid{grid-template-columns:1fr 1fr;}
@@ -498,7 +469,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   .trm{max-width:100%;}
 }
 
-/* BOTROW */
 .botrow{display:flex;align-items:center;justify-content:center;gap:1.4rem;flex-wrap:wrap;}
 .bico{text-align:center;}
 .bico span{font-size:2.8rem;display:block;}
@@ -513,14 +483,10 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 </head>
 <body>
 
-<!-- CUSTOM CURSOR -->
 <div id="cur"></div>
 <div id="cur2"></div>
-
-<!-- MATRIX CANVAS -->
 <canvas id="matrix"></canvas>
 
-<!-- LOADING -->
 <div id="load">
   <div class="lt">AETHERIA</div>
   <div class="ls">Elite Developer Platform</div>
@@ -535,7 +501,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 <div class="blob b2"></div>
 <div class="blob b3"></div>
 
-<!-- Mobile Menu -->
 <div id="mm">
   <a href="#home" onclick="cm()">Home</a>
   <a href="#api" onclick="cm()">REST API</a>
@@ -545,7 +510,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   <button class="cbtn2" onclick="cm()">✕ Close</button>
 </div>
 
-<!-- Navbar -->
 <nav id="nav">
   <div class="ni">
     <a href="#home" class="logo">⬡ AETHERIA</a>
@@ -556,7 +520,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
       <a href="#scripts">Scripts</a>
       <a href="#contact">Contact</a>
     </div>
-    <!-- API KEY -->
     <div class="nkey" title="Enter API Key">
       <span class="nkstatus" id="nkstat"></span>
       <input type="password" id="apiKeyInput" placeholder="Enter API Key..." maxlength="64" oninput="handleKeyInput()">
@@ -568,7 +531,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   </div>
 </nav>
 
-<!-- HERO -->
 <section id="home">
   <div class="hi wrap">
     <div class="hleft" style="display:flex;flex-direction:column;gap:1.5rem;">
@@ -601,7 +563,7 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
           <div class="td td1"></div><div class="td td2"></div><div class="td td3"></div>
           <div class="ttl">aetheria — terminal v2.5.0</div>
         </div>
-        <div class="tbody" id="heroTerm">
+        <div class="tbody">
           <div><span class="tp">aetheria@core:~$</span> <span class="tc">system status</span></div>
           <div><span class="to">→ Booting subsystems...</span></div>
           <div><span class="tok">✓ 248 APIs operational</span></div>
@@ -624,7 +586,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   </div>
 </section>
 
-<!-- LIVE STATUS -->
 <div id="liveStatus" class="wrap" style="padding-bottom:3rem;">
   <div class="sh rev">
     <div class="stag">// Live System Dashboard</div>
@@ -640,25 +601,23 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   </div>
 </div>
 
-<!-- Features -->
 <div class="wrap" style="position:relative;z-index:1;padding-bottom:3rem;">
   <div class="fgrid">
     <div class="fc rev"><div class="fi-icon">⚡</div><div class="fn">Fast API</div><div class="fd">Ultra-low latency under 100ms. Engineered for speed at scale.</div></div>
     <div class="fc rev d1"><div class="fi-icon">🛡️</div><div class="fn">Secure System</div><div class="fd">E2E encrypted. Auth-protected endpoints with rate limiting.</div></div>
     <div class="fc rev d2"><div class="fi-icon">💬</div><div class="fn">WA Integration</div><div class="fd">Native WhatsApp multi-device support with webhook triggers.</div></div>
-    <div class="fc rev d3"><div class="fi-icon">👨‍💻</div><div class="fn">Dev Friendly</div><div class="fd">Clean docs, code examples, SDK integrations, and live testing.</div></div>
+    <div class="fc rev d3"><div class="fi-icon">👨‍💻</div><div class="fn">Dev Friendly</div><div class="fd">Clean docs, WA plugin examples, SDK integrations, and live testing.</div></div>
   </div>
 </div>
 
 <div class="dv"></div>
 
-<!-- API SECTION -->
 <section id="api">
   <div class="wrap">
     <div class="sh rev">
       <div class="stag">// REST API Documentation</div>
       <h2 class="stitle">Developer <span>API Hub</span></h2>
-      <div class="ssub">248 endpoints. Copy, test, and integrate in seconds.</div>
+      <div class="ssub">248 endpoints. Copy plugin code, test live, and integrate in seconds.</div>
     </div>
     <div class="asearch rev"><span class="sic">⌕</span><input type="text" id="asrch" placeholder="Search endpoints… e.g. tiktok, ai, qrcode" oninput="fapi()"></div>
     <div class="ctabs rev">
@@ -677,7 +636,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 
 <div class="dv"></div>
 
-<!-- API PLAYGROUND -->
 <section id="playground">
   <div class="wrap">
     <div class="sh rev">
@@ -701,7 +659,7 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
             <option value="POST">POST</option>
           </select>
           <div class="pglabel">// PARAMETERS (JSON)</div>
-          <textarea class="pginput pgtextarea" id="pg-params" placeholder='{"url":"https://...","quality":"hd"}'></textarea>
+          <textarea class="pginput pgtextarea" id="pg-params" placeholder='{"url":"https://vm.tiktok.com/..."}'></textarea>
           <button class="pgexec" id="pg-exec" onclick="pgExecute()">▶ EXECUTE REQUEST</button>
         </div>
         <div class="pgright">
@@ -722,7 +680,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 
 <div class="dv"></div>
 
-<!-- SCRIPTS -->
 <section id="scripts">
   <div class="wrap">
     <div class="sh rev">
@@ -746,7 +703,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 
 <div class="dv"></div>
 
-<!-- CONTACT -->
 <section id="contact">
   <div class="wrap">
     <div class="sh rev">
@@ -777,7 +733,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   </div>
 </section>
 
-<!-- Footer -->
 <footer>
   <div class="fl"></div>
   <div class="fi2 wrap">
@@ -788,9 +743,8 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 </footer>
 
 <button id="stop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<div id="toast" id="toast2"></div>
+<div id="toast"></div>
 
-<!-- TRY API MODAL -->
 <div id="tryModal">
   <div class="tmodal">
     <div class="tmod-head">
@@ -806,7 +760,6 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
   </div>
 </div>
 
-<!-- DOWNLOAD MODAL -->
 <div id="dlModal">
   <div class="dlbox">
     <div class="dl-head">
@@ -833,287 +786,731 @@ footer{position:relative;z-index:1;padding:1.8rem 1rem;border-top:1px solid var(
 </div>
 
 <script>
-// ─── DATA ─────────────────────────────────────────────
+// ─── API DATA (format sesuai plugin WA Bot) ────────────────
 const API_DATA = [
-  {id:'c1',cat:'downloader',method:'GET',ep:'/api/downloader/tiktok',desc:'Download TikTok videos without watermark. Returns direct CDN URL.',params:[{n:'url',req:true,type:'text',ph:'https://vm.tiktok.com/...'},{n:'quality',req:false,type:'select',opts:['hd','sd']}],example:`fetch('https://api.aetheria.my.id/downloader/tiktok?url=VIDEO_URL')\n  .then(r => r.json())\n  .then(data => console.log(data));`,sampleRes:{status:true,video:{url:'https://cdn.aetheria.../vid.mp4',quality:'hd',size:'4.2MB'},author:'@user',likes:12400}},
-  {id:'c2',cat:'ai',method:'POST',ep:'/api/ai/chat',desc:'AI Chat completion powered by GPT-4 backend. Streaming supported.',params:[{n:'message',req:true,type:'text',ph:'Hello, how are you?'},{n:'system',req:false,type:'text',ph:'You are a helpful assistant'},{n:'stream',req:false,type:'select',opts:['false','true']}],example:`fetch('https://api.aetheria.my.id/ai/chat', {\n  method: 'POST',\n  headers: {'Content-Type': 'application/json'},\n  body: JSON.stringify({ message: 'Hello!' })\n}).then(r => r.json()).then(console.log);`,sampleRes:{status:true,reply:'Hello! How can I help you today?',model:'gpt-4',tokens_used:28}},
-  {id:'c3',cat:'downloader',method:'GET',ep:'/api/downloader/youtube',desc:'YouTube video & audio downloader. Supports mp4/mp3 with quality selection.',params:[{n:'url',req:true,type:'text',ph:'https://youtu.be/...'},{n:'format',req:false,type:'select',opts:['mp4','mp3']},{n:'quality',req:false,type:'select',opts:['1080p','720p','480p','360p']}],example:`fetch('https://api.aetheria.my.id/downloader/youtube?url=YT_URL&format=mp4')\n  .then(r => r.json()).then(data => console.log(data));`,sampleRes:{status:true,title:'My YouTube Video',url:'https://cdn.aetheria.../video.mp4',size:'28MB',duration:'3:42'}},
-  {id:'c4',cat:'tools',method:'GET',ep:'/api/tools/qrcode',desc:'Generate QR Code from any text or URL. Returns image buffer or base64.',params:[{n:'text',req:true,type:'text',ph:'https://aetheria.my.id'},{n:'size',req:false,type:'select',opts:['200','400','600']},{n:'color',req:false,type:'text',ph:'#bf00ff'}],example:`fetch('https://api.aetheria.my.id/tools/qrcode?text=Hello')\n  .then(r => r.blob())\n  .then(blob => { /* render image */ });`,sampleRes:{status:true,qr:'data:image/png;base64,iVBORw0K...',size:200,format:'png'}},
-  {id:'c5',cat:'search',method:'GET',ep:'/api/search/google',desc:'Google search scraper returning structured JSON with snippets & links.',params:[{n:'q',req:true,type:'text',ph:'aetheria official'},{n:'limit',req:false,type:'select',opts:['5','10','20']},{n:'lang',req:false,type:'select',opts:['en','id','ja']}],example:`fetch('https://api.aetheria.my.id/search/google?q=aetheria&limit=5')\n  .then(r => r.json()).then(data => console.log(data));`,sampleRes:{status:true,results:[{title:'Aetheria Official',url:'https://aetheria.my.id',snippet:'Elite Developer Tools...'},{title:'Aetheria API Docs',url:'https://docs.aetheria.my.id',snippet:'Full REST API documentation...'}]}},
-  {id:'c6',cat:'anime',method:'GET',ep:'/api/anime/info',desc:'Anime info, episodes & streaming links from MyAnimeList.',params:[{n:'title',req:false,type:'text',ph:'Naruto'},{n:'mal_id',req:false,type:'text',ph:'20'}],example:`fetch('https://api.aetheria.my.id/anime/info?title=Naruto')\n  .then(r => r.json()).then(data => console.log(data));`,sampleRes:{status:true,anime:{title:'Naruto',score:8.1,episodes:220,status:'Finished',genres:['Action','Adventure']}}},
-  {id:'c7',cat:'tools',method:'GET',ep:'/api/tools/sticker',desc:'Convert image/gif to WhatsApp sticker with custom metadata.',params:[{n:'url',req:true,type:'text',ph:'https://i.imgur.com/...'},{n:'pack',req:false,type:'text',ph:'Aetheria'},{n:'author',req:false,type:'text',ph:'@aetheria'}],example:`fetch('https://api.aetheria.my.id/tools/sticker?url=IMG_URL&pack=Aetheria')\n  .then(r => r.json()).then(data => console.log(data));`,sampleRes:{status:true,sticker:'data:image/webp;base64,...',pack:'Aetheria',author:'@aetheria'}},
-  {id:'c8',cat:'other',method:'POST',ep:'/api/tools/imgai',desc:'AI image generation from text prompt using diffusion models.',params:[{n:'prompt',req:true,type:'text',ph:'futuristic neon city at night'},{n:'style',req:false,type:'select',opts:['realistic','anime','cyberpunk','oil-painting']},{n:'size',req:false,type:'select',opts:['512x512','768x768','1024x1024']}],example:`fetch('https://api.aetheria.my.id/tools/imgai', {\n  method: 'POST',\n  body: JSON.stringify({ prompt: 'futuristic city neon' })\n}).then(r => r.json()).then(console.log);`,sampleRes:{status:true,image:'https://cdn.aetheria.../gen_abc123.png',seed:42,model:'stable-diffusion-xl'}},
-  {id:'c9',cat:'downloader',method:'GET',ep:'/api/downloader/instagram',desc:'Download Instagram reels, posts, and stories. Supports carousel.',params:[{n:'url',req:true,type:'text',ph:'https://www.instagram.com/p/...'},{n:'type',req:false,type:'select',opts:['auto','video','image']}],example:`fetch('https://api.aetheria.my.id/downloader/instagram?url=IG_URL')\n  .then(r => r.json()).then(data => console.log(data));`,sampleRes:{status:true,type:'video',url:'https://cdn.aetheria.../ig_video.mp4',thumbnail:'https://cdn.aetheria.../thumb.jpg'}},
-  {id:'c10',cat:'tools',method:'GET',ep:'/api/tools/ocr',desc:'Extract text from any image using OCR. Supports multiple languages.',params:[{n:'url',req:true,type:'text',ph:'https://i.imgur.com/text.png'},{n:'lang',req:false,type:'select',opts:['eng','ind','jpn','chi_sim']}],example:`fetch('https://api.aetheria.my.id/tools/ocr?url=IMG_URL')\n  .then(r => r.json()).then(data => console.log(data));`,sampleRes:{status:true,text:'Hello World\nThis is extracted text',confidence:98.4,lang:'eng'}},
+  {
+    id:'c1', cat:'downloader', method:'GET',
+    ep:'/api/downloader/tiktok',
+    desc:'Download TikTok video tanpa watermark. Mendukung link vm.tiktok, vt.tiktok, dan tiktok.com. Response berisi field data.play, data.author.nickname, data.diggCount.',
+    params:[
+      {n:'url', req:true,  type:'text',   ph:'https://vm.tiktok.com/ZMxxxxx/'},
+      {n:'quality', req:false, type:'select', opts:['hd','sd']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/downloader/tiktok?url=\${encodeURIComponent(url)}\`)
+const data = await res.json()
+
+// Ambil URL video dari berbagai kemungkinan field
+const videoUrl = data?.data?.play
+  || data?.data?.video?.noWatermark
+  || data?.data?.videoUrl
+  || null
+
+const author = data?.data?.author?.nickname || data?.data?.author || 'Unknown'
+const likes  = data?.data?.diggCount || data?.data?.stats?.likeCount || 0
+const title  = data?.data?.title || data?.data?.desc || ''
+
+// Kirim ke WhatsApp
+await sock.sendMessage(m.chat, {
+  video: { url: videoUrl },
+  caption: \`👤 *\${author}*  ❤️ \${Number(likes).toLocaleString()}\n\${title.slice(0,60)}\`,
+  mimetype: 'video/mp4'
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        play:'https://cdn.aetheria.my.id/tiktok/vid_nowm.mp4',
+        video:{ noWatermark:'https://cdn.aetheria.my.id/tiktok/vid_nowm.mp4' },
+        title:'Video TikTok keren #fyp',
+        desc:'Video TikTok keren #fyp',
+        diggCount:12400,
+        stats:{ likeCount:12400 },
+        author:{ nickname:'@creator_keren', uniqueId:'creator_keren' }
+      }
+    }
+  },
+  {
+    id:'c2', cat:'downloader', method:'GET',
+    ep:'/api/downloader/youtube',
+    desc:'Download video/audio YouTube. Support mp4 & mp3 dengan pilihan kualitas. Response berisi data.url, data.title, data.duration.',
+    params:[
+      {n:'url',     req:true,  type:'text',   ph:'https://youtu.be/dQw4w9WgXcQ'},
+      {n:'format',  req:false, type:'select', opts:['mp4','mp3']},
+      {n:'quality', req:false, type:'select', opts:['1080p','720p','480p','360p']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/downloader/youtube?url=\${encodeURIComponent(url)}&format=mp4&quality=720p\`)
+const data = await res.json()
+
+const videoUrl = data?.data?.url
+  || data?.data?.video?.url
+  || data?.result?.download?.url
+  || null
+
+const title    = data?.data?.title    || data?.result?.title    || ''
+const duration = data?.data?.duration || data?.result?.duration || ''
+const size     = data?.data?.size     || ''
+
+await sock.sendMessage(m.chat, {
+  video: { url: videoUrl },
+  caption: \`🎬 *\${title}*\n⏱ \${duration}  📦 \${size}\`,
+  mimetype: 'video/mp4'
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        url:'https://cdn.aetheria.my.id/yt/video_720p.mp4',
+        video:{ url:'https://cdn.aetheria.my.id/yt/video_720p.mp4' },
+        title:'Rick Astley - Never Gonna Give You Up',
+        duration:'3:33', size:'28.4 MB', quality:'720p', format:'mp4'
+      },
+      result:{ title:'Rick Astley - Never Gonna Give You Up', download:{ url:'https://cdn.aetheria.my.id/yt/video_720p.mp4' }, duration:'3:33' }
+    }
+  },
+  {
+    id:'c3', cat:'downloader', method:'GET',
+    ep:'/api/downloader/instagram',
+    desc:'Download reels, post, dan story Instagram. Mendukung carousel. Response berisi data.url, data.type, data.thumbnail.',
+    params:[
+      {n:'url',  req:true,  type:'text',   ph:'https://www.instagram.com/reel/Cxxxxxxx/'},
+      {n:'type', req:false, type:'select', opts:['auto','video','image']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/downloader/instagram?url=\${encodeURIComponent(url)}\`)
+const data = await res.json()
+
+const mediaUrl = data?.data?.url
+  || data?.data?.video?.url
+  || data?.result?.media
+  || null
+
+const type      = data?.data?.type     || 'video'
+const thumbnail = data?.data?.thumbnail || data?.data?.thumb || ''
+const author    = data?.data?.author   || data?.data?.username || 'Unknown'
+
+await sock.sendMessage(m.chat, {
+  video: { url: mediaUrl },
+  caption: \`📸 Instagram · 👤 \${author}\`,
+  mimetype: 'video/mp4'
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        url:'https://cdn.aetheria.my.id/ig/reel_abc.mp4',
+        video:{ url:'https://cdn.aetheria.my.id/ig/reel_abc.mp4' },
+        type:'video',
+        thumbnail:'https://cdn.aetheria.my.id/ig/thumb_abc.jpg',
+        thumb:'https://cdn.aetheria.my.id/ig/thumb_abc.jpg',
+        author:'@ig_creator', username:'ig_creator'
+      },
+      result:{ media:'https://cdn.aetheria.my.id/ig/reel_abc.mp4' }
+    }
+  },
+  {
+    id:'c4', cat:'downloader', method:'GET',
+    ep:'/api/downloader/spotify',
+    desc:'Download lagu Spotify sebagai MP3 dengan metadata lengkap. Response berisi data.audio, data.title, data.artist, data.cover.',
+    params:[
+      {n:'url',     req:true,  type:'text',   ph:'https://open.spotify.com/track/xxxxxxx'},
+      {n:'quality', req:false, type:'select', opts:['320kbps','192kbps','128kbps']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/downloader/spotify?url=\${encodeURIComponent(url)}\`)
+const data = await res.json()
+
+const audioUrl = data?.data?.audio
+  || data?.data?.download
+  || data?.result?.url
+  || null
+
+const title    = data?.data?.title  || data?.data?.name              || ''
+const artist   = data?.data?.artist || data?.data?.artists?.join(', ') || 'Unknown'
+const cover    = data?.data?.cover  || data?.data?.image             || ''
+const duration = data?.data?.duration || ''
+
+await sock.sendMessage(m.chat, {
+  audio: { url: audioUrl },
+  caption: \`🎵 *\${title}*\n🎤 \${artist}  ⏱ \${duration}\`,
+  mimetype: 'audio/mpeg'
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        audio:'https://cdn.aetheria.my.id/spotify/track_abc.mp3',
+        download:'https://cdn.aetheria.my.id/spotify/track_abc.mp3',
+        title:'Blinding Lights', name:'Blinding Lights',
+        artist:'The Weeknd', artists:['The Weeknd'],
+        cover:'https://cdn.aetheria.my.id/spotify/cover_abc.jpg',
+        image:'https://cdn.aetheria.my.id/spotify/cover_abc.jpg',
+        duration:'3:20', quality:'320kbps'
+      },
+      result:{ url:'https://cdn.aetheria.my.id/spotify/track_abc.mp3' }
+    }
+  },
+  {
+    id:'c5', cat:'ai', method:'POST',
+    ep:'/api/ai/chat',
+    desc:'AI Chat completion berbasis GPT-4. Support konteks percakapan. Response berisi data.reply, data.model, data.tokens_used.',
+    params:[
+      {n:'message', req:true,  type:'text',   ph:'Halo, apa kabar?'},
+      {n:'system',  req:false, type:'text',   ph:'Kamu adalah asisten yang membantu'},
+      {n:'stream',  req:false, type:'select', opts:['false','true']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch('https://api.aetheria.my.id/api/ai/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: text, system: 'Kamu asisten yang membantu' })
+})
+const data = await res.json()
+
+const reply  = data?.data?.reply
+  || data?.result?.text
+  || data?.reply
+  || 'Tidak ada respons'
+
+const model  = data?.data?.model || data?.model || 'gpt-4'
+const tokens = data?.data?.tokens_used || data?.usage?.total_tokens || 0
+
+await m.reply(\`🤖 *AI Reply*\n\n\${reply}\n\n_model: \${model} · tokens: \${tokens}_\`)`,
+    sampleRes:{
+      status:true,
+      data:{ reply:'Halo! Saya baik-baik saja. Ada yang bisa saya bantu?', model:'gpt-4o', tokens_used:34 },
+      result:{ text:'Halo! Saya baik-baik saja. Ada yang bisa saya bantu?' },
+      reply:'Halo! Saya baik-baik saja. Ada yang bisa saya bantu?',
+      model:'gpt-4o', usage:{ total_tokens:34 }
+    }
+  },
+  {
+    id:'c6', cat:'ai', method:'POST',
+    ep:'/api/ai/imagine',
+    desc:'Generate gambar dari teks prompt (Stable Diffusion XL). Response berisi data.url, data.seed, data.model.',
+    params:[
+      {n:'prompt', req:true,  type:'text',   ph:'futuristic neon city at night, cyberpunk'},
+      {n:'style',  req:false, type:'select', opts:['realistic','anime','cyberpunk','oil-painting']},
+      {n:'size',   req:false, type:'select', opts:['512x512','768x768','1024x1024']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch('https://api.aetheria.my.id/api/ai/imagine', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prompt, style: 'realistic' })
+})
+const data = await res.json()
+
+const imageUrl = data?.data?.url
+  || data?.data?.image
+  || data?.result?.image
+  || null
+
+const seed  = data?.data?.seed  || data?.seed  || 0
+const model = data?.data?.model || 'stable-diffusion-xl'
+
+await sock.sendMessage(m.chat, {
+  image: { url: imageUrl },
+  caption: \`🎨 *AI Image*\n📝 \${prompt}\n🎲 seed: \${seed}\`
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        url:'https://cdn.aetheria.my.id/imagine/gen_abc123.png',
+        image:'https://cdn.aetheria.my.id/imagine/gen_abc123.png',
+        seed:42, model:'stable-diffusion-xl',
+        prompt:'futuristic neon city at night, cyberpunk'
+      },
+      result:{ image:'https://cdn.aetheria.my.id/imagine/gen_abc123.png' }, seed:42
+    }
+  },
+  {
+    id:'c7', cat:'tools', method:'GET',
+    ep:'/api/tools/qrcode',
+    desc:'Generate QR Code dari teks/URL apapun. Response berisi data.qr (base64 PNG) dan data.image.',
+    params:[
+      {n:'text',  req:true,  type:'text',   ph:'https://aetheria.my.id'},
+      {n:'size',  req:false, type:'select', opts:['200','400','600']},
+      {n:'color', req:false, type:'text',   ph:'#bf00ff'}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/tools/qrcode?text=\${encodeURIComponent(text)}&size=400\`)
+const data = await res.json()
+
+const qrBase64 = data?.data?.qr
+  || data?.data?.image
+  || data?.result?.base64
+  || null
+
+// Strip header dan kirim sebagai gambar
+const imgBuf = Buffer.from(
+  qrBase64.replace(/^data:image\\/png;base64,/, ''), 'base64'
+)
+
+await sock.sendMessage(m.chat, {
+  image: imgBuf,
+  caption: '✅ *QR Code* berhasil dibuat!'
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        qr:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA...',
+        image:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA...',
+        size:400, format:'png'
+      },
+      result:{ base64:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA...' }
+    }
+  },
+  {
+    id:'c8', cat:'tools', method:'GET',
+    ep:'/api/tools/sticker',
+    desc:'Konversi gambar/GIF ke stiker WhatsApp format WebP dengan metadata custom. Response berisi data.sticker (base64 WebP).',
+    params:[
+      {n:'url',    req:true,  type:'text', ph:'https://i.imgur.com/example.jpg'},
+      {n:'pack',   req:false, type:'text', ph:'Aetheria'},
+      {n:'author', req:false, type:'text', ph:'@aetheriashopp'}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/tools/sticker?url=\${encodeURIComponent(imgUrl)}&pack=Aetheria&author=@bot\`)
+const data = await res.json()
+
+const stickerB64 = data?.data?.sticker
+  || data?.data?.webp
+  || data?.result?.sticker
+  || null
+
+const stickerBuf = Buffer.from(
+  stickerB64.replace(/^data:image\\/webp;base64,/, ''), 'base64'
+)
+
+await sock.sendMessage(m.chat, {
+  sticker: stickerBuf
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        sticker:'data:image/webp;base64,UklGRgAA...',
+        webp:'data:image/webp;base64,UklGRgAA...',
+        pack:'Aetheria', author:'@aetheriashopp'
+      },
+      result:{ sticker:'data:image/webp;base64,UklGRgAA...' }
+    }
+  },
+  {
+    id:'c9', cat:'tools', method:'GET',
+    ep:'/api/tools/ocr',
+    desc:'Ekstrak teks dari gambar dengan OCR. Support bahasa Indonesia, Inggris, Jepang, dan China. Response berisi data.text, data.confidence.',
+    params:[
+      {n:'url',  req:true,  type:'text',   ph:'https://i.imgur.com/text_example.png'},
+      {n:'lang', req:false, type:'select', opts:['ind','eng','jpn','chi_sim']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/tools/ocr?url=\${encodeURIComponent(imgUrl)}&lang=ind\`)
+const data = await res.json()
+
+const text       = data?.data?.text
+  || data?.result?.text
+  || data?.text
+  || 'Tidak ada teks terdeteksi'
+
+const confidence = data?.data?.confidence || data?.result?.confidence || 0
+const lang       = data?.data?.lang || 'ind'
+
+await m.reply(\`📄 *Hasil OCR*\n\n\${text}\n\n_Akurasi: \${confidence}%  ·  Bahasa: \${lang}_\`)`,
+    sampleRes:{
+      status:true,
+      data:{
+        text:'Halo ini adalah teks yang diekstrak dari gambar.',
+        confidence:97.8, lang:'ind'
+      },
+      result:{ text:'Halo ini adalah teks yang diekstrak dari gambar.', confidence:97.8 },
+      text:'Halo ini adalah teks yang diekstrak dari gambar.'
+    }
+  },
+  {
+    id:'c10', cat:'search', method:'GET',
+    ep:'/api/search/google',
+    desc:'Google search scraper — mengembalikan JSON terstruktur berisi title, snippet, dan URL per hasil. Response berisi data.results[].',
+    params:[
+      {n:'q',     req:true,  type:'text',   ph:'aetheria official api'},
+      {n:'limit', req:false, type:'select', opts:['5','10','20']},
+      {n:'lang',  req:false, type:'select', opts:['id','en','ja']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/search/google?q=\${encodeURIComponent(query)}&limit=5\`)
+const data = await res.json()
+
+const results = data?.data?.results
+  || data?.result?.results
+  || data?.results
+  || []
+
+const formatted = results.slice(0, 5)
+  .map((r, i) => \`*\${i+1}. \${r.title}*\n\${r.snippet}\n🔗 \${r.url}\`)
+  .join('\n\n')
+
+await m.reply(\`🔍 *Hasil Pencarian*\n\n\${formatted}\`)`,
+    sampleRes:{
+      status:true,
+      data:{
+        results:[
+          { title:'Aetheria Official', url:'https://aetheria.my.id', snippet:'Elite Developer Tools & REST API Platform' },
+          { title:'Aetheria API Docs', url:'https://docs.aetheria.my.id', snippet:'Dokumentasi lengkap 248 endpoint REST API' }
+        ]
+      },
+      result:{ results:[{ title:'Aetheria Official', url:'https://aetheria.my.id', snippet:'Elite Developer Tools' }] },
+      results:[{ title:'Aetheria Official', url:'https://aetheria.my.id', snippet:'Elite Developer Tools' }]
+    }
+  },
+  {
+    id:'c11', cat:'anime', method:'GET',
+    ep:'/api/anime/info',
+    desc:'Info anime lengkap dari MyAnimeList: sinopsis, episode, skor, genre, dan cover. Response berisi data.anime dengan semua field.',
+    params:[
+      {n:'title',  req:false, type:'text', ph:'Naruto'},
+      {n:'mal_id', req:false, type:'text', ph:'20'}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/anime/info?title=\${encodeURIComponent(title)}\`)
+const data = await res.json()
+
+const anime    = data?.data?.anime || data?.result || data?.anime || {}
+const name     = anime?.title    || anime?.name     || 'Unknown'
+const score    = anime?.score    || anime?.rating   || 0
+const episodes = anime?.episodes || anime?.eps      || '?'
+const synopsis = anime?.synopsis || anime?.desc     || ''
+const genres   = anime?.genres?.join(', ')          || ''
+const cover    = anime?.image    || anime?.cover    || ''
+
+await sock.sendMessage(m.chat, {
+  image: { url: cover },
+  caption: \`📺 *\${name}*\n⭐ \${score}  📺 \${episodes} eps\n🎭 \${genres}\n\n\${synopsis.slice(0,200)}...\`
+}, { quoted: m })`,
+    sampleRes:{
+      status:true,
+      data:{
+        anime:{
+          title:'Naruto', name:'Naruto', score:8.1, rating:8.1,
+          episodes:220, eps:220, status:'Finished Airing',
+          synopsis:'Naruto Uzumaki seorang ninja muda yang bermimpi menjadi Hokage...',
+          desc:'Naruto Uzumaki seorang ninja muda yang bermimpi menjadi Hokage...',
+          genres:['Action','Adventure','Comedy'],
+          image:'https://cdn.myanimelist.net/images/anime/13/17405.jpg',
+          cover:'https://cdn.myanimelist.net/images/anime/13/17405.jpg'
+        }
+      },
+      result:{ title:'Naruto', score:8.1, episodes:220 },
+      anime:{ title:'Naruto', score:8.1 }
+    }
+  },
+  {
+    id:'c12', cat:'other', method:'GET',
+    ep:'/api/tools/cuaca',
+    desc:'Cek cuaca realtime suatu kota. Response berisi data.weather dengan suhu, kondisi, kelembaban, dan kecepatan angin.',
+    params:[
+      {n:'city', req:true,  type:'text',   ph:'Jakarta'},
+      {n:'lang', req:false, type:'select', opts:['id','en']}
+    ],
+    example:`import fetch from 'node-fetch'
+
+const res  = await fetch(\`https://api.aetheria.my.id/api/tools/cuaca?city=\${encodeURIComponent(city)}&lang=id\`)
+const data = await res.json()
+
+const weather   = data?.data?.weather || data?.result || data?.weather || {}
+const temp      = weather?.temp      || weather?.temperature || '?'
+const kondisi   = weather?.condition || weather?.desc        || 'Tidak diketahui'
+const humidity  = weather?.humidity  || '?'
+const wind      = weather?.wind      || weather?.windSpeed   || '?'
+const cityName  = weather?.city      || weather?.location    || city
+const icon      = weather?.icon      || '🌡️'
+
+await m.reply(\`\${icon} *Cuaca \${cityName}*\n\n🌡️ Suhu: \${temp}\n🌤️ Kondisi: \${kondisi}\n💧 Kelembaban: \${humidity}\n💨 Angin: \${wind}\`)`,
+    sampleRes:{
+      status:true,
+      data:{
+        weather:{
+          city:'Jakarta', location:'Jakarta, Indonesia',
+          temp:'32°C', temperature:'32°C',
+          condition:'Berawan sebagian', desc:'Berawan sebagian',
+          humidity:'78%', wind:'15 km/h', windSpeed:'15 km/h', icon:'⛅'
+        }
+      },
+      result:{ city:'Jakarta', temp:'32°C', condition:'Berawan sebagian', humidity:'78%' },
+      weather:{ city:'Jakarta', temp:'32°C' }
+    }
+  }
 ];
 
 const SCRIPT_DATA = [
-  {id:'s1',cat:'bot',emoji:'🤖',name:'WhatsApp Bot MD',ver:'v3.2.1',desc:'Full-featured multi-device bot with 100+ commands, AI integration & downloader.',status:'online',price:'Rp 75K',tags:['100+ Commands','AI Chat','Downloader','Multi-Session','Auto Reply'],rating:5,downloads:3240,lastUpdate:'2025-01-08',size:'12.4 MB',changelog:['Added GPT-4o support','Fixed group command handler','New sticker pack manager','Improved anti-crash system'],link:'https://www.mediafire.com/'},
-  {id:'s2',cat:'bot',emoji:'📲',name:'Pushkontak Bot',ver:'v2.1.0',desc:'Mass contact push for WhatsApp with delay & anti-ban logic.',status:'updated',price:'Rp 50K',tags:['Mass Broadcast','Anti-Ban','Delay Control','CSV Import'],rating:4,downloads:1820,lastUpdate:'2025-01-05',size:'5.8 MB',changelog:['Improved anti-ban algorithm','CSV import up to 10,000 contacts','New delay randomizer','Bug fixes'],link:'https://www.mediafire.com/'},
-  {id:'s3',cat:'store',emoji:'🛍️',name:'Store Bot',ver:'v4.0.2',desc:'WA store bot: catalog, order management, payment confirmation & admin panel.',status:'online',price:'Rp 90K',tags:['Catalog System','Auto Order','Payment','Admin Panel'],rating:5,downloads:2650,lastUpdate:'2025-01-07',size:'18.2 MB',changelog:['New admin dashboard','Added QRIS payment gateway','Multi-warehouse support','Performance improvements'],link:'https://www.mediafire.com/'},
-  {id:'s4',cat:'ai',emoji:'🧠',name:'AI Integration Bot',ver:'v2.5.0',desc:'GPT-4 powered WA assistant with context memory, image vision & voice reply.',status:'online',price:'Rp 120K',tags:['GPT-4','Image Vision','Voice Reply','Memory'],rating:5,downloads:4120,lastUpdate:'2025-01-09',size:'22.1 MB',changelog:['GPT-4o integration','Added image vision capability','Voice-to-text reply','Context memory up to 50 messages'],link:'https://www.mediafire.com/'},
+  {id:'s1',cat:'bot',emoji:'🤖',name:'WhatsApp Bot MD',ver:'v3.2.1',desc:'Full-featured multi-device bot dengan 100+ command, AI integration & downloader menggunakan Aetheria API.',status:'online',price:'Rp 75K',tags:['100+ Commands','AI Chat','Downloader','Multi-Session','Auto Reply'],rating:5,downloads:3240,lastUpdate:'2025-01-08',size:'12.4 MB',changelog:['Added GPT-4o support via /api/ai/chat','Fixed group command handler','New sticker pack via /api/tools/sticker','Improved anti-crash system'],link:'https://www.mediafire.com/'},
+  {id:'s2',cat:'bot',emoji:'📲',name:'Pushkontak Bot',ver:'v2.1.0',desc:'Mass contact push untuk WhatsApp dengan delay & anti-ban logic.',status:'updated',price:'Rp 50K',tags:['Mass Broadcast','Anti-Ban','Delay Control','CSV Import'],rating:4,downloads:1820,lastUpdate:'2025-01-05',size:'5.8 MB',changelog:['Improved anti-ban algorithm','CSV import up to 10,000 contacts','New delay randomizer','Bug fixes'],link:'https://www.mediafire.com/'},
+  {id:'s3',cat:'store',emoji:'🛍️',name:'Store Bot',ver:'v4.0.2',desc:'WA store bot: katalog, manajemen order, konfirmasi pembayaran & panel admin.',status:'online',price:'Rp 90K',tags:['Catalog System','Auto Order','Payment','Admin Panel'],rating:5,downloads:2650,lastUpdate:'2025-01-07',size:'18.2 MB',changelog:['New admin dashboard','Added QRIS payment gateway','Multi-warehouse support','Performance improvements'],link:'https://www.mediafire.com/'},
+  {id:'s4',cat:'ai',emoji:'🧠',name:'AI Integration Bot',ver:'v2.5.0',desc:'GPT-4 powered WA assistant dengan context memory, image vision & voice reply via Aetheria API.',status:'online',price:'Rp 120K',tags:['GPT-4','Image Vision','Voice Reply','Memory'],rating:5,downloads:4120,lastUpdate:'2025-01-09',size:'22.1 MB',changelog:['GPT-4o via /api/ai/chat','Added image vision via /api/tools/ocr','Voice-to-text reply','Context memory up to 50 messages'],link:'https://www.mediafire.com/'},
 ];
 
 // ─── STATE ────────────────────────────────────────────
 let apiKey = localStorage.getItem('aetheriaKey') || '';
 let keyVisible = false;
-let CC = 'all';
-let SCC = 'all';
-let currentDlScript = null;
-let currentTryEndpoint = null;
+let CC = 'all', SCC = 'all';
+let currentDlScript = null, currentTryEndpoint = null;
 
 // ─── LOADING ─────────────────────────────────────────
 const ltypes = ['Initializing Core Systems...','Loading API Endpoints...','Establishing Secure Connection...','Booting Interface...'];
-let lti = 0, ltp = 0;
-function lTypeAnim() {
-  const el = document.getElementById('ltype');
-  const s = ltypes[lti % ltypes.length];
-  if (ltp <= s.length) { el.textContent = s.slice(0, ltp++) + '█'; setTimeout(lTypeAnim, 38); }
-  else { lti++; ltp = 0; }
+let lti=0,ltp=0;
+function lTypeAnim(){
+  const el=document.getElementById('ltype');
+  const s=ltypes[lti%ltypes.length];
+  if(ltp<=s.length){el.textContent=s.slice(0,ltp++)+'█';setTimeout(lTypeAnim,38);}
+  else{lti++;ltp=0;}
 }
-let lp = 0;
-function lPercAnim() {
-  const el = document.getElementById('lperc');
-  if (lp <= 100) { el.textContent = lp + '%'; lp += 2; setTimeout(lPercAnim, 48); }
+let lp=0;
+function lPercAnim(){
+  const el=document.getElementById('lperc');
+  if(lp<=100){el.textContent=lp+'%';lp+=2;setTimeout(lPercAnim,48);}
 }
-lTypeAnim(); lPercAnim();
-
-window.addEventListener('load', () => {
-  setTimeout(() => {
+lTypeAnim();lPercAnim();
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
     document.getElementById('load').classList.add('out');
-    startC(); initRev(); renderApi(); renderScripts(); initKey();
-  }, 2600);
+    startC();initRev();renderApi();renderScripts();initKey();
+  },2600);
 });
 
 // ─── PARTICLES ───────────────────────────────────────
-const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
-let W, H, pts = [];
-function rsz() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
-rsz(); window.addEventListener('resize', rsz);
-class P {
-  constructor() { this.r(); }
-  r() { this.x = Math.random() * W; this.y = Math.random() * H; this.vx = (Math.random() - .5) * .22; this.vy = (Math.random() - .5) * .22; this.s = Math.random() * 1.1 + .3; this.age = 0; this.life = Math.random() * 160 + 80; this.col = Math.random() > .5 ? '191,0,255' : '0,212,255'; }
-  u() { this.x += this.vx; this.y += this.vy; this.age++; if (this.age > this.life || this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.r(); }
-  d() { const a = Math.sin(this.age / this.life * Math.PI) * .45; ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2); ctx.fillStyle = `rgba(${this.col},${a})`; ctx.fill(); }
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let W,H,pts=[];
+function rsz(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+rsz();window.addEventListener('resize',rsz);
+class P{
+  constructor(){this.r();}
+  r(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.22;this.vy=(Math.random()-.5)*.22;this.s=Math.random()*1.1+.3;this.age=0;this.life=Math.random()*160+80;this.col=Math.random()>.5?'191,0,255':'0,212,255';}
+  u(){this.x+=this.vx;this.y+=this.vy;this.age++;if(this.age>this.life||this.x<0||this.x>W||this.y<0||this.y>H)this.r();}
+  d(){const a=Math.sin(this.age/this.life*Math.PI)*.45;ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=`rgba(${this.col},${a})`;ctx.fill();}
 }
-for (let i = 0; i < 90; i++) pts.push(new P());
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-  for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) { const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.sqrt(dx * dx + dy * dy); if (d < 90) { ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.strokeStyle = `rgba(191,0,255,${(1 - d / 90) * .08})`; ctx.lineWidth = .35; ctx.stroke(); } }
-  pts.forEach(p => { p.u(); p.d(); });
+for(let i=0;i<90;i++)pts.push(new P());
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<90){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(191,0,255,${(1-d/90)*.08})`;ctx.lineWidth=.35;ctx.stroke();}}
+  pts.forEach(p=>{p.u();p.d();});
   requestAnimationFrame(draw);
 }
 draw();
 
-// ─── MATRIX RAIN ─────────────────────────────────────
-const mc = document.getElementById('matrix'), mctx = mc.getContext('2d');
-function rsm() { mc.width = innerWidth; mc.height = innerHeight; }
-rsm(); window.addEventListener('resize', rsm);
-const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:,./<>?';
-const cols = Math.floor(innerWidth / 18);
-const drops = Array(cols).fill(1);
-function drawMatrix() {
-  mctx.fillStyle = 'rgba(4,0,9,0.05)'; mctx.fillRect(0, 0, mc.width, mc.height);
-  mctx.fillStyle = '#bf00ff'; mctx.font = '12px JetBrains Mono';
-  drops.forEach((y, i) => {
-    mctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 18, y * 18);
-    if (y * 18 > mc.height && Math.random() > 0.975) drops[i] = 0;
+// ─── MATRIX ──────────────────────────────────────────
+const mc=document.getElementById('matrix'),mctx=mc.getContext('2d');
+function rsm(){mc.width=innerWidth;mc.height=innerHeight;}
+rsm();window.addEventListener('resize',rsm);
+const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:,./<>?';
+const cols=Math.floor(innerWidth/18);
+const drops=Array(cols).fill(1);
+function drawMatrix(){
+  mctx.fillStyle='rgba(4,0,9,0.05)';mctx.fillRect(0,0,mc.width,mc.height);
+  mctx.fillStyle='#bf00ff';mctx.font='12px JetBrains Mono';
+  drops.forEach((y,i)=>{
+    mctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*18,y*18);
+    if(y*18>mc.height&&Math.random()>.975)drops[i]=0;
     drops[i]++;
   });
 }
-setInterval(drawMatrix, 60);
+setInterval(drawMatrix,60);
 
 // ─── CURSOR ──────────────────────────────────────────
-const cur = document.getElementById('cur'), cur2 = document.getElementById('cur2');
-let mx = 0, my = 0, cx2 = 0, cy2 = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx + 'px'; cur.style.top = my + 'px'; });
-function animCursor() {
-  cx2 += (mx - cx2) * .12; cy2 += (my - cy2) * .12;
-  cur2.style.left = cx2 + 'px'; cur2.style.top = cy2 + 'px';
-  requestAnimationFrame(animCursor);
-}
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=0,my=0,cx2=0,cy2=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+function animCursor(){cx2+=(mx-cx2)*.12;cy2+=(my-cy2)*.12;cur2.style.left=cx2+'px';cur2.style.top=cy2+'px';requestAnimationFrame(animCursor);}
 animCursor();
-document.querySelectorAll('a,button,input,select,textarea,[onclick]').forEach(el => {
-  el.addEventListener('mouseenter', () => { cur.style.width = '20px'; cur.style.height = '20px'; cur2.style.transform = 'translate(-50%,-50%) scale(1.6)'; });
-  el.addEventListener('mouseleave', () => { cur.style.width = '12px'; cur.style.height = '12px'; cur2.style.transform = 'translate(-50%,-50%) scale(1)'; });
+document.querySelectorAll('a,button,input,select,textarea,[onclick]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='20px';cur.style.height='20px';cur2.style.transform='translate(-50%,-50%) scale(1.6)';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='12px';cur.style.height='12px';cur2.style.transform='translate(-50%,-50%) scale(1)';});
 });
 
 // ─── SCROLL ──────────────────────────────────────────
-window.addEventListener('scroll', () => {
-  document.getElementById('nav').classList.toggle('sc', scrollY > 40);
-  document.getElementById('stop').classList.toggle('show', scrollY > 300);
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('sc',scrollY>40);
+  document.getElementById('stop').classList.toggle('show',scrollY>300);
 });
 
 // ─── COUNTERS ────────────────────────────────────────
-function animN(el, t, sfx = '') { let c = 0; const s = t / 65, i = setInterval(() => { c += s; if (c >= t) { c = t; clearInterval(i); } el.textContent = Math.floor(c).toLocaleString() + sfx; }, 18); }
-function startC() { animN(document.getElementById('s1'), 2847123, '+'); animN(document.getElementById('s2'), 12490, '+'); animN(document.getElementById('s3'), 248, ''); }
-
-// Live status flicker
-setInterval(() => {
-  const latEl = document.getElementById('ls-lat');
-  if (latEl) latEl.textContent = (32 + Math.floor(Math.random() * 30)) + 'ms';
-}, 2800);
+function animN(el,t,sfx=''){let c=0;const s=t/65,i=setInterval(()=>{c+=s;if(c>=t){c=t;clearInterval(i);}el.textContent=Math.floor(c).toLocaleString()+sfx;},18);}
+function startC(){animN(document.getElementById('s1'),2847123,'+');animN(document.getElementById('s2'),12490,'+');animN(document.getElementById('s3'),248,'');}
+setInterval(()=>{const e=document.getElementById('ls-lat');if(e)e.textContent=(32+Math.floor(Math.random()*30))+'ms';},2800);
 
 // ─── REVEAL ──────────────────────────────────────────
-function initRev() {
-  const o = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: .07 });
-  document.querySelectorAll('.rev').forEach(el => o.observe(el));
+function initRev(){
+  const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.07});
+  document.querySelectorAll('.rev').forEach(el=>o.observe(el));
 }
 
 // ─── API KEY ─────────────────────────────────────────
-function initKey() {
-  const inp = document.getElementById('apiKeyInput');
-  if (apiKey) { inp.value = apiKey; document.getElementById('nkstat').classList.add('ok'); }
+function initKey(){const inp=document.getElementById('apiKeyInput');if(apiKey){inp.value=apiKey;document.getElementById('nkstat').classList.add('ok');}}
+function handleKeyInput(){const v=document.getElementById('apiKeyInput').value;document.getElementById('nkstat').classList.toggle('ok',v.length>8);}
+function saveKey(){apiKey=document.getElementById('apiKeyInput').value;localStorage.setItem('aetheriaKey',apiKey);toast(apiKey?'🔑 API Key saved!':'Key cleared');document.getElementById('nkstat').classList.toggle('ok',apiKey.length>8);}
+function toggleKeyVis(){keyVisible=!keyVisible;const inp=document.getElementById('apiKeyInput');inp.type=keyVisible?'text':'password';document.getElementById('nkToggle').textContent=keyVisible?'🙈':'👁';}
+
+// ─── SYNTAX HIGHLIGHT (code) ─────────────────────────
+function hlCode(code) {
+  // escape HTML first
+  code = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // strings
+  code = code.replace(/(&#x27;|&#39;|`[^`]*`|'[^']*'|"[^"]*")/g,'<span style="color:#7fdbff">$1</span>');
+  // keywords
+  code = code.replace(/\b(import|from|const|let|await|async|return|null|true|false|if|else)\b/g,'<span style="color:#bf00ff">$1</span>');
+  // functions/methods
+  code = code.replace(/\b(fetch|JSON|stringify|encodeURIComponent|console|log|sendMessage|reply|Buffer|from|Number|toLocaleString|join|slice|replace)\b/g,'<span style="color:#00d4ff">$1</span>');
+  // comments
+  code = code.replace(/(\/\/[^\n]*)/g,'<span style="color:rgba(139,122,160,.5)">$1</span>');
+  return code;
 }
-function handleKeyInput() { const v = document.getElementById('apiKeyInput').value; const s = document.getElementById('nkstat'); s.classList.toggle('ok', v.length > 8); }
-function saveKey() { apiKey = document.getElementById('apiKeyInput').value; localStorage.setItem('aetheriaKey', apiKey); toast(apiKey ? '🔑 API Key saved!' : 'Key cleared'); document.getElementById('nkstat').classList.toggle('ok', apiKey.length > 8); }
-function toggleKeyVis() { keyVisible = !keyVisible; const inp = document.getElementById('apiKeyInput'); inp.type = keyVisible ? 'text' : 'password'; document.getElementById('nkToggle').textContent = keyVisible ? '🙈' : '👁'; }
 
 // ─── API RENDER ───────────────────────────────────────
-function renderApi() {
-  const list = document.getElementById('alist');
-  list.innerHTML = API_DATA.map((a, i) => `
-    <div class="ac rev${i % 2 ? ' d1' : ''}" data-cat="${a.cat}" id="ac-${a.id}">
+function renderApi(){
+  const list=document.getElementById('alist');
+  list.innerHTML=API_DATA.map((a,i)=>`
+    <div class="ac rev${i%2?' d1':''}" data-cat="${a.cat}" id="ac-${a.id}">
       <div class="atop">
         <div class="aleft">
-          <span class="mb ${a.method === 'GET' ? 'mget' : 'mpost'}">${a.method}</span>
+          <span class="mb ${a.method==='GET'?'mget':'mpost'}">${a.method}</span>
           <code class="eu">${a.ep}</code>
           <span class="astat"><span class="astat-dot"></span>Online</span>
         </div>
         <div class="abtns">
-          <button class="ab ab-c" onclick="cpEp('${a.ep}')">Copy</button>
-          <button class="ab ab-t" onclick="tog('cb-${a.id}',this)">▶ Code</button>
+          <button class="ab ab-c" onclick="cpEp('${a.ep}')">Copy URL</button>
+          <button class="ab ab-t" onclick="tog('cb-${a.id}',this)">▶ Plugin Code</button>
           <button class="ab ab-try" onclick="openTry('${a.id}')">⚡ Try API</button>
         </div>
       </div>
       <div class="ad">${a.desc}</div>
-      <div class="ap">Params: ${a.params.map(p => `<span>${p.n}${p.req ? '*' : ''}</span>`).join(' · ')}</div>
-      <div class="cblock" id="cb-${a.id}"><span class="cm">// Example Request</span>\n${hlCode(a.example)}</div>
+      <div class="ap">Params: ${a.params.map(p=>`<span>${p.n}${p.req?'*':''}</span>`).join(' · ')}</div>
+      <div class="cblock" id="cb-${a.id}">${hlCode(a.example)}</div>
     </div>
   `).join('');
-  setTimeout(initRev, 50);
+  setTimeout(initRev,50);
 }
 
-function hlCode(code) {
-  return code.replace(/('.*?')/g, '<span class="cs">$1</span>').replace(/\b(fetch|then|JSON|stringify|console|log|method|headers|body)\b/g, '<span class="cf">$1</span>');
+function fapi(){
+  const q=document.getElementById('asrch').value.toLowerCase();
+  let v=0;
+  document.querySelectorAll('#alist .ac').forEach(c=>{
+    const m=(!q||c.textContent.toLowerCase().includes(q))&&(CC==='all'||c.dataset.cat===CC);
+    c.style.display=m?'':'none';if(m)v++;
+  });
+  document.getElementById('nor').style.display=v?'none':'block';
 }
-
-// ─── API FILTER ───────────────────────────────────────
-function fapi() { const q = document.getElementById('asrch').value.toLowerCase(); let v = 0; document.querySelectorAll('#alist .ac').forEach(c => { const m = (!q || c.textContent.toLowerCase().includes(q)) && (CC === 'all' || c.dataset.cat === CC); c.style.display = m ? '' : 'none'; if (m) v++; }); document.getElementById('nor').style.display = v ? 'none' : 'block'; }
-function scat(cat, btn) { CC = cat; document.querySelectorAll('.ct').forEach(b => b.classList.remove('on')); btn.classList.add('on'); fapi(); }
-function tog(id, btn) { const el = document.getElementById(id); const op = el.style.display === 'block'; el.style.display = op ? 'none' : 'block'; btn.textContent = op ? '▶ Code' : '▼ Code'; }
-function cpEp(url) { navigator.clipboard.writeText('https://api.aetheria.my.id' + url).catch(() => {}); toast('Endpoint copied ✓'); }
+function scat(cat,btn){CC=cat;document.querySelectorAll('.ct').forEach(b=>b.classList.remove('on'));btn.classList.add('on');fapi();}
+function tog(id,btn){const el=document.getElementById(id);const op=el.style.display==='block';el.style.display=op?'none':'block';btn.textContent=op?'▶ Plugin Code':'▼ Plugin Code';}
+function cpEp(url){navigator.clipboard.writeText('https://api.aetheria.my.id'+url).catch(()=>{});toast('Endpoint copied ✓');}
 
 // ─── TRY API MODAL ────────────────────────────────────
-function openTry(id) {
-  const a = API_DATA.find(x => x.id === id);
-  if (!a) return;
-  currentTryEndpoint = a;
-  document.getElementById('tm-title').textContent = '⚡ Try — ' + a.ep;
-  document.getElementById('tm-ep').textContent = `${a.method} ${a.ep}`;
-  const pCont = document.getElementById('tm-params');
-  pCont.innerHTML = a.params.map(p => `
+function openTry(id){
+  const a=API_DATA.find(x=>x.id===id);if(!a)return;
+  currentTryEndpoint=a;
+  document.getElementById('tm-title').textContent='⚡ Try — '+a.ep;
+  document.getElementById('tm-ep').textContent=`${a.method} ${a.ep}`;
+  const pCont=document.getElementById('tm-params');
+  pCont.innerHTML=a.params.map(p=>`
     <div class="tmod-param">
-      <div class="tmod-plabel">${p.n}${p.req ? ' *' : ' (optional)'}</div>
-      ${p.type === 'select'
-        ? `<select class="tmod-pinput" id="tp-${p.n}"><option value="">— select —</option>${p.opts.map(o => `<option value="${o}">${o}</option>`).join('')}</select>`
-        : `<input class="tmod-pinput" id="tp-${p.n}" type="text" placeholder="${p.ph || ''}">`
+      <div class="tmod-plabel">${p.n}${p.req?' *':' (opsional)'}</div>
+      ${p.type==='select'
+        ?`<select class="tmod-pinput" id="tp-${p.n}"><option value="">— pilih —</option>${p.opts.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`
+        :`<input class="tmod-pinput" id="tp-${p.n}" type="text" placeholder="${p.ph||''}">`
       }
     </div>
   `).join('');
-  document.getElementById('tm-res').innerHTML = '<span style="color:var(--muted);font-size:.66rem;">// Run request to see response...</span>';
+  document.getElementById('tm-res').innerHTML='<span style="color:var(--muted);font-size:.66rem;">// Jalankan request untuk melihat response...</span>';
   document.getElementById('tryModal').classList.add('open');
 }
-function closeTry() { document.getElementById('tryModal').classList.remove('open'); }
+function closeTry(){document.getElementById('tryModal').classList.remove('open');}
 
-async function tmExecute() {
-  const a = currentTryEndpoint;
-  if (!a) return;
-  const btn = document.getElementById('tm-exec');
-  btn.disabled = true; btn.textContent = '⏳ Executing...';
-  const res = document.getElementById('tm-res');
-  res.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;color:var(--p);font-size:.7rem;"><div class="loading-spin"></div> Sending request...</div>';
-  const params = {};
-  a.params.forEach(p => { const v = document.getElementById('tp-' + p.n)?.value; if (v) params[p.n] = v; });
-  await fakeRequest(res, a, params);
-  btn.disabled = false; btn.textContent = '▶ EXECUTE';
-}
-
-async function fakeRequest(resEl, a, params) {
-  await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
-  // Show sample response (real API calls would need CORS headers)
-  const resp = JSON.parse(JSON.stringify(a.sampleRes));
-  if (params.url) resp._note = 'Demo mode — showing sample response';
-  resEl.innerHTML = syntaxHL(JSON.stringify(resp, null, 2));
+async function tmExecute(){
+  const a=currentTryEndpoint;if(!a)return;
+  const btn=document.getElementById('tm-exec');
+  btn.disabled=true;btn.textContent='⏳ Executing...';
+  const res=document.getElementById('tm-res');
+  res.innerHTML='<div style="display:flex;align-items:center;gap:.5rem;color:var(--p);font-size:.7rem;"><div class="loading-spin"></div> Sending request...</div>';
+  const params={};
+  a.params.forEach(p=>{const v=document.getElementById('tp-'+p.n)?.value;if(v)params[p.n]=v;});
+  await new Promise(r=>setTimeout(r,600+Math.random()*800));
+  const resp=JSON.parse(JSON.stringify(a.sampleRes));
+  resp._note='Demo mode — showing sample response. Real calls require valid API key.';
+  res.innerHTML=syntaxHL(JSON.stringify(resp,null,2));
+  btn.disabled=false;btn.textContent='▶ EXECUTE';
 }
 
 // ─── PLAYGROUND ──────────────────────────────────────
-async function pgExecute() {
-  const ep = document.getElementById('pg-ep').value.trim();
-  const method = document.getElementById('pg-method').value;
-  const paramsRaw = document.getElementById('pg-params').value.trim();
-  const out = document.getElementById('pg-out');
-  const statEl = document.getElementById('pg-stat');
-  const timeEl = document.getElementById('pg-time');
-  const btn = document.getElementById('pg-exec');
-  if (!ep) { out.innerHTML = '<span style="color:#ff6060;">// Error: endpoint is required</span>'; return; }
-  btn.disabled = true; btn.textContent = '⏳ Executing...';
-  statEl.className = 'pgstat pgstat-idle'; statEl.textContent = 'LOADING';
-  out.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;color:var(--p);font-size:.7rem;padding:.5rem 0;"><div class="loading-spin"></div> Sending request to API...</div>';
-  const t0 = Date.now();
-  let params = {};
-  if (paramsRaw) try { params = JSON.parse(paramsRaw); } catch (e) { out.innerHTML = '<span style="color:#ff6060;">// JSON parse error: ' + e.message + '</span>'; btn.disabled = false; btn.textContent = '▶ EXECUTE REQUEST'; return; }
-  await new Promise(r => setTimeout(r, 700 + Math.random() * 900));
-  const elapsed = Date.now() - t0;
-  const matched = API_DATA.find(a => a.ep === ep || ep.includes(a.ep.split('/').slice(-1)[0]));
-  let resp, ok;
-  if (matched) { resp = JSON.parse(JSON.stringify(matched.sampleRes)); resp._demo = true; resp._time = elapsed + 'ms'; ok = true; }
-  else { resp = { status: false, error: 'Endpoint not found', code: 404, endpoint: ep }; ok = false; }
-  statEl.className = 'pgstat ' + (ok ? 'pgstat-ok' : 'pgstat-err');
-  statEl.textContent = ok ? '200 OK' : '404 ERROR';
-  timeEl.textContent = elapsed + 'ms';
-  out.innerHTML = syntaxHL(JSON.stringify(resp, null, 2));
-  btn.disabled = false; btn.textContent = '▶ EXECUTE REQUEST';
+async function pgExecute(){
+  const ep=document.getElementById('pg-ep').value.trim();
+  const method=document.getElementById('pg-method').value;
+  const paramsRaw=document.getElementById('pg-params').value.trim();
+  const out=document.getElementById('pg-out');
+  const statEl=document.getElementById('pg-stat');
+  const timeEl=document.getElementById('pg-time');
+  const btn=document.getElementById('pg-exec');
+  if(!ep){out.innerHTML='<span style="color:#ff6060;">// Error: endpoint is required</span>';return;}
+  btn.disabled=true;btn.textContent='⏳ Executing...';
+  statEl.className='pgstat pgstat-idle';statEl.textContent='LOADING';
+  out.innerHTML='<div style="display:flex;align-items:center;gap:.5rem;color:var(--p);font-size:.7rem;padding:.5rem 0;"><div class="loading-spin"></div> Sending request to API...</div>';
+  const t0=Date.now();
+  let params={};
+  if(paramsRaw)try{params=JSON.parse(paramsRaw);}catch(e){out.innerHTML='<span style="color:#ff6060;">// JSON parse error: '+e.message+'</span>';btn.disabled=false;btn.textContent='▶ EXECUTE REQUEST';return;}
+  await new Promise(r=>setTimeout(r,700+Math.random()*900));
+  const elapsed=Date.now()-t0;
+  const matched=API_DATA.find(a=>a.ep===ep||ep.includes(a.ep.split('/').slice(-1)[0]));
+  let resp,ok;
+  if(matched){resp=JSON.parse(JSON.stringify(matched.sampleRes));resp._demo=true;resp._elapsed=elapsed+'ms';resp._note='Demo — showing sample response';ok=true;}
+  else{resp={status:false,error:'Endpoint not found',code:404,endpoint:ep};ok=false;}
+  statEl.className='pgstat '+(ok?'pgstat-ok':'pgstat-err');
+  statEl.textContent=ok?'200 OK':'404 ERROR';
+  timeEl.textContent=elapsed+'ms';
+  out.innerHTML=syntaxHL(JSON.stringify(resp,null,2));
+  btn.disabled=false;btn.textContent='▶ EXECUTE REQUEST';
 }
-
-function copyPgOut() { const t = document.getElementById('pg-out').textContent; navigator.clipboard.writeText(t).catch(() => {}); toast('Response copied ✓'); }
+function copyPgOut(){const t=document.getElementById('pg-out').textContent;navigator.clipboard.writeText(t).catch(()=>{});toast('Response copied ✓');}
 
 // ─── JSON SYNTAX HIGHLIGHT ────────────────────────────
-function syntaxHL(json) {
-  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, m => {
-    let cls = 'jnum';
-    if (/^"/.test(m)) { if (/:$/.test(m)) cls = 'jk'; else cls = 'jstr'; }
-    else if (/true|false/.test(m)) cls = 'jbool';
-    else if (/null/.test(m)) cls = 'jnull';
-    return `<span class="${cls}">${m}</span>`;
+function syntaxHL(json){
+  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,m=>{
+    let cls='jnum';
+    if(/^"/.test(m)){if(/:$/.test(m))cls='jk';else cls='jstr';}
+    else if(/true|false/.test(m))cls='jbool';
+    else if(/null/.test(m))cls='jnull';
+    return`<span class="${cls}">${m}</span>`;
   });
 }
 
-// ─── SCRIPTS RENDER ───────────────────────────────────
-function renderScripts() {
-  const grid = document.getElementById('sgrid');
-  const q = document.getElementById('ssrch')?.value.toLowerCase() || '';
-  const filtered = SCRIPT_DATA.filter(s => (SCC === 'all' || s.cat === SCC) && (!q || s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q)));
-  grid.innerHTML = filtered.map((s, i) => `
-    <div class="sc-card rev${i > 0 ? ' d' + Math.min(i, 5) : ''}">
+// ─── SCRIPTS ─────────────────────────────────────────
+function renderScripts(){
+  const grid=document.getElementById('sgrid');
+  const q=document.getElementById('ssrch')?.value.toLowerCase()||'';
+  const filtered=SCRIPT_DATA.filter(s=>(SCC==='all'||s.cat===SCC)&&(!q||s.name.toLowerCase().includes(q)||s.desc.toLowerCase().includes(q)));
+  grid.innerHTML=filtered.map((s,i)=>`
+    <div class="sc-card rev${i>0?' d'+Math.min(i,5):''}">
       <div class="sc-head">
         <div class="sc-top">
           <div class="sc-emoji">${s.emoji}</div>
           <div class="sc-badges">
-            <span class="sbg ${s.status === 'online' ? 'son' : 'supd'}"><span class="sdd ${s.status === 'online' ? 'sdg' : 'sdy'}"></span>${s.status === 'online' ? 'Online' : 'Updated'}</span>
+            <span class="sbg ${s.status==='online'?'son':'supd'}"><span class="sdd ${s.status==='online'?'sdg':'sdy'}"></span>${s.status==='online'?'Online':'Updated'}</span>
             <span class="sc-ver">${s.ver}</span>
           </div>
         </div>
         <div class="sc-name">${s.name}</div>
         <div class="sc-desc">${s.desc}</div>
         <div class="sc-meta">
-          <div class="sc-mitem"><span>★</span> ${'★'.repeat(s.rating)}${'☆'.repeat(5-s.rating)} ${s.rating}.0</div>
+          <div class="sc-mitem">${'★'.repeat(s.rating)}${'☆'.repeat(5-s.rating)} ${s.rating}.0</div>
           <div class="sc-mitem">↓ <span>${s.downloads.toLocaleString()}</span></div>
           <div class="sc-mitem">📅 <span>${s.lastUpdate}</span></div>
         </div>
       </div>
       <div class="sc-body">
-        <div class="pills">${s.tags.map(t => `<span class="pill">${t}</span>`).join('')}</div>
+        <div class="pills">${s.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</div>
         <div class="sc-footer">
           <div class="price">${s.price}</div>
           <div class="sc-btns">
@@ -1124,74 +1521,57 @@ function renderScripts() {
       </div>
     </div>
   `).join('');
-  setTimeout(initRev, 50);
+  setTimeout(initRev,50);
 }
-
-function filterScripts() { renderScripts(); }
-function sfcat(cat, btn) { SCC = cat; document.querySelectorAll('#scatTabs .ct').forEach(b => b.classList.remove('on')); btn.classList.add('on'); renderScripts(); }
+function filterScripts(){renderScripts();}
+function sfcat(cat,btn){SCC=cat;document.querySelectorAll('#scatTabs .ct').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderScripts();}
 
 // ─── DOWNLOAD MODAL ───────────────────────────────────
-function openDl(id) {
-  const s = SCRIPT_DATA.find(x => x.id === id);
-  if (!s) return;
-  currentDlScript = s;
-  document.getElementById('dl-title').textContent = '⬇ ' + s.name;
-  document.getElementById('dl-info').innerHTML = `
+function openDl(id){
+  const s=SCRIPT_DATA.find(x=>x.id===id);if(!s)return;
+  currentDlScript=s;
+  document.getElementById('dl-title').textContent='⬇ '+s.name;
+  document.getElementById('dl-info').innerHTML=`
     <div class="dl-iitem"><div class="dl-ilbl">Version</div><div class="dl-ival">${s.ver}</div></div>
     <div class="dl-iitem"><div class="dl-ilbl">File Size</div><div class="dl-ival">${s.size}</div></div>
     <div class="dl-iitem"><div class="dl-ilbl">Last Update</div><div class="dl-ival">${s.lastUpdate}</div></div>
     <div class="dl-iitem"><div class="dl-ilbl">Downloads</div><div class="dl-ival">${s.downloads.toLocaleString()}</div></div>
   `;
-  document.getElementById('dl-log').innerHTML = `
+  document.getElementById('dl-log').innerHTML=`
     <div class="dl-cltitle">// CHANGELOG ${s.ver}</div>
-    ${s.changelog.map(c => `<div class="dl-clitem">${c}</div>`).join('')}
+    ${s.changelog.map(c=>`<div class="dl-clitem">${c}</div>`).join('')}
   `;
-  document.getElementById('dl-anim').style.display = 'none';
-  document.getElementById('dl-btn').style.display = 'flex';
+  document.getElementById('dl-anim').style.display='none';
+  document.getElementById('dl-btn').style.display='flex';
   document.getElementById('dlModal').classList.add('open');
 }
-function closeDl() { document.getElementById('dlModal').classList.remove('open'); }
-function copyDlLink() { if (currentDlScript) { navigator.clipboard.writeText(currentDlScript.link).catch(() => {}); toast('Download link copied ✓'); } }
-
-async function startDl() {
-  const anim = document.getElementById('dl-anim');
-  const btn = document.getElementById('dl-btn');
-  const fill = document.getElementById('dl-bfill');
-  const pct = document.getElementById('dl-pct');
-  btn.style.display = 'none'; anim.style.display = 'block';
-  let p = 0;
-  const iv = setInterval(() => {
-    p += Math.random() * 8;
-    if (p >= 100) { p = 100; clearInterval(iv); setTimeout(() => { if (currentDlScript) window.open(currentDlScript.link, '_blank'); closeDl(); toast('Redirecting to MediaFire ✓'); }, 400); }
-    fill.style.width = p + '%'; pct.textContent = Math.floor(p) + '%';
-  }, 120);
+function closeDl(){document.getElementById('dlModal').classList.remove('open');}
+function copyDlLink(){if(currentDlScript){navigator.clipboard.writeText(currentDlScript.link).catch(()=>{});toast('Download link copied ✓');}}
+async function startDl(){
+  const anim=document.getElementById('dl-anim');
+  const btn=document.getElementById('dl-btn');
+  const fill=document.getElementById('dl-bfill');
+  const pct=document.getElementById('dl-pct');
+  btn.style.display='none';anim.style.display='block';
+  let p=0;
+  const iv=setInterval(()=>{
+    p+=Math.random()*8;
+    if(p>=100){p=100;clearInterval(iv);setTimeout(()=>{if(currentDlScript)window.open(currentDlScript.link,'_blank');closeDl();toast('Redirecting to MediaFire ✓');},400);}
+    fill.style.width=p+'%';pct.textContent=Math.floor(p)+'%';
+  },120);
 }
 
 // ─── UTILS ────────────────────────────────────────────
-function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
-function tm() { document.getElementById('mm').classList.toggle('open'); }
-function cm() { document.getElementById('mm').classList.remove('open'); }
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function tm(){document.getElementById('mm').classList.toggle('open');}
+function cm(){document.getElementById('mm').classList.remove('open');}
 
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => { const t = document.querySelector(a.getAttribute('href')); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); } });
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}});
 });
-
-// Close modals on backdrop click
-document.getElementById('tryModal').addEventListener('click', e => { if (e.target === document.getElementById('tryModal')) closeTry(); });
-document.getElementById('dlModal').addEventListener('click', e => { if (e.target === document.getElementById('dlModal')) closeDl(); });
-
-// Keyboard ESC
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTry(); closeDl(); cm(); } });
-
-// Playground quick-fill from API cards
-document.addEventListener('click', e => {
-  if (e.target.classList.contains('ab-try')) return;
-  const eu = e.target.closest('.ac')?.querySelector('.eu');
-  if (eu && (e.target.classList.contains('ab-c') || e.target.classList.contains('ab-t'))) {
-    // handled separately
-  }
-});
+document.getElementById('tryModal').addEventListener('click',e=>{if(e.target===document.getElementById('tryModal'))closeTry();});
+document.getElementById('dlModal').addEventListener('click',e=>{if(e.target===document.getElementById('dlModal'))closeDl();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTry();closeDl();cm();}});
 </script>
 </body>
 </html>
