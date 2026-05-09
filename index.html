@@ -131,7 +131,7 @@ textarea::placeholder{color:var(--text2)}
     <div class="status-dot"></div>
     <div class="status-txt">Online</div>
     <div class="header-right">
-      <div class="model-tag">aetheria-sonnet-4</div>
+      <div class="model-tag">aetheria-official</div>
       <button class="clear-btn" onclick="clearChat()">⌫ Clear</button>
     </div>
   </div>
@@ -201,7 +201,7 @@ for(let i=0;i<60;i++)ps.push(new P());
 // ─── STATE ─────────────────────────────────────────────────
 const history=[];
 let busy=false;
-let attachedFiles=[]; // {name, content, type}
+let attachedFiles=[];
 
 // ─── FILE UPLOAD ───────────────────────────────────────────
 document.getElementById('fileInput').addEventListener('change',async function(){
@@ -256,7 +256,7 @@ function removeFile(i){
 // ─── UTILS ─────────────────────────────────────────────────
 function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px'}
-function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!busy)send();}}
 function useSug(btn){
   document.getElementById('inp').value=btn.textContent.replace(/^[^\s]+\s/,'');
   hideSugs();send();
@@ -283,7 +283,6 @@ function clearChat(){
   renderAttachedFiles();
   const cb=document.getElementById('chatBody');
   cb.innerHTML='<div id="scrollAnchor" style="height:1px"></div>';
-  // re-show welcome
   const w=document.createElement('div');
   w.className='welcome';w.id='welcome';
   w.innerHTML=`<div class="welcome-icon">⬡</div><h2>AETHERIA AI</h2><p>AI asisten canggih yang bisa ngobrol, nulis kode, debug, bikin web, dan benerin source code kamu. Powered by Aetheria Official.</p><div class="caps"><span class="cap">💬 Ngobrol bebas</span><span class="cap">💻 Coding & Debug</span><span class="cap">🌐 Bikin Web</span><span class="cap">📁 Upload File</span><span class="cap">🔍 Code Review</span></div>`;
@@ -334,30 +333,21 @@ function addTyping(){
 
 // ─── FORMAT REPLY ──────────────────────────────────────────
 function formatReply(s){
-  // code blocks with language
   s=s.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,lang,code)=>{
     const l=lang||'code';
     const id='cb_'+Math.random().toString(36).slice(2);
     const escaped=escHtml(code.trim());
     return `<div class="code-block"><div class="code-header"><span class="code-lang">${l.toUpperCase()}</span><button class="code-copy" onclick="copyCode('${id}')">📋 copy</button></div><pre id="${id}">${escaped}</pre></div>`;
   });
-  // inline code
   s=s.replace(/`([^`\n]+)`/g,'<code style="background:rgba(168,85,247,.2);padding:.1em .35em;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:.82em">$1</code>');
-  // bold
   s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-  // italic
   s=s.replace(/\*(.+?)\*/g,'<em>$1</em>');
-  // headers
   s=s.replace(/^### (.+)$/gm,'<div style="font-family:\'Orbitron\',sans-serif;font-size:.8rem;color:var(--neon);margin:.6rem 0 .3rem;letter-spacing:.05em">$1</div>');
   s=s.replace(/^## (.+)$/gm,'<div style="font-family:\'Orbitron\',sans-serif;font-size:.9rem;color:var(--neon);margin:.7rem 0 .3rem;letter-spacing:.05em">$1</div>');
   s=s.replace(/^# (.+)$/gm,'<div style="font-family:\'Orbitron\',sans-serif;font-size:1rem;color:var(--neon);margin:.8rem 0 .4rem;letter-spacing:.08em">$1</div>');
-  // unordered list
   s=s.replace(/^[\-\*] (.+)$/gm,'<div style="padding-left:.8rem;position:relative;margin:.15rem 0"><span style="position:absolute;left:0;color:var(--neon)">▸</span> $1</div>');
-  // ordered list
   s=s.replace(/^\d+\. (.+)$/gm,'<div style="padding-left:.8rem;position:relative;margin:.15rem 0"><span style="color:var(--neon)">→</span> $1</div>');
-  // horizontal rule
   s=s.replace(/^---$/gm,'<hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">');
-  // newlines
   s=s.replace(/\n/g,'<br>');
   return s;
 }
@@ -370,23 +360,15 @@ function copyCode(id){
 // ─── BUILD API MESSAGES ────────────────────────────────────
 function buildUserContent(text, files){
   if(!files||files.length===0) return text;
-
   const content=[];
-  // add text files as text blocks
   const textFiles=files.filter(f=>f.type==='text');
   const imageFiles=files.filter(f=>f.type==='image');
-
   let combinedText=text;
   if(textFiles.length>0){
     const fileParts=textFiles.map(f=>`\n\n--- FILE: ${f.name} ---\n${f.content}\n--- END FILE ---`).join('');
     combinedText=text+fileParts;
   }
-
-  if(imageFiles.length===0){
-    return combinedText;
-  }
-
-  // mixed: text + images
+  if(imageFiles.length===0) return combinedText;
   content.push({type:'text',text:combinedText});
   imageFiles.forEach(f=>{
     content.push({type:'image',source:{type:'base64',media_type:f.mediaType,data:f.content}});
@@ -404,7 +386,6 @@ async function send(){
   hideSugs();
   const userText=txt||(attachedFiles.length>0?`[${attachedFiles.length} file dilampirkan]`:'');
 
-  // display user message
   let displayHtml=escHtml(userText).replace(/\n/g,'<br>');
   if(attachedFiles.length>0){
     const fileList=attachedFiles.map(f=>`<div class="file-preview"><span class="fi">${f.type==='image'?'🖼':'📄'}</span>${escHtml(f.name)}</div>`).join('');
@@ -417,11 +398,9 @@ async function send(){
 
   addMsg('user',displayHtml);
 
-  // build API content
   const userContent=buildUserContent(userText,attachedFiles);
   history.push({role:'user',content:userContent});
 
-  // clear attached files
   attachedFiles=[];
   renderAttachedFiles();
 
@@ -430,11 +409,16 @@ async function send(){
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body:JSON.stringify({
-        model:'aetheria-sonnet-4-20250514',
+        model:'claude-sonnet-4-20250514',
         max_tokens:8000,
-        system:`Kamu adalah Aetheria AI, asisten AI canggih yang sangat capable dan helpful. Kamu adalah expert dalam:
+        system:`Kamu adalah Aetheria Official, AI asisten canggih buatan Aetheria. Nama kamu adalah Aetheria Official. Kamu BUKAN Claude, BUKAN produk Anthropic, dan BUKAN AI buatan perusahaan lain. Kalau ada yang tanya siapa kamu, kamu hanya bilang: "Saya Aetheria Official, AI asisten buatan Aetheria." Jangan pernah mengaku sebagai Claude atau menyebut Anthropic.
+
+Kamu adalah expert dalam:
 
 PROGRAMMING & CODING:
 - Semua bahasa: JavaScript, TypeScript, Python, Java, C/C++, Go, Rust, PHP, Ruby, Swift, Kotlin, dll
@@ -474,7 +458,7 @@ CARA MERESPONS:
       const errMsg=data.error.message||'Terjadi error dari API.';
       typEl.querySelector('.typing-wrap').outerHTML=`<div class="error-bubble">⚠ ${escHtml(errMsg)}</div>`;
       typEl.querySelector('.msg-meta').textContent=`Error • ${now()}`;
-      history.pop(); // remove failed message
+      history.pop();
     } else {
       const reply=data.content?.map(b=>b.type==='text'?b.text:'').filter(Boolean).join('\n')||'Maaf, tidak ada respons.';
       history.push({role:'assistant',content:reply});
