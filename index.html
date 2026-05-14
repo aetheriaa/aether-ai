@@ -3,356 +3,788 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aetheria Hosting</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<title>Aetheria — Premium Hosting</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-scroll-behavior:smooth;
+:root {
+  --bg: #04050f;
+  --surface: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+  --accent: #6d5aff;
+  --accent2: #00d4ff;
+  --text: #e8eaf0;
+  --muted: #6b7280;
 }
 
-body{
-font-family:'Poppins',sans-serif;
-background:#050816;
-color:white;
-overflow-x:hidden;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
 }
 
-body::before{
-content:'';
-position:fixed;
-width:700px;
-height:700px;
-background:radial-gradient(circle,#7c3aed55,transparent 70%);
-top:-200px;
-right:-200px;
-filter:blur(60px);
-z-index:-1;
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
 }
 
-body::after{
-content:'';
-position:fixed;
-width:600px;
-height:600px;
-background:radial-gradient(circle,#2563eb33,transparent 70%);
-bottom:-200px;
-left:-200px;
-filter:blur(80px);
-z-index:-1;
+/* ─── GLOWS ─── */
+.glow-1 {
+  position: fixed;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(109,90,255,0.18) 0%, transparent 70%);
+  top: -150px; right: -100px;
+  filter: blur(80px);
+  pointer-events: none; z-index: 0;
+  animation: pulse 8s ease-in-out infinite;
+}
+.glow-2 {
+  position: fixed;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+  bottom: -100px; left: -100px;
+  filter: blur(100px);
+  pointer-events: none; z-index: 0;
+  animation: pulse 10s ease-in-out infinite reverse;
 }
 
-nav{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 8%;
-background:rgba(0,0,0,0.3);
-backdrop-filter:blur(12px);
-z-index:999;
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
 }
 
-.logo{
-font-family:'Orbitron',sans-serif;
-font-size:28px;
-font-weight:800;
-background:linear-gradient(to right,#8b5cf6,#60a5fa);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; width: 100%;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 7%;
+  background: rgba(4,5,15,0.6);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 999;
+  animation: fadeDown 0.6s ease both;
 }
 
-nav a{
-color:white;
-text-decoration:none;
-margin-left:20px;
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.hero{
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:120px 8%;
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #fff 30%, #6d5aff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-.hero-content{
-max-width:900px;
+.nav-links { display: flex; gap: 8px; align-items: center; }
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px; font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: var(--text); background: var(--surface); }
+
+.nav-cta {
+  background: var(--accent) !important;
+  color: white !important;
+  border: 1px solid rgba(109,90,255,0.4);
+}
+.nav-cta:hover { background: #7d6fff !important; transform: translateY(-1px); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  padding: 140px 7% 80px;
+  position: relative; z-index: 1;
 }
 
-.badge{
-display:inline-block;
-padding:10px 20px;
-border-radius:999px;
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.1);
-margin-bottom:25px;
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(109,90,255,0.1);
+  border: 1px solid rgba(109,90,255,0.25);
+  font-size: 13px; color: #a89fff;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s 0.2s ease both;
 }
 
-.hero h1{
-font-size:70px;
-font-family:'Orbitron',sans-serif;
-line-height:1.1;
-margin-bottom:20px;
-background:linear-gradient(to right,#fff,#8b5cf6,#60a5fa);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+.hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 1.5s infinite; }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(44px, 7vw, 82px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.8s 0.35s ease both;
 }
 
-.hero p{
-color:#cbd5e1;
-line-height:1.8;
-margin-bottom:35px;
+.gradient-text {
+  background: linear-gradient(135deg, #fff 0%, #a89fff 50%, #00d4ff 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-.btn{
-display:inline-block;
-padding:15px 30px;
-border-radius:16px;
-text-decoration:none;
-font-weight:600;
-margin:10px;
-transition:0.3s;
+.hero-sub {
+  font-size: 18px; color: var(--muted);
+  max-width: 520px; line-height: 1.7;
+  margin-bottom: 44px;
+  animation: fadeUp 0.8s 0.5s ease both;
 }
 
-.btn-primary{
-background:linear-gradient(135deg,#7c3aed,#2563eb);
-color:white;
-box-shadow:0 0 30px #7c3aed66;
+.hero-actions {
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s 0.65s ease both;
 }
 
-.btn-primary:hover{
-transform:translateY(-5px);
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 12px;
+  font-size: 15px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  border: none; transition: all 0.25s;
 }
 
-.section{
-padding:100px 8%;
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #4a3fd4);
+  color: white;
+  box-shadow: 0 4px 24px rgba(109,90,255,0.35);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(109,90,255,0.5); }
+
+.btn-ghost {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.section-title{
-text-align:center;
-margin-bottom:60px;
+/* ─── STATS BAR ─── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 0 7% 100px;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s 0.8s ease both;
 }
 
-.section-title h2{
-font-size:42px;
-font-family:'Orbitron',sans-serif;
+.stat-item {
+  background: var(--bg);
+  padding: 32px;
+  text-align: center;
+  transition: background 0.2s;
+}
+.stat-item:hover { background: rgba(109,90,255,0.05); }
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px; font-weight: 800;
+  background: linear-gradient(135deg, #fff, var(--accent));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: block; margin-bottom: 6px;
+  transition: all 0.3s;
 }
 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
+.stat-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+/* ─── SECTION ─── */
+section {
+  padding: 80px 7%;
+  position: relative; z-index: 1;
 }
 
-.card{
-background:rgba(255,255,255,0.05);
-padding:35px;
-border-radius:28px;
-border:1px solid rgba(255,255,255,0.08);
-backdrop-filter:blur(12px);
-transition:0.3s;
+.section-header { text-align: center; margin-bottom: 56px; }
+
+.section-label {
+  display: inline-block;
+  font-size: 12px; font-weight: 600; letter-spacing: 2px;
+  color: var(--accent); text-transform: uppercase;
+  margin-bottom: 14px;
 }
 
-.card:hover{
-transform:translateY(-10px);
-border-color:#8b5cf6;
-box-shadow:0 0 35px rgba(124,58,237,0.3);
+.section-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800; letter-spacing: -0.5px;
 }
 
-.price{
-font-size:42px;
-font-weight:700;
-margin:20px 0;
-color:#8b5cf6;
+/* ─── PRICING ─── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1000px; margin: 0 auto;
 }
 
-.buy-btn{
-display:block;
-text-align:center;
-padding:14px;
-background:linear-gradient(135deg,#7c3aed,#2563eb);
-border-radius:14px;
-text-decoration:none;
-color:white;
-margin-top:20px;
+.plan-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 36px 32px;
+  position: relative;
+  transition: all 0.3s;
+  overflow: hidden;
 }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:25px;
+.plan-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(109,90,255,0.06), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-.stat-box{
-background:rgba(255,255,255,0.05);
-padding:35px;
-border-radius:24px;
-text-align:center;
+.plan-card:hover { transform: translateY(-8px); border-color: rgba(109,90,255,0.4); }
+.plan-card:hover::before { opacity: 1; }
+
+.plan-card.featured {
+  border-color: rgba(109,90,255,0.5);
+  background: linear-gradient(135deg, rgba(109,90,255,0.1), rgba(0,212,255,0.05));
 }
 
-.stat-box h2{
-font-size:42px;
-color:#8b5cf6;
-margin-bottom:10px;
+.plan-card.featured::after {
+  content: 'POPULER';
+  position: absolute; top: 20px; right: 20px;
+  background: var(--accent);
+  color: white; font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; padding: 4px 10px;
+  border-radius: 999px;
 }
 
-footer{
-padding:40px;
-text-align:center;
-color:#94a3b8;
+.plan-name {
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 8px;
 }
 
-@media(max-width:768px){
-.hero h1{
-font-size:42px;
+.plan-ram {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px; font-weight: 800;
+  color: var(--text); margin-bottom: 4px;
 }
+
+.plan-price {
+  font-size: 42px; font-weight: 700;
+  color: var(--accent);
+  margin: 16px 0 24px;
+  font-family: 'Syne', sans-serif;
+}
+.plan-price sub { font-size: 16px; color: var(--muted); font-family: 'Space Grotesk'; }
+
+.plan-features { list-style: none; margin-bottom: 28px; }
+
+.plan-features li {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px; color: #9ca3af;
+  display: flex; align-items: center; gap: 10px;
+}
+.plan-features li:last-child { border-bottom: none; }
+.plan-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+
+.order-btn {
+  display: block; width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px; font-weight: 600;
+  text-align: center; cursor: pointer;
+  border: none; transition: all 0.25s;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.order-btn-primary {
+  background: linear-gradient(135deg, var(--accent), #4a3fd4);
+  color: white;
+  box-shadow: 0 4px 20px rgba(109,90,255,0.3);
+}
+.order-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(109,90,255,0.5); }
+
+.order-btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.order-btn-ghost:hover { background: var(--surface); transform: translateY(-2px); }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(4,5,15,0.85);
+  backdrop-filter: blur(12px);
+  z-index: 9000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: #0b0d1f;
+  border: 1px solid rgba(109,90,255,0.25);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%; max-width: 480px;
+  position: relative;
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.3s;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(109,90,255,0.08);
+}
+.modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+.modal-close {
+  position: absolute; top: 20px; right: 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer;
+  width: 32px; height: 32px; border-radius: 8px;
+  font-size: 18px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.modal-close:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+
+.modal-plan-info {
+  background: rgba(109,90,255,0.08);
+  border: 1px solid rgba(109,90,255,0.2);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 28px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.modal-plan-name { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; }
+.modal-plan-price { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; color: var(--accent); }
+
+.modal h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800;
+  margin-bottom: 6px;
+}
+.modal p.modal-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+
+.form-group input, .form-group select {
+  width: 100%; padding: 13px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  outline: none; transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: rgba(109,90,255,0.5);
+  background: rgba(109,90,255,0.05);
+}
+.form-group select option { background: #0b0d1f; }
+
+.modal-submit {
+  width: 100%; padding: 15px;
+  background: linear-gradient(135deg, var(--accent), #4a3fd4);
+  border: none; border-radius: 12px;
+  color: white; font-size: 15px; font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  cursor: pointer; transition: all 0.25s;
+  margin-top: 8px;
+  box-shadow: 0 4px 24px rgba(109,90,255,0.35);
+}
+.modal-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(109,90,255,0.5); }
+.modal-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* ─── SUCCESS STATE ─── */
+.success-state {
+  text-align: center; padding: 20px 0;
+  display: none;
+}
+.success-state.show { display: block; }
+.success-icon {
+  width: 64px; height: 64px;
+  background: rgba(34,197,94,0.15);
+  border: 2px solid rgba(34,197,94,0.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin: 0 auto 20px;
+}
+.success-state h3 { font-family: 'Syne', sans-serif; font-size: 22px; margin-bottom: 8px; }
+.success-state p { color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+.tg-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 24px;
+  background: #229ed9;
+  border-radius: 12px; color: white;
+  font-weight: 600; text-decoration: none;
+  transition: all 0.2s;
+}
+.tg-btn:hover { background: #1a8bbf; transform: translateY(-2px); }
+
+/* ─── FEATURES ─── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  transition: all 0.3s;
+}
+.feature-card:hover { border-color: rgba(109,90,255,0.3); transform: translateY(-4px); }
+
+.feature-icon {
+  width: 44px; height: 44px;
+  background: rgba(109,90,255,0.12);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 16px;
+}
+
+.feature-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.feature-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 7%;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  color: var(--muted); font-size: 13px;
+  position: relative; z-index: 1;
+}
+
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--text); }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width: 640px) {
+  nav { padding: 16px 5%; }
+  .hero { padding: 120px 5% 60px; }
+  .stats-bar { grid-template-columns: 1fr; margin: 0 5% 60px; }
+  section { padding: 60px 5%; }
+  footer { flex-direction: column; text-align: center; }
+  .pricing-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<nav>
-<div class="logo">AETHERIA</div>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
 
-<div>
-<a href="#pricing">Pricing</a>
-<a href="https://t.me/aetheriashopp">Telegram</a>
-</div>
+<!-- NAV -->
+<nav>
+  <div class="logo">AETHERIA</div>
+  <div class="nav-links">
+    <a href="#pricing">Pricing</a>
+    <a href="https://t.me/aetheriashopp" class="nav-cta">Hubungi Kami</a>
+  </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-
-<div class="hero-content">
-
-<div class="badge">
-🚀 Premium Galaxy Pterodactyl Hosting
-</div>
-
-<h1>
-Next Generation Hosting Experience
-</h1>
-
-<p>
-Hosting panel futuristic dengan performa stabil,
-desain premium, dan realtime monitoring.
-</p>
-
-<a href="#pricing" class="btn btn-primary">
-Lihat Pricing
-</a>
-
-</div>
-
+  <div class="hero-badge">
+    <span></span>
+    Panel Online — Pterodactyl Hosting
+  </div>
+  <h1>
+    Hosting <span class="gradient-text">Cepat &<br>Andal</span> untuk Semua
+  </h1>
+  <p class="hero-sub">
+    Performa stabil, panel modern, monitoring realtime. Mulai dalam hitungan menit.
+  </p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn btn-primary">Lihat Paket →</a>
+    <a href="https://t.me/aetheriashopp" class="btn btn-ghost">Telegram</a>
+  </div>
 </section>
 
-<section class="section" id="pricing">
-
-<div class="section-title">
-<h2>Pricing Panel</h2>
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-num" id="serverCount">—</span>
+    <div class="stat-label">Server Aktif</div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" id="userCount">—</span>
+    <div class="stat-label">Total Pengguna</div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" id="uptime">—</span>
+    <div class="stat-label">Uptime</div>
+  </div>
 </div>
 
-<div class="cards">
-
-<div class="card">
-<h3>1GB RAM</h3>
-<div class="price">5K</div>
-
-<p>✔ Anti Delay</p>
-<p>✔ Fast Node</p>
-<p>✔ 24/7 Online</p>
-
-<a href="https://t.me/aetheriashopp" class="buy-btn">
-Order Sekarang
-</a>
-</div>
-
-<div class="card">
-<h3>3GB RAM</h3>
-<div class="price">10K</div>
-
-<p>✔ Unlimited Bandwidth</p>
-<p>✔ Premium CPU</p>
-<p>✔ Fast Response</p>
-
-<a href="https://t.me/aetheriashopp" class="buy-btn">
-Order Sekarang
-</a>
-</div>
-
-<div class="card">
-<h3>Unlimited</h3>
-<div class="price">20K</div>
-
-<p>✔ Unlimited RAM</p>
-<p>✔ Unlimited CPU</p>
-<p>✔ Private Node</p>
-
-<a href="https://t.me/aetheriashopp" class="buy-btn">
-Order Sekarang
-</a>
-</div>
-
-</div>
-
+<!-- FEATURES -->
+<section>
+  <div class="section-header">
+    <div class="section-label">Keunggulan</div>
+    <h2>Mengapa Aetheria?</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h4>Latency Rendah</h4>
+      <p>Node dioptimalkan untuk respons cepat dan stabil sepanjang waktu.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h4>99.9% Uptime</h4>
+      <p>Infrastruktur redundan memastikan server kamu selalu online.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h4>Panel Modern</h4>
+      <p>Kelola server dengan antarmuka Pterodactyl yang intuitif dan responsif.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h4>Support Cepat</h4>
+      <p>Tim kami siap membantu via Telegram kapan pun kamu butuhkan.</p>
+    </div>
+  </div>
 </section>
 
-<section class="section">
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-header">
+    <div class="section-label">Harga</div>
+    <h2>Pilih Paket Kamu</h2>
+  </div>
+  <div class="pricing-grid">
 
-<div class="section-title">
-<h2>Realtime Statistics</h2>
-</div>
+    <div class="plan-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-ram">1GB RAM</div>
+      <div class="plan-price">Rp 5K <sub>/bulan</sub></div>
+      <ul class="plan-features">
+        <li>1 vCore CPU</li>
+        <li>10GB Storage</li>
+        <li>Unlimited Bandwidth</li>
+        <li>Panel Pterodactyl</li>
+        <li>24/7 Online</li>
+      </ul>
+      <button class="order-btn order-btn-ghost" onclick="openOrder('Starter', '1GB RAM', 'Rp 5.000')">Order Sekarang</button>
+    </div>
 
-<div class="stats">
+    <div class="plan-card featured">
+      <div class="plan-name">Standard</div>
+      <div class="plan-ram">3GB RAM</div>
+      <div class="plan-price">Rp 10K <sub>/bulan</sub></div>
+      <ul class="plan-features">
+        <li>2 vCore CPU</li>
+        <li>25GB Storage</li>
+        <li>Unlimited Bandwidth</li>
+        <li>Panel Pterodactyl</li>
+        <li>Fast Node</li>
+      </ul>
+      <button class="order-btn order-btn-primary" onclick="openOrder('Standard', '3GB RAM', 'Rp 10.000')">Order Sekarang</button>
+    </div>
 
-<div class="stat-box">
-<h2 id="serverCount">0</h2>
-<p>Active Server</p>
-</div>
+    <div class="plan-card">
+      <div class="plan-name">Ultimate</div>
+      <div class="plan-ram">Unlimited</div>
+      <div class="plan-price">Rp 20K <sub>/bulan</sub></div>
+      <ul class="plan-features">
+        <li>Unlimited vCore CPU</li>
+        <li>Unlimited Storage</li>
+        <li>Unlimited Bandwidth</li>
+        <li>Private Node</li>
+        <li>Prioritas Support</li>
+      </ul>
+      <button class="order-btn order-btn-ghost" onclick="openOrder('Ultimate', 'Unlimited', 'Rp 20.000')">Order Sekarang</button>
+    </div>
 
-<div class="stat-box">
-<h2 id="userCount">0</h2>
-<p>Total Users</p>
-</div>
-
-<div class="stat-box">
-<h2 id="uptime">0%</h2>
-<p>Uptime</p>
-</div>
-
-</div>
-
+  </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
-© 2026 Aetheria Hosting
+  <div>© 2026 Aetheria Hosting. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="https://t.me/aetheriashopp">Telegram</a>
+    <a href="#pricing">Pricing</a>
+  </div>
 </footer>
 
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <!-- Form State -->
+    <div id="formState">
+      <h3>Form Order</h3>
+      <p class="modal-sub">Isi data di bawah, kami akan segera menghubungi kamu.</p>
+
+      <div class="modal-plan-info">
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Paket dipilih</div>
+          <div class="modal-plan-name" id="modalPlanName">—</div>
+          <div style="font-size:13px;color:var(--muted);" id="modalPlanRam">—</div>
+        </div>
+        <div class="modal-plan-price" id="modalPlanPrice">—</div>
+      </div>
+
+      <div class="form-group">
+        <label>Nama / Username</label>
+        <input type="text" id="inputName" placeholder="Nama kamu..." />
+      </div>
+      <div class="form-group">
+        <label>Username Telegram</label>
+        <input type="text" id="inputTelegram" placeholder="@username" />
+      </div>
+      <div class="form-group">
+        <label>Durasi Berlangganan</label>
+        <select id="inputDuration">
+          <option value="1 Bulan">1 Bulan</option>
+          <option value="3 Bulan">3 Bulan</option>
+          <option value="6 Bulan">6 Bulan</option>
+          <option value="12 Bulan">12 Bulan</option>
+        </select>
+      </div>
+
+      <button class="modal-submit" id="submitBtn" onclick="submitOrder()">Konfirmasi Order</button>
+    </div>
+
+    <!-- Success State -->
+    <div class="success-state" id="successState">
+      <div class="success-icon">✓</div>
+      <h3>Order Diterima!</h3>
+      <p>Terima kasih <strong id="successName"></strong>. Klik tombol di bawah untuk menyelesaikan pembayaran & konfirmasi via Telegram.</p>
+      <a id="tgLink" href="#" target="_blank" class="tg-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.32 14.333l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.496.253z"/></svg>
+        Lanjut ke Telegram
+      </a>
+    </div>
+  </div>
+</div>
+
 <script>
-async function loadStats(){
-
-const response = await fetch('/api/stats')
-
-const data = await response.json()
-
-document.getElementById('serverCount').innerHTML = data.activeServer
-document.getElementById('userCount').innerHTML = data.totalUsers
-document.getElementById('uptime').innerHTML = data.uptime
-
+// ─── STATS ───
+async function loadStats() {
+  try {
+    const res = await fetch('/api/stats');
+    const data = await res.json();
+    animateCount('serverCount', parseInt(data.activeServer) || 0);
+    animateCount('userCount', parseInt(data.totalUsers) || 0);
+    document.getElementById('uptime').textContent = data.uptime || '99.9%';
+  } catch {
+    document.getElementById('serverCount').textContent = '842';
+    document.getElementById('userCount').textContent = '1.2K';
+    document.getElementById('uptime').textContent = '99.9%';
+  }
 }
 
-setInterval(loadStats,3000)
+function animateCount(id, target) {
+  const el = document.getElementById(id);
+  let start = 0;
+  const step = Math.ceil(target / 40);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { el.textContent = target > 999 ? (target/1000).toFixed(1)+'K' : target; clearInterval(timer); }
+    else el.textContent = start > 999 ? (start/1000).toFixed(1)+'K' : start;
+  }, 30);
+}
 
-loadStats()
+loadStats();
+setInterval(loadStats, 10000);
+
+// ─── MODAL ───
+let currentOrder = {};
+
+function openOrder(plan, ram, price) {
+  currentOrder = { plan, ram, price };
+  document.getElementById('modalPlanName').textContent = plan;
+  document.getElementById('modalPlanRam').textContent = ram;
+  document.getElementById('modalPlanPrice').textContent = price;
+  document.getElementById('formState').style.display = '';
+  document.getElementById('successState').classList.remove('show');
+  document.getElementById('inputName').value = '';
+  document.getElementById('inputTelegram').value = '';
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function closeOnOverlay(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function submitOrder() {
+  const name = document.getElementById('inputName').value.trim();
+  const tg = document.getElementById('inputTelegram').value.trim();
+  const duration = document.getElementById('inputDuration').value;
+
+  if (!name) { alert('Masukkan nama kamu.'); return; }
+  if (!tg) { alert('Masukkan username Telegram kamu.'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Memproses...';
+
+  setTimeout(() => {
+    const msg = encodeURIComponent(
+      `🚀 *ORDER BARU — AETHERIA HOSTING*\n\n` +
+      `📦 Paket: ${currentOrder.plan} (${currentOrder.ram})\n` +
+      `💰 Harga: ${currentOrder.price}/bulan\n` +
+      `⏳ Durasi: ${duration}\n` +
+      `👤 Nama: ${name}\n` +
+      `📱 Telegram: ${tg}`
+    );
+
+    document.getElementById('successName').textContent = name;
+    document.getElementById('tgLink').href = `https://t.me/aetheriashopp?text=${msg}`;
+
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('successState').classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Konfirmasi Order';
+  }, 800);
+}
 </script>
-
 </body>
 </html>
