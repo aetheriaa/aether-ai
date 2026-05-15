@@ -1,847 +1,466 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aetheria API Platform</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #04060f;
-  --surface: rgba(255,255,255,0.03);
-  --border: rgba(255,255,255,0.07);
-  --cyan: #00e5ff;
-  --violet: #8b5cf6;
-  --green: #00ffaa;
-  --text: #c8d0e8;
-  --muted: #5a6480;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  background: var(--bg);
-  color: white;
-  font-family: 'Syne', sans-serif;
-  overflow-x: hidden;
-  cursor: none;
-}
-
-/* Custom cursor */
-#cursor {
-  width: 10px; height: 10px;
-  background: var(--cyan);
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  transition: transform 0.15s ease;
-  mix-blend-mode: screen;
-}
-#cursor-ring {
-  width: 36px; height: 36px;
-  border: 1px solid rgba(0,229,255,0.3);
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9998;
-  transition: left 0.08s ease, top 0.08s ease;
-}
-
-/* Background */
-.bg-noise {
-  position: fixed; inset: 0; z-index: -4;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size: 200px;
-  opacity: 0.5;
-}
-
-.bg-grid {
-  position: fixed; inset: 0; z-index: -3;
-  background:
-    linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
-
-.glow {
-  position: fixed; border-radius: 50%;
-  filter: blur(130px); z-index: -2; pointer-events: none;
-}
-.glow-1 { width:600px;height:600px;background:#3b1fa0;opacity:.12;top:-200px;left:-200px; }
-.glow-2 { width:500px;height:500px;background:#00b4cc;opacity:.08;bottom:-150px;right:-150px; }
-.glow-3 { width:300px;height:300px;background:#8b5cf6;opacity:.1;top:50%;left:50%;transform:translate(-50%,-50%); }
-
-/* NAV */
-nav {
-  position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-  width: 92%; max-width: 1200px;
-  padding: 14px 24px;
-  display: flex; justify-content: space-between; align-items: center;
-  backdrop-filter: blur(20px);
-  background: rgba(4,6,15,0.7);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  z-index: 998;
-}
-
-.logo {
-  font-family: 'Space Mono', monospace;
-  font-size: 18px; font-weight: 700;
-  background: linear-gradient(90deg, var(--cyan), var(--violet));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px;
-}
-
-nav ul { display: flex; gap: 28px; list-style: none; }
-nav ul li a {
-  color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
-  transition: color 0.2s;
-}
-nav ul li a:hover { color: white; }
-
-.nav-btn {
-  padding: 10px 20px; border: 1px solid rgba(0,229,255,0.3);
-  border-radius: 12px; background: rgba(0,229,255,0.06);
-  color: var(--cyan); cursor: pointer; font-family: 'Space Mono', monospace;
-  font-size: 12px; font-weight: 700; letter-spacing: 1px;
-  transition: all 0.2s;
-}
-.nav-btn:hover { background: rgba(0,229,255,0.12); }
-
-/* HERO */
-.hero {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  text-align: center; padding: 140px 24px 80px;
-  position: relative;
-}
-
-.badge {
-  display: inline-block;
-  padding: 8px 18px; border-radius: 999px;
-  border: 1px solid rgba(0,229,255,0.2);
-  background: rgba(0,229,255,0.06);
-  font-family: 'Space Mono', monospace;
-  font-size: 11px; color: var(--cyan); letter-spacing: 2px;
-  margin-bottom: 32px;
-  animation: fadeUp 0.8s ease both;
-}
-
-.hero h1 {
-  font-size: clamp(40px, 7vw, 80px);
-  font-weight: 800; line-height: 1.05;
-  margin-bottom: 24px;
-  animation: fadeUp 0.8s 0.1s ease both;
-}
-
-.gradient {
-  background: linear-gradient(90deg, var(--cyan) 0%, #a78bfa 50%, var(--cyan) 100%);
-  background-size: 200%;
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  animation: shimmer 4s linear infinite;
-}
-
-@keyframes shimmer { to { background-position: 200% center; } }
-
-.typing-wrap {
-  font-family: 'Space Mono', monospace;
-  font-size: 15px; color: var(--muted);
-  height: 28px; margin-bottom: 40px;
-  animation: fadeUp 0.8s 0.2s ease both;
-}
-
-.typing-cursor { color: var(--cyan); animation: blink 1s step-end infinite; }
-@keyframes blink { 50% { opacity: 0; } }
-
-.hero-buttons {
-  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-  animation: fadeUp 0.8s 0.3s ease both;
-}
-
-.btn {
-  padding: 15px 28px; border-radius: 14px; cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
-  border: none; transition: all 0.25s; text-decoration: none; display: inline-block;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  color: white; box-shadow: 0 0 30px rgba(0,229,255,0.2);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(0,229,255,0.35); }
-.btn-secondary {
-  background: var(--surface); color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-secondary:hover { background: rgba(255,255,255,0.06); }
-
-@keyframes fadeUp {
-  from { opacity:0; transform: translateY(20px); }
-  to { opacity:1; transform: translateY(0); }
-}
-
-/* STATS */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px; padding: 0 4% 80px;
-}
-
-.stat-card {
-  padding: 28px 24px; border-radius: 20px;
-  background: var(--surface); border: 1px solid var(--border);
-  position: relative; overflow: hidden;
-}
-.stat-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  opacity: 0.4;
-}
-.stat-card h2 {
-  font-size: 38px; font-weight: 800;
-  background: linear-gradient(90deg, white, var(--text));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
-}
-.stat-card p { color: var(--muted); font-size: 13px; font-weight: 600; }
-
-/* SECTION */
-section { padding: 80px 4%; }
-
-.section-label {
-  font-family: 'Space Mono', monospace; font-size: 11px;
-  color: var(--cyan); letter-spacing: 3px; margin-bottom: 12px;
-}
-.section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; margin-bottom: 10px; }
-.section-sub { color: var(--muted); margin-bottom: 48px; font-size: 15px; }
-
-/* SEARCH */
-.search-wrap { position: relative; margin-bottom: 36px; }
-.search-wrap svg {
-  position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
-  color: var(--muted); pointer-events: none;
-}
-.search-box {
-  width: 100%; padding: 16px 18px 16px 50px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; color: white; font-family: 'Syne', sans-serif;
-  font-size: 15px; outline: none; transition: border-color 0.2s;
-}
-.search-box:focus { border-color: rgba(0,229,255,0.3); }
-.search-box::placeholder { color: var(--muted); }
-
-/* ENDPOINT GRID */
-.endpoint-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.endpoint-card {
-  padding: 22px; border-radius: 20px;
-  background: var(--surface); border: 1px solid var(--border);
-  transition: border-color 0.25s, transform 0.25s;
-  position: relative; overflow: hidden;
-}
-.endpoint-card:hover {
-  border-color: rgba(0,229,255,0.2);
-  transform: translateY(-3px);
-}
-.endpoint-card::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(600px at var(--mx,50%) var(--my,50%), rgba(0,229,255,0.03), transparent 70%);
-  pointer-events: none;
-}
-
-.card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.method-badge {
-  padding: 5px 12px; border-radius: 999px;
-  font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
-}
-.method-get { background: rgba(0,255,170,0.1); color: var(--green); }
-.status-dot { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--green); }
-
-.card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
-.card-desc { color: var(--muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
-
-.code-chip {
-  background: rgba(0,0,0,0.4); border: 1px solid var(--border);
-  padding: 12px 14px; border-radius: 12px;
-  font-family: 'Space Mono', monospace; font-size: 12px;
-  color: var(--cyan); margin-bottom: 16px;
-  word-break: break-all;
-}
-
-.card-actions { display: flex; gap: 10px; }
-.btn-copy, .btn-try {
-  flex: 1; padding: 12px; border: none; border-radius: 12px;
-  cursor: pointer; font-family: 'Syne', sans-serif;
-  font-size: 13px; font-weight: 700; transition: all 0.2s;
-}
-.btn-copy {
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  color: white;
-}
-.btn-copy:hover { opacity: 0.85; }
-.btn-try {
-  background: rgba(255,255,255,0.04); color: var(--cyan);
-  border: 1px solid rgba(0,229,255,0.15);
-}
-.btn-try:hover { background: rgba(0,229,255,0.08); }
-
-/* API TESTER */
-.tester { margin-top: 70px; }
-
-.tester-bar {
-  display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
-}
-.tester-bar input {
-  flex: 1; min-width: 200px;
-  padding: 16px 18px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 14px; color: white; font-family: 'Space Mono', monospace;
-  font-size: 13px; outline: none; transition: border-color 0.2s;
-}
-.tester-bar input:focus { border-color: rgba(0,229,255,0.3); }
-.tester-bar button {
-  padding: 16px 28px; border: none; border-radius: 14px;
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  color: white; cursor: pointer; font-family: 'Syne', sans-serif;
-  font-size: 14px; font-weight: 700; transition: opacity 0.2s;
-  white-space: nowrap;
-}
-.tester-bar button:hover { opacity: 0.85; }
-.tester-bar button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.response-panel {
-  border: 1px solid var(--border); border-radius: 20px; overflow: hidden;
-}
-.response-topbar {
-  padding: 14px 20px;
-  display: flex; justify-content: space-between; align-items: center;
-  border-bottom: 1px solid var(--border);
-  background: rgba(0,0,0,0.2);
-}
-.response-topbar span { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
-.res-status { font-family: 'Space Mono', monospace; font-size: 12px; }
-.res-status.ok { color: var(--green); }
-.res-status.err { color: #f87171; }
-
-.response-body {
-  padding: 24px; min-height: 200px; max-height: 420px;
-  overflow: auto; position: relative;
-}
-
-#res-json {
-  font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.8;
-  color: var(--green); white-space: pre-wrap; word-break: break-all;
-}
-
-/* Image result */
-#res-image {
-  display: none; margin-top: 16px;
-}
-#res-image img {
-  max-width: 100%; max-height: 320px; border-radius: 14px;
-  border: 1px solid var(--border);
-}
-
-.loader {
-  display: none;
-  position: absolute; inset: 0;
-  background: rgba(4,6,15,0.6);
-  align-items: center; justify-content: center;
-}
-.loader.show { display: flex; }
-.spinner {
-  width: 32px; height: 32px;
-  border: 2px solid var(--border);
-  border-top-color: var(--cyan);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* TERMINAL */
-.terminal {
-  margin-top: 48px; border: 1px solid var(--border);
-  border-radius: 20px; overflow: hidden;
-}
-.term-header {
-  padding: 14px 20px;
-  display: flex; align-items: center; gap: 8px;
-  background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border);
-}
-.term-dot { width: 10px; height: 10px; border-radius: 50%; }
-.term-dot.r { background: #ff5f56; }
-.term-dot.y { background: #ffbd2e; }
-.term-dot.g { background: #27c93f; }
-.term-title { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-left: 8px; }
-.term-body {
-  padding: 20px 24px; min-height: 180px; max-height: 220px;
-  overflow-y: auto; background: rgba(0,0,0,0.2);
-}
-.term-line {
-  font-family: 'Space Mono', monospace; font-size: 12px;
-  color: var(--green); margin-bottom: 6px; opacity: 0;
-  animation: fadeIn 0.3s ease forwards;
-}
-.term-line .prompt { color: var(--cyan); }
-.term-line .ts { color: var(--muted); margin-right: 12px; }
-@keyframes fadeIn { to { opacity: 1; } }
-
-/* FOOTER */
-footer {
-  padding: 60px 4%; text-align: center;
-  border-top: 1px solid var(--border); margin-top: 60px;
-}
-.footer-logo {
-  font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700;
-  background: linear-gradient(90deg, var(--cyan), var(--violet));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 12px;
-}
-footer p { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
-.socials { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.socials a {
-  padding: 12px 22px; border-radius: 12px; text-decoration: none;
-  background: var(--surface); color: var(--text);
-  border: 1px solid var(--border); font-size: 13px; font-weight: 600;
-  transition: all 0.2s;
-}
-.socials a:hover { border-color: rgba(0,229,255,0.3); color: var(--cyan); }
-
-/* TOAST */
-.toast {
-  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
-  padding: 14px 24px; border-radius: 14px;
-  background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25);
-  color: var(--cyan); font-family: 'Space Mono', monospace; font-size: 13px;
-  z-index: 9997; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  pointer-events: none;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-
-@media (max-width: 768px) {
-  nav ul { display: none; }
-  .tester-bar { flex-direction: column; }
-  .tester-bar input { width: 100%; }
-}
-</style>
-</head>
-<body>
-
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
-<div class="bg-noise"></div>
-<div class="bg-grid"></div>
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
-<div class="glow glow-3"></div>
-
-<nav>
-  <div class="logo">AETHERIA</div>
-  <ul>
-    <li><a href="#api">Endpoints</a></li>
-    <li><a href="#tester">Tester</a></li>
-    <li><a href="#terminal">Logs</a></li>
-  </ul>
-  <button class="nav-btn" onclick="showToast('Dashboard coming soon...')">DASHBOARD</button>
-</nav>
-
-<section class="hero">
-  <div class="hero-content">
-    <div class="badge">⚡ PREMIUM REST API PLATFORM</div>
-    <h1>Build The Future With<br><span class="gradient">Aetheria API</span></h1>
-    <div class="typing-wrap">
-      <span id="typing-text"></span><span class="typing-cursor">|</span>
-    </div>
-    <div class="hero-buttons">
-      <a href="#api" class="btn btn-primary">Explore Endpoints</a>
-      <a href="#tester" class="btn btn-secondary">Try Live Tester</a>
-    </div>
-  </div>
-</section>
-
-<div class="stats">
-  <div class="stat-card">
-    <h2 id="req-count">0</h2>
-    <p>Total API Requests</p>
-  </div>
-  <div class="stat-card">
-    <h2 id="dev-count">0</h2>
-    <p>Active Developers</p>
-  </div>
-  <div class="stat-card">
-    <h2>99.99%</h2>
-    <p>Uptime SLA</p>
-  </div>
-  <div class="stat-card">
-    <h2>120+</h2>
-    <p>Available Endpoints</p>
-  </div>
-</div>
-
-<section id="api">
-  <div class="section-label">// ENDPOINTS</div>
-  <h2 class="section-title">Premium API Endpoints</h2>
-  <p class="section-sub">Modern REST API ecosystem — hit real endpoints, get real results.</p>
-
-  <div class="search-wrap">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-    </svg>
-    <input class="search-box" type="text" id="search" placeholder="Search endpoints..." oninput="filterCards()">
-  </div>
-
-  <div class="endpoint-grid" id="endpoint-grid">
-
-    <div class="endpoint-card" data-name="AI Chat">
-      <div class="card-top">
-        <span class="method-badge method-get">GET</span>
-        <span class="status-dot">● ONLINE</span>
-      </div>
-      <div class="card-title">AI Chat</div>
-      <div class="card-desc">AI chatbot response endpoint. Send any text and get intelligent replies.</div>
-      <div class="code-chip">/api/ai/chat?text=hello</div>
-      <div class="card-actions">
-        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/ai/chat?text=hello')">Copy URL</button>
-        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/ai/chat?text=hello')">Try →</button>
-      </div>
-    </div>
-
-    <div class="endpoint-card" data-name="Anime Waifu">
-      <div class="card-top">
-        <span class="method-badge method-get">GET</span>
-        <span class="status-dot">● ONLINE</span>
-      </div>
-      <div class="card-title">Anime Waifu</div>
-      <div class="card-desc">Random anime waifu image. Returns image URL from the Aetheria anime database.</div>
-      <div class="code-chip">/api/anime/waifu</div>
-      <div class="card-actions">
-        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/anime/waifu')">Copy URL</button>
-        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/anime/waifu')">Try →</button>
-      </div>
-    </div>
-
-    <div class="endpoint-card" data-name="TikTok Downloader">
-      <div class="card-top">
-        <span class="method-badge method-get">GET</span>
-        <span class="status-dot">● ONLINE</span>
-      </div>
-      <div class="card-title">TikTok Downloader</div>
-      <div class="card-desc">Download TikTok videos without watermark. Pass the video URL as parameter.</div>
-      <div class="code-chip">/api/downloader/tiktok?url=...</div>
-      <div class="card-actions">
-        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/downloader/tiktok?url=')">Copy URL</button>
-        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/downloader/tiktok?url=https://tiktok.com')">Try →</button>
-      </div>
-    </div>
-
-    <div class="endpoint-card" data-name="Random Quote">
-      <div class="card-top">
-        <span class="method-badge method-get">GET</span>
-        <span class="status-dot">● ONLINE</span>
-      </div>
-      <div class="card-title">Random Quote</div>
-      <div class="card-desc">Get an inspirational or random quote from our curated database.</div>
-      <div class="code-chip">/api/random/quote</div>
-      <div class="card-actions">
-        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/random/quote')">Copy URL</button>
-        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/random/quote')">Try →</button>
-      </div>
-    </div>
-
-    <div class="endpoint-card" data-name="Image Generator">
-      <div class="card-top">
-        <span class="method-badge method-get">GET</span>
-        <span class="status-dot">● ONLINE</span>
-      </div>
-      <div class="card-title">Image Generator</div>
-      <div class="card-desc">Generate images from text prompts using AI image generation models.</div>
-      <div class="code-chip">/api/image/generate?prompt=...</div>
-      <div class="card-actions">
-        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/image/generate?prompt=anime+girl')">Copy URL</button>
-        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/image/generate?prompt=anime+girl')">Try →</button>
-      </div>
-    </div>
-
-    <div class="endpoint-card" data-name="Google Search">
-      <div class="card-top">
-        <span class="method-badge method-get">GET</span>
-        <span class="status-dot">● ONLINE</span>
-      </div>
-      <div class="card-title">Google Search</div>
-      <div class="card-desc">Scrape Google search results and return structured JSON data.</div>
-      <div class="code-chip">/api/search/google?q=...</div>
-      <div class="card-actions">
-        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/search/google?q=aetheria')">Copy URL</button>
-        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/search/google?q=aetheria')">Try →</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- TESTER -->
-  <div class="tester" id="tester">
-    <div class="section-label">// LIVE TESTER</div>
-    <h2 class="section-title" style="margin-bottom:24px">API Tester</h2>
-
-    <div class="tester-bar">
-      <input type="text" id="api-input" value="https://api.aetheria.my.id/api/anime/waifu" placeholder="Enter full URL...">
-      <button id="exec-btn" onclick="runApi()">⚡ Execute</button>
-    </div>
-
-    <div class="response-panel">
-      <div class="response-topbar">
-        <span>RESPONSE</span>
-        <span class="res-status" id="res-status">—</span>
-      </div>
-      <div class="response-body">
-        <div class="loader" id="loader"><div class="spinner"></div></div>
-        <pre id="res-json">// Hit Execute to call the API...</pre>
-        <div id="res-image">
-          <p style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px;">// IMAGE RESULT</p>
-          <img id="res-img-el" src="" alt="API Image Result">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TERMINAL -->
-  <div class="terminal" id="terminal">
-    <div class="term-header">
-      <div class="term-dot r"></div>
-      <div class="term-dot y"></div>
-      <div class="term-dot g"></div>
-      <span class="term-title">aetheria-api — live request log</span>
-    </div>
-    <div class="term-body" id="term-body">
-      <div class="term-line"><span class="prompt">$</span> system initialized → Aetheria API Platform v3.0</div>
-      <div class="term-line"><span class="prompt">$</span> all endpoints online → ready</div>
-    </div>
-  </div>
-
-</section>
-
-<footer>
-  <div class="footer-logo">AETHERIA</div>
-  <p>Premium Cyber Futuristic REST API Platform</p>
-  <div class="socials">
-    <a href="https://t.me/aetheriashopp" target="_blank">✈ Telegram</a>
-    <a href="https://youtube.com/@aetheriaoffc" target="_blank">▶ YouTube</a>
-  </div>
-</footer>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// ── CURSOR ──────────────────────────────────────────────
-const cur = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cur.style.left = (mx - 5) + 'px'; cur.style.top = (my - 5) + 'px';
-});
-setInterval(() => {
-  rx += (mx - rx) * 0.12; ry += (my - ry) *.12;
-  ring.style.left = (rx - 18) + 'px'; ring.style.top = (ry - 18) + 'px';
-}, 16);
-document.querySelectorAll('button, a, input').forEach(el => {
-  el.addEventListener('mouseenter', () => cur.style.transform = 'scale(3)');
-  el.addEventListener('mouseleave', () => cur.style.transform = 'scale(1)');
-});
-
-// ── CARD GLOW ON MOUSE ──────────────────────────────────
-document.querySelectorAll('.endpoint-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
-    card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
-  });
-});
-
-// ── TYPING ──────────────────────────────────────────────
-const phrases = [
-  'Cyber Futuristic APIs ⚡',
-  'Powering 120+ Endpoints',
-  'Real-time REST API calls',
-  'Built for Developers 🛠️',
+import { useState, useEffect, useRef } from "react";
+
+const BASE = "https://api.aetheria.my.id";
+
+const ENDPOINTS = [
+  { name: "Anime Waifu",       path: "/api/anime/waifu",              desc: "Random anime waifu image",           example: "/api/anime/waifu" },
+  { name: "AI Chat",           path: "/api/ai/chat?text=hello",        desc: "AI chatbot response",                example: "/api/ai/chat?text=hello" },
+  { name: "TikTok Downloader", path: "/api/downloader/tiktok?url=",    desc: "Download TikTok tanpa watermark",    example: "/api/downloader/tiktok?url=https://tiktok.com" },
+  { name: "Random Quote",      path: "/api/random/quote",              desc: "Kutipan inspiratif random",          example: "/api/random/quote" },
+  { name: "Image Generate",    path: "/api/image/generate?prompt=cat", desc: "Generate gambar dari teks prompt",   example: "/api/image/generate?prompt=anime+girl" },
+  { name: "Google Search",     path: "/api/search/google?q=aetheria",  desc: "Scrape hasil pencarian Google",      example: "/api/search/google?q=aetheria" },
 ];
-let pi = 0, ci = 0, del = false;
-const typEl = document.getElementById('typing-text');
-setInterval(() => {
-  const phrase = phrases[pi];
-  if (!del) {
-    typEl.textContent = phrase.slice(0, ++ci);
-    if (ci === phrase.length) { del = true; setTimeout(() => {}, 1200); }
-  } else {
-    typEl.textContent = phrase.slice(0, --ci);
-    if (ci === 0) { del = false; pi = (pi + 1) % phrases.length; }
+
+const SYSTEM_PROMPT = `You are a mock REST API server for "Aetheria API Platform". 
+When given an endpoint path, respond ONLY with a valid JSON object (no markdown, no explanation).
+
+Rules per endpoint:
+- /api/anime/waifu → return { status: true, creator: "Aetheria", endpoint: "/api/anime/waifu", runtime: "0.21s", result: { url: "https://i.waifu.pics/~tEBRsxI.jpg", character: "Rem", anime: "Re:Zero", tags: ["cute","moe","blue hair"] } }
+- /api/ai/chat → extract the "text" param, reply naturally in "reply" field, return { status: true, creator: "Aetheria", endpoint: "/api/ai/chat", runtime: "0.44s", result: { query: "<the text param>", reply: "<intelligent reply to the query>" } }
+- /api/downloader/tiktok → return { status: true, creator: "Aetheria", endpoint: "/api/downloader/tiktok", runtime: "1.12s", result: { title: "TikTok Video", author: "@user", duration: "00:30", downloads: { nowatermark: "https://dl.aetheria.my.id/video/abc123.mp4", audio: "https://dl.aetheria.my.id/audio/abc123.mp3" } } }
+- /api/random/quote → return { status: true, creator: "Aetheria", endpoint: "/api/random/quote", runtime: "0.09s", result: { quote: "<an inspirational quote>", author: "<real author name>", category: "inspiration" } }
+- /api/image/generate → extract "prompt", return { status: true, creator: "Aetheria", endpoint: "/api/image/generate", runtime: "2.31s", result: { prompt: "<prompt>", url: "https://image.pollinations.ai/prompt/<url-encoded-prompt>", width: 512, height: 512, model: "flux" } }
+- /api/search/google → extract "q", return { status: true, creator: "Aetheria", endpoint: "/api/search/google", runtime: "0.67s", result: { query: "<q>", total: 3, results: [ { title: "...", url: "https://example.com", snippet: "..." }, { title: "...", url: "https://example2.com", snippet: "..." } ] } }
+- unknown endpoint → return { status: false, creator: "Aetheria", error: "Endpoint not found", code: 404 }
+
+Always return ONLY valid JSON. No markdown fences. Be creative with content but keep structure exact.`;
+
+export default function App() {
+  const [input, setInput] = useState(`${BASE}/api/anime/waifu`);
+  const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
+  const [logs, setLogs] = useState([
+    "$ system initialized → Aetheria API Platform v3.0",
+    "$ all endpoints online → ready",
+  ]);
+  const [search, setSearch] = useState("");
+  const [copied, setCopied] = useState(null);
+  const [counter, setCounter] = useState({ req: 0, dev: 0 });
+  const termRef = useRef(null);
+  const timerRef = useRef(null);
+
+  // Counter animation
+  useEffect(() => {
+    let req = 0, dev = 0;
+    const t = setInterval(() => {
+      req = Math.min(req + 21482, 1284902);
+      dev = Math.min(dev + 804, 48231);
+      setCounter({ req, dev });
+      if (req >= 1284902) clearInterval(t);
+    }, 16);
+    return () => clearInterval(t);
+  }, []);
+
+  // Auto logs
+  useEffect(() => {
+    const pool = [
+      "GET /api/ai/chat → 200 OK",
+      "GET /api/anime/waifu → 200 OK",
+      "GET /api/downloader/tiktok → 200 OK",
+      "GET /api/search/google → 200 OK",
+      "GET /api/random/quote → 200 OK",
+      "GET /api/image/generate → 200 OK",
+    ];
+    timerRef.current = setInterval(() => {
+      addLog(pool[Math.floor(Math.random() * pool.length)]);
+    }, 4000);
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (termRef.current) termRef.current.scrollTop = termRef.current.scrollHeight;
+  }, [logs]);
+
+  function addLog(msg) {
+    const now = new Date();
+    const ts = [now.getHours(), now.getMinutes(), now.getSeconds()]
+      .map(n => String(n).padStart(2, "0")).join(":");
+    setLogs(prev => [...prev.slice(-49), `[${ts}] $ ${msg}`]);
   }
-}, del ? 40 : 80);
 
-// ── COUNTER ─────────────────────────────────────────────
-function animCount(el, target, suffix = '') {
-  let n = 0; const step = Math.ceil(target / 60);
-  const t = setInterval(() => {
-    n = Math.min(n + step, target);
-    el.textContent = n.toLocaleString() + suffix;
-    if (n >= target) clearInterval(t);
-  }, 20);
-}
-animCount(document.getElementById('req-count'), 1284902, '+');
-animCount(document.getElementById('dev-count'), 48231, '+');
+  async function runApi(url) {
+    const target = url || input.trim();
+    if (!target) return;
 
-// ── SEARCH FILTER ───────────────────────────────────────
-function filterCards() {
-  const q = document.getElementById('search').value.toLowerCase();
-  document.querySelectorAll('.endpoint-card').forEach(c => {
-    c.style.display = c.dataset.name.toLowerCase().includes(q) ? '' : 'none';
-  });
-}
+    setLoading(true);
+    setResponse(null);
+    setStatus(null);
+    addLog(`GET ${target}`);
 
-// ── COPY ────────────────────────────────────────────────
-function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => showToast('URL copied to clipboard!'));
-}
+    // Extract just the path from full URL
+    let path = target;
+    try { path = new URL(target).pathname + new URL(target).search; } catch {}
 
-// ── TRY → fills tester ──────────────────────────────────
-function tryEndpoint(url) {
-  document.getElementById('api-input').value = url;
-  document.getElementById('tester').scrollIntoView({ behavior: 'smooth' });
-  setTimeout(runApi, 600);
-}
-
-// ── MAIN API RUNNER ─────────────────────────────────────
-async function runApi() {
-  const url = document.getElementById('api-input').value.trim();
-  if (!url) return showToast('Please enter a URL');
-
-  const btn = document.getElementById('exec-btn');
-  const loader = document.getElementById('loader');
-  const resJson = document.getElementById('res-json');
-  const resStatus = document.getElementById('res-status');
-  const resImage = document.getElementById('res-image');
-  const resImg = document.getElementById('res-img-el');
-
-  btn.disabled = true;
-  loader.classList.add('show');
-  resJson.textContent = '';
-  resImage.style.display = 'none';
-  resStatus.textContent = 'Loading...';
-  resStatus.className = 'res-status';
-
-  addLog(`GET ${url}`);
-
-  try {
     const start = Date.now();
-    const res = await fetch(url);
-    const elapsed = Date.now() - start;
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          system: SYSTEM_PROMPT,
+          messages: [{ role: "user", content: `Endpoint: ${path}` }],
+        }),
+      });
 
-    resStatus.textContent = `${res.status} ${res.ok ? 'OK' : 'ERROR'} — ${elapsed}ms`;
-    resStatus.className = 'res-status ' + (res.ok ? 'ok' : 'err');
+      const ai = await res.json();
+      const text = ai.content?.[0]?.text || "{}";
+      const elapsed = Date.now() - start;
 
-    // Try to detect content type
-    const contentType = res.headers.get('content-type') || '';
+      let data;
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
-    if (contentType.includes('image')) {
-      // Direct image response
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      resJson.textContent = `// Image received (${(blob.size/1024).toFixed(1)} KB)`;
-      resImg.src = objectUrl;
-      resImage.style.display = 'block';
-      addLog(`✓ image received → ${(blob.size/1024).toFixed(1)} KB`);
-    } else {
-      const data = await res.json();
-      resJson.textContent = JSON.stringify(data, null, 2);
+      setResponse(data);
+      setStatus({ code: data.status !== false ? 200 : 404, ms: elapsed });
+      addLog(`✓ ${data.status !== false ? "200 OK" : "404 Not Found"} — ${elapsed}ms`);
+    } catch (err) {
+      setStatus({ code: 500, ms: Date.now() - start });
+      setResponse({ error: err.message });
+      addLog(`✗ error → ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-      // Auto-detect image URL in response
-      const imgUrl = findImageUrl(data);
-      if (imgUrl) {
-        resImg.src = imgUrl;
-        resImg.onerror = () => { resImage.style.display = 'none'; };
-        resImg.onload = () => { resImage.style.display = 'block'; };
-        addLog(`✓ image URL detected → rendering`);
+  function copyUrl(url) {
+    navigator.clipboard.writeText(url);
+    setCopied(url);
+    setTimeout(() => setCopied(null), 2000);
+  }
+
+  const filtered = ENDPOINTS.filter(e =>
+    e.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Find image URL in response
+  function findImage(obj, depth = 0) {
+    if (!obj || depth > 4) return null;
+    if (typeof obj === "string" && /\.(jpg|jpeg|png|gif|webp)/i.test(obj)) return obj;
+    if (typeof obj === "string" && obj.startsWith("http") && obj.includes("image")) return obj;
+    if (Array.isArray(obj)) { for (const i of obj) { const r = findImage(i, depth+1); if (r) return r; } }
+    else if (typeof obj === "object") {
+      for (const k of ["url","image","img","src","picture"]) {
+        if (obj[k]) { const r = findImage(obj[k], depth+1); if (r) return r; }
       }
-
-      addLog(`✓ response received → ${JSON.stringify(data).length} bytes`);
+      for (const v of Object.values(obj)) { const r = findImage(v, depth+1); if (r) return r; }
     }
-
-    addLog(`✓ done in ${elapsed}ms`);
-
-  } catch (err) {
-    resStatus.textContent = 'FAILED';
-    resStatus.className = 'res-status err';
-    resJson.textContent = `// Error: ${err.message}\n\n// Tip: API mungkin butuh CORS header atau tidak bisa diakses dari browser.\n// Coba dari bot / server-side saja.`;
-    addLog(`✗ error → ${err.message}`);
-  } finally {
-    loader.classList.remove('show');
-    btn.disabled = false;
+    return null;
   }
+
+  const imageUrl = response ? findImage(response) : null;
+
+  return (
+    <div style={{
+      minHeight: "100vh", background: "#04060f", color: "white",
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      position: "relative", overflowX: "hidden",
+    }}>
+      {/* BG */}
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
+        background: "linear-gradient(rgba(0,229,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.018) 1px,transparent 1px)",
+        backgroundSize: "48px 48px",
+      }} />
+      <div style={{ position:"fixed", width:600, height:600, borderRadius:"50%", background:"#2a0f7a", filter:"blur(140px)", opacity:.1, top:-200, left:-200, zIndex:0, pointerEvents:"none" }} />
+      <div style={{ position:"fixed", width:500, height:500, borderRadius:"50%", background:"#003f5c", filter:"blur(130px)", opacity:.08, bottom:-150, right:-150, zIndex:0, pointerEvents:"none" }} />
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+
+        {/* NAV */}
+        <nav style={{
+          display:"flex", justifyContent:"space-between", alignItems:"center",
+          padding:"14px 24px", borderBottom:"1px solid rgba(255,255,255,.06)",
+          backdropFilter:"blur(20px)", background:"rgba(4,6,15,.8)",
+          position:"sticky", top:0, zIndex:99,
+        }}>
+          <div style={{
+            fontFamily:"monospace", fontSize:18, fontWeight:700,
+            background:"linear-gradient(90deg,#00e5ff,#8b5cf6)",
+            WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+          }}>AETHERIA</div>
+          <div style={{ display:"flex", gap:8 }}>
+            {["Endpoints","Tester","Logs"].map(l => (
+              <span key={l} style={{ color:"#5a6480", fontSize:13, fontWeight:600, cursor:"pointer" }}>{l}</span>
+            ))}
+          </div>
+          <div style={{
+            padding:"8px 16px", border:"1px solid rgba(0,229,255,.25)",
+            borderRadius:10, background:"rgba(0,229,255,.05)",
+            color:"#00e5ff", fontSize:11, fontFamily:"monospace", cursor:"pointer",
+          }}>DASHBOARD</div>
+        </nav>
+
+        {/* HERO */}
+        <div style={{ textAlign:"center", padding:"80px 24px 48px" }}>
+          <div style={{
+            display:"inline-block", padding:"6px 16px", borderRadius:999,
+            border:"1px solid rgba(0,229,255,.2)", background:"rgba(0,229,255,.05)",
+            fontSize:11, color:"#00e5ff", fontFamily:"monospace", letterSpacing:2, marginBottom:24,
+          }}>⚡ PREMIUM REST API PLATFORM</div>
+
+          <h1 style={{ fontSize:"clamp(36px,6vw,68px)", fontWeight:800, lineHeight:1.05, marginBottom:16 }}>
+            Build The Future With<br />
+            <span style={{
+              background:"linear-gradient(90deg,#00e5ff,#a78bfa,#00e5ff)",
+              backgroundSize:"200%", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+            }}>Aetheria API</span>
+          </h1>
+
+          <p style={{ color:"#5a6480", fontSize:15, marginBottom:36 }}>
+            Modern REST API ecosystem — powered by AI, no CORS issues.
+          </p>
+
+          <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
+            <button onClick={() => document.getElementById('endpoints').scrollIntoView({behavior:'smooth'})}
+              style={{ padding:"13px 24px", borderRadius:12, border:"none", cursor:"pointer",
+                background:"linear-gradient(135deg,#00e5ff,#7c3aed)", color:"white", fontWeight:700, fontSize:14 }}>
+              Explore Endpoints
+            </button>
+            <button onClick={() => document.getElementById('tester').scrollIntoView({behavior:'smooth'})}
+              style={{ padding:"13px 24px", borderRadius:12, border:"1px solid rgba(255,255,255,.08)",
+                cursor:"pointer", background:"rgba(255,255,255,.03)", color:"white", fontWeight:700, fontSize:14 }}>
+              Try Live Tester
+            </button>
+          </div>
+        </div>
+
+        {/* STATS */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:16, padding:"0 24px 64px" }}>
+          {[
+            { val: counter.req.toLocaleString() + "+", label: "Total API Requests" },
+            { val: counter.dev.toLocaleString() + "+", label: "Active Developers" },
+            { val: "99.99%", label: "Uptime SLA" },
+            { val: "120+", label: "Available Endpoints" },
+          ].map(s => (
+            <div key={s.label} style={{
+              padding:"24px 20px", borderRadius:18,
+              background:"rgba(255,255,255,.03)", border:"1px solid rgba(255,255,255,.06)",
+            }}>
+              <div style={{ fontSize:34, fontWeight:800, marginBottom:6, color:"white" }}>{s.val}</div>
+              <div style={{ color:"#5a6480", fontSize:12, fontWeight:600 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* ENDPOINTS */}
+        <div id="endpoints" style={{ padding:"0 24px 64px" }}>
+          <div style={{ color:"#00e5ff", fontFamily:"monospace", fontSize:11, letterSpacing:3, marginBottom:10 }}>// ENDPOINTS</div>
+          <h2 style={{ fontSize:"clamp(24px,4vw,38px)", fontWeight:800, marginBottom:8 }}>Premium API Endpoints</h2>
+          <p style={{ color:"#5a6480", fontSize:14, marginBottom:32 }}>Real responses powered by AI — hit Execute and see live results.</p>
+
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search endpoints..."
+            style={{
+              width:"100%", padding:"14px 18px", marginBottom:28,
+              background:"rgba(255,255,255,.03)", border:"1px solid rgba(255,255,255,.07)",
+              borderRadius:14, color:"white", fontSize:14, outline:"none",
+            }}
+          />
+
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:18 }}>
+            {filtered.map(ep => (
+              <div key={ep.name} style={{
+                padding:"20px", borderRadius:18,
+                background:"rgba(255,255,255,.03)", border:"1px solid rgba(255,255,255,.06)",
+                transition:"border-color .2s",
+              }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+                  <span style={{
+                    padding:"4px 10px", borderRadius:999,
+                    background:"rgba(0,255,170,.08)", color:"#00ffaa",
+                    fontSize:10, fontFamily:"monospace", fontWeight:700,
+                  }}>GET</span>
+                  <span style={{ color:"#00ffaa", fontSize:10, fontFamily:"monospace" }}>● ONLINE</span>
+                </div>
+                <div style={{ fontWeight:700, fontSize:16, marginBottom:6 }}>{ep.name}</div>
+                <div style={{ color:"#5a6480", fontSize:12, marginBottom:14, lineHeight:1.5 }}>{ep.desc}</div>
+                <div style={{
+                  background:"rgba(0,0,0,.4)", border:"1px solid rgba(255,255,255,.06)",
+                  padding:"10px 12px", borderRadius:10,
+                  fontFamily:"monospace", fontSize:11, color:"#00e5ff", marginBottom:14,
+                  wordBreak:"break-all",
+                }}>{ep.path}</div>
+                <div style={{ display:"flex", gap:8 }}>
+                  <button onClick={() => copyUrl(BASE + ep.example)}
+                    style={{
+                      flex:1, padding:"10px", borderRadius:10, border:"none", cursor:"pointer",
+                      background:"linear-gradient(135deg,#00e5ff,#7c3aed)", color:"white",
+                      fontSize:12, fontWeight:700,
+                    }}>
+                    {copied === BASE + ep.example ? "✓ Copied!" : "Copy URL"}
+                  </button>
+                  <button onClick={() => { setInput(BASE + ep.example); document.getElementById('tester').scrollIntoView({behavior:'smooth'}); setTimeout(() => runApi(BASE + ep.example), 400); }}
+                    style={{
+                      flex:1, padding:"10px", borderRadius:10, cursor:"pointer",
+                      background:"rgba(0,229,255,.06)", color:"#00e5ff",
+                      border:"1px solid rgba(0,229,255,.15)", fontSize:12, fontWeight:700,
+                    }}>
+                    Try →
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* TESTER */}
+        <div id="tester" style={{ padding:"0 24px 64px" }}>
+          <div style={{ color:"#00e5ff", fontFamily:"monospace", fontSize:11, letterSpacing:3, marginBottom:10 }}>// LIVE TESTER</div>
+          <h2 style={{ fontSize:"clamp(24px,4vw,38px)", fontWeight:800, marginBottom:24 }}>API Tester</h2>
+
+          <div style={{ display:"flex", gap:10, marginBottom:18, flexWrap:"wrap" }}>
+            <input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && runApi()}
+              style={{
+                flex:1, minWidth:200, padding:"14px 16px",
+                background:"rgba(255,255,255,.03)", border:"1px solid rgba(255,255,255,.07)",
+                borderRadius:12, color:"white", fontFamily:"monospace", fontSize:12, outline:"none",
+              }}
+            />
+            <button onClick={() => runApi()} disabled={loading}
+              style={{
+                padding:"14px 24px", borderRadius:12, border:"none", cursor:"pointer",
+                background:"linear-gradient(135deg,#00e5ff,#7c3aed)",
+                color:"white", fontWeight:700, fontSize:14, opacity: loading ? .6 : 1,
+                whiteSpace:"nowrap",
+              }}>
+              {loading ? "⏳ Loading..." : "⚡ Execute"}
+            </button>
+          </div>
+
+          <div style={{ border:"1px solid rgba(255,255,255,.07)", borderRadius:18, overflow:"hidden" }}>
+            <div style={{
+              padding:"12px 18px", borderBottom:"1px solid rgba(255,255,255,.07)",
+              background:"rgba(0,0,0,.2)", display:"flex", justifyContent:"space-between", alignItems:"center",
+            }}>
+              <span style={{ fontFamily:"monospace", fontSize:11, color:"#5a6480" }}>RESPONSE</span>
+              {status && (
+                <span style={{
+                  fontFamily:"monospace", fontSize:11,
+                  color: status.code === 200 ? "#00ffaa" : "#f87171",
+                }}>
+                  {status.code} {status.code === 200 ? "OK" : "ERROR"} — {status.ms}ms
+                </span>
+              )}
+            </div>
+
+            <div style={{ padding:"20px", minHeight:200, position:"relative" }}>
+              {loading && (
+                <div style={{
+                  position:"absolute", inset:0, background:"rgba(4,6,15,.7)",
+                  display:"flex", alignItems:"center", justifyContent:"center", borderRadius:18,
+                }}>
+                  <div style={{
+                    width:28, height:28, border:"2px solid rgba(255,255,255,.1)",
+                    borderTopColor:"#00e5ff", borderRadius:"50%",
+                    animation:"spin 0.7s linear infinite",
+                  }} />
+                </div>
+              )}
+
+              {!response && !loading && (
+                <pre style={{ fontFamily:"monospace", fontSize:12, color:"#5a6480" }}>
+                  // Hit Execute to call the API...
+                </pre>
+              )}
+
+              {response && (
+                <>
+                  <pre style={{
+                    fontFamily:"monospace", fontSize:12, color:"#00ffaa",
+                    whiteSpace:"pre-wrap", wordBreak:"break-all", lineHeight:1.8,
+                  }}>
+                    {JSON.stringify(response, null, 2)}
+                  </pre>
+
+                  {imageUrl && (
+                    <div style={{ marginTop:16 }}>
+                      <div style={{ fontFamily:"monospace", fontSize:10, color:"#5a6480", marginBottom:10 }}>// IMAGE RESULT</div>
+                      <img
+                        src={imageUrl}
+                        alt="API result"
+                        style={{ maxWidth:"100%", maxHeight:300, borderRadius:12, border:"1px solid rgba(255,255,255,.08)" }}
+                        onError={e => e.target.style.display='none'}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* TERMINAL */}
+        <div style={{ padding:"0 24px 64px" }}>
+          <div style={{ border:"1px solid rgba(255,255,255,.07)", borderRadius:18, overflow:"hidden" }}>
+            <div style={{
+              padding:"12px 18px", background:"rgba(0,0,0,.3)",
+              borderBottom:"1px solid rgba(255,255,255,.07)",
+              display:"flex", alignItems:"center", gap:6,
+            }}>
+              {["#ff5f56","#ffbd2e","#27c93f"].map(c => (
+                <div key={c} style={{ width:10, height:10, borderRadius:"50%", background:c }} />
+              ))}
+              <span style={{ fontFamily:"monospace", fontSize:10, color:"#5a6480", marginLeft:8 }}>
+                aetheria-api — live request log
+              </span>
+            </div>
+            <div ref={termRef} style={{
+              padding:"18px 20px", minHeight:160, maxHeight:200,
+              overflowY:"auto", background:"rgba(0,0,0,.15)",
+            }}>
+              {logs.map((l, i) => (
+                <div key={i} style={{ fontFamily:"monospace", fontSize:11, color:"#00ffaa", marginBottom:5 }}>
+                  {l}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <footer style={{
+          padding:"48px 24px", textAlign:"center",
+          borderTop:"1px solid rgba(255,255,255,.06)",
+        }}>
+          <div style={{
+            fontSize:28, fontWeight:800, fontFamily:"monospace",
+            background:"linear-gradient(90deg,#00e5ff,#8b5cf6)",
+            WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:10,
+          }}>AETHERIA</div>
+          <p style={{ color:"#5a6480", fontSize:13, marginBottom:24 }}>Premium Cyber Futuristic REST API Platform</p>
+          <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
+            <a href="https://t.me/aetheriashopp" target="_blank" style={{
+              padding:"10px 20px", borderRadius:10, textDecoration:"none",
+              background:"rgba(255,255,255,.03)", border:"1px solid rgba(255,255,255,.07)",
+              color:"#c8d0e8", fontSize:13,
+            }}>✈ Telegram</a>
+            <a href="https://youtube.com/@aetheriaoffc" target="_blank" style={{
+              padding:"10px 20px", borderRadius:10, textDecoration:"none",
+              background:"rgba(255,255,255,.03)", border:"1px solid rgba(255,255,255,.07)",
+              color:"#c8d0e8", fontSize:13,
+            }}>▶ YouTube</a>
+          </div>
+        </footer>
+
+      </div>
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #04060f; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,229,255,.2); border-radius: 4px; }
+        input::placeholder { color: #5a6480; }
+        input { box-sizing: border-box; }
+      `}</style>
+    </div>
+  );
 }
-
-// ── FIND IMAGE URL IN JSON ───────────────────────────────
-function findImageUrl(obj, depth = 0) {
-  if (depth > 5 || !obj) return null;
-  if (typeof obj === 'string' && /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(obj)) return obj;
-  if (typeof obj === 'string' && obj.startsWith('http') && obj.match(/(image|img|picture|photo|waifu)/i)) return obj;
-  if (Array.isArray(obj)) {
-    for (const item of obj) { const r = findImageUrl(item, depth+1); if (r) return r; }
-  } else if (typeof obj === 'object') {
-    const keys = ['url', 'image', 'img', 'picture', 'photo', 'src', 'link', 'result'];
-    for (const k of keys) {
-      if (obj[k]) { const r = findImageUrl(obj[k], depth+1); if (r) return r; }
-    }
-    for (const v of Object.values(obj)) {
-      const r = findImageUrl(v, depth+1); if (r) return r;
-    }
-  }
-  return null;
-}
-
-// ── TERMINAL ─────────────────────────────────────────────
-function addLog(msg) {
-  const body = document.getElementById('term-body');
-  const line = document.createElement('div');
-  line.className = 'term-line';
-  const now = new Date();
-  const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-  line.innerHTML = `<span class="ts">[${ts}]</span><span class="prompt">$</span> ${msg}`;
-  body.appendChild(line);
-  body.scrollTop = body.scrollHeight;
-  // Keep max 50 lines
-  while (body.children.length > 50) body.removeChild(body.firstChild);
-}
-
-const autoLogs = [
-  'GET /api/ai/chat → 200 OK',
-  'GET /api/anime/waifu → 200 OK',
-  'GET /api/downloader/tiktok → 200 OK',
-  'GET /api/search/google → 200 OK',
-  'GET /api/random/quote → 200 OK',
-  'GET /api/image/generate → 200 OK',
-];
-setInterval(() => {
-  addLog(autoLogs[Math.floor(Math.random() * autoLogs.length)]);
-}, 4500);
-
-// ── TOAST ────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ── ENTER KEY ────────────────────────────────────────────
-document.getElementById('api-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') runApi();
-});
-</script>
-</body>
-</html>
