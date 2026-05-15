@@ -1,600 +1,847 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — NexHost</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<title>Aetheria API Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#04070d;--s1:#080f1a;--s2:#0c1525;--border:#162235;
-  --cyan:#00f0ff;--green:#00ff7f;--red:#ff3355;--yellow:#ffc947;
-  --purple:#a259ff;--text:#cce4ff;--muted:#3a5a7a;
-  --font:'Barlow',sans-serif;--mono:'IBM Plex Mono',monospace;--cond:'Barlow Condensed',sans-serif;
+  --bg: #04060f;
+  --surface: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.07);
+  --cyan: #00e5ff;
+  --violet: #8b5cf6;
+  --green: #00ffaa;
+  --text: #c8d0e8;
+  --muted: #5a6480;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
-body::before{content:'';position:fixed;inset:0;
-  background-image:linear-gradient(rgba(0,240,255,0.02) 1px,transparent 1px),
-  linear-gradient(90deg,rgba(0,240,255,0.02) 1px,transparent 1px);
-  background-size:60px 60px;pointer-events:none;z-index:0}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: white;
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom cursor */
+#cursor {
+  width: 10px; height: 10px;
+  background: var(--cyan);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(0,229,255,0.3);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transition: left 0.08s ease, top 0.08s ease;
+}
+
+/* Background */
+.bg-noise {
+  position: fixed; inset: 0; z-index: -4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px;
+  opacity: 0.5;
+}
+
+.bg-grid {
+  position: fixed; inset: 0; z-index: -3;
+  background:
+    linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.glow {
+  position: fixed; border-radius: 50%;
+  filter: blur(130px); z-index: -2; pointer-events: none;
+}
+.glow-1 { width:600px;height:600px;background:#3b1fa0;opacity:.12;top:-200px;left:-200px; }
+.glow-2 { width:500px;height:500px;background:#00b4cc;opacity:.08;bottom:-150px;right:-150px; }
+.glow-3 { width:300px;height:300px;background:#8b5cf6;opacity:.1;top:50%;left:50%;transform:translate(-50%,-50%); }
 
 /* NAV */
-nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
-  padding:0 2rem;height:56px;background:rgba(4,7,13,0.97);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border)}
-.logo{font-family:var(--mono);font-size:.9rem;font-weight:600;letter-spacing:.1em;color:var(--text)}
-.logo b{color:var(--cyan)}
-.logo small{font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-left:.5rem;letter-spacing:.08em}
-.nav-back{color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:.68rem;
-  letter-spacing:.06em;transition:color .2s}
-.nav-back:hover{color:var(--cyan)}
+nav {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+  width: 92%; max-width: 1200px;
+  padding: 14px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  backdrop-filter: blur(20px);
+  background: rgba(4,6,15,0.7);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  z-index: 998;
+}
 
-.container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
-.page-title{font-family:var(--cond);font-size:2rem;font-weight:900;text-transform:uppercase;
-  letter-spacing:.02em;margin-bottom:.2rem}
-.page-sub{font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.06em;
-  margin-bottom:2rem}
+.logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 18px; font-weight: 700;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+nav ul { display: flex; gap: 28px; list-style: none; }
+nav ul li a {
+  color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
+  transition: color 0.2s;
+}
+nav ul li a:hover { color: white; }
+
+.nav-btn {
+  padding: 10px 20px; border: 1px solid rgba(0,229,255,0.3);
+  border-radius: 12px; background: rgba(0,229,255,0.06);
+  color: var(--cyan); cursor: pointer; font-family: 'Space Mono', monospace;
+  font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.nav-btn:hover { background: rgba(0,229,255,0.12); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 140px 24px 80px;
+  position: relative;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 18px; border-radius: 999px;
+  border: 1px solid rgba(0,229,255,0.2);
+  background: rgba(0,229,255,0.06);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; color: var(--cyan); letter-spacing: 2px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease both;
+}
+
+.hero h1 {
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 800; line-height: 1.05;
+  margin-bottom: 24px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+.gradient {
+  background: linear-gradient(90deg, var(--cyan) 0%, #a78bfa 50%, var(--cyan) 100%);
+  background-size: 200%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer { to { background-position: 200% center; } }
+
+.typing-wrap {
+  font-family: 'Space Mono', monospace;
+  font-size: 15px; color: var(--muted);
+  height: 28px; margin-bottom: 40px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.typing-cursor { color: var(--cyan); animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-buttons {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.btn {
+  padding: 15px 28px; border-radius: 14px; cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+  border: none; transition: all 0.25s; text-decoration: none; display: inline-block;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  color: white; box-shadow: 0 0 30px rgba(0,229,255,0.2);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(0,229,255,0.35); }
+.btn-secondary {
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.06); }
+
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
 
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;
-  margin-bottom:2rem;border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.stat-card{background:var(--s1);padding:1.4rem 1.2rem}
-.stat-val{font-family:var(--cond);font-size:2rem;font-weight:900;line-height:1}
-.stat-val.blue{color:var(--cyan)}.stat-val.green{color:var(--green)}
-.stat-val.yellow{color:var(--yellow)}.stat-val.red{color:var(--red)}
-.stat-lbl{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.08em;
-  text-transform:uppercase;margin-top:.3rem}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; padding: 0 4% 80px;
+}
 
-/* TABS */
-.tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
-.tab{padding:.65rem 1.4rem;font-family:var(--mono);font-size:.68rem;font-weight:600;
-  cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;
-  letter-spacing:.06em;text-transform:uppercase;transition:all .2s}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--cyan);border-color:var(--cyan)}
+.stat-card {
+  padding: 28px 24px; border-radius: 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.4;
+}
+.stat-card h2 {
+  font-size: 38px; font-weight: 800;
+  background: linear-gradient(90deg, white, var(--text));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+.stat-card p { color: var(--muted); font-size: 13px; font-weight: 600; }
 
-/* TABLE */
-.table-wrap{background:var(--s1);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.table-top{padding:1rem 1.3rem;display:flex;justify-content:space-between;align-items:center;
-  border-bottom:1px solid var(--border);gap:1rem;flex-wrap:wrap}
-.table-top h3{font-family:var(--cond);font-size:1rem;font-weight:900;text-transform:uppercase;
-  letter-spacing:.04em}
-.search{background:var(--s2);border:1px solid var(--border);border-radius:4px;
-  padding:.38rem .8rem;color:var(--text);font-family:var(--mono);font-size:.72rem;
-  outline:none;width:200px;transition:border-color .2s;letter-spacing:.04em}
-.search:focus{border-color:var(--cyan)}
-table{width:100%;border-collapse:collapse}
-th{background:var(--s2);padding:.7rem 1rem;text-align:left;font-family:var(--mono);
-  font-size:.6rem;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
-td{padding:.85rem 1rem;font-size:.84rem;border-top:1px solid var(--border);vertical-align:middle}
-tr:hover td{background:rgba(255,255,255,0.015)}
-.order-id{font-family:var(--mono);font-size:.7rem;color:var(--cyan);letter-spacing:.04em}
-.cust-name{font-weight:700;font-size:.88rem}
-.cust-wa{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-top:.1rem;letter-spacing:.04em}
-.plan-name{font-weight:600;font-size:.88rem}
-.plan-price{font-family:var(--mono);font-size:.7rem;color:var(--cyan);margin-top:.1rem}
-.pay-method{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+/* SECTION */
+section { padding: 80px 4%; }
 
-/* STATUS BADGE */
-.sbadge{display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .6rem;
-  border-radius:3px;font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.05em}
-.sbadge.pending{background:rgba(255,201,71,.08);color:var(--yellow);border:1px solid rgba(255,201,71,.2)}
-.sbadge.confirmed{background:rgba(162,89,255,.08);color:var(--purple);border:1px solid rgba(162,89,255,.2)}
-.sbadge.active{background:rgba(0,255,127,.07);color:var(--green);border:1px solid rgba(0,255,127,.2)}
-.sbadge.expired{background:rgba(255,51,85,.07);color:var(--red);border:1px solid rgba(255,51,85,.15)}
+.section-label {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  color: var(--cyan); letter-spacing: 3px; margin-bottom: 12px;
+}
+.section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; margin-bottom: 10px; }
+.section-sub { color: var(--muted); margin-bottom: 48px; font-size: 15px; }
 
-/* ACTION BUTTONS */
-.abtn{padding:.28rem .65rem;border-radius:3px;font-family:var(--mono);font-size:.65rem;
-  font-weight:600;cursor:pointer;border:1px solid;transition:all .15s;letter-spacing:.04em}
-.abtn:hover{opacity:.8;transform:translateY(-1px)}
-.abtn.confirm{background:rgba(0,255,127,.08);color:var(--green);border-color:rgba(0,255,127,.25)}
-.abtn.create{background:rgba(0,240,255,.08);color:var(--cyan);border-color:rgba(0,240,255,.25)}
-.abtn.wa{background:rgba(37,211,102,.08);color:#25d366;border-color:rgba(37,211,102,.25)}
-.abtn.del{background:rgba(255,51,85,.08);color:var(--red);border-color:rgba(255,51,85,.2)}
-.abtn-row{display:flex;gap:.4rem;flex-wrap:wrap}
+/* SEARCH */
+.search-wrap { position: relative; margin-bottom: 36px; }
+.search-wrap svg {
+  position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); pointer-events: none;
+}
+.search-box {
+  width: 100%; padding: 16px 18px 16px 50px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; color: white; font-family: 'Syne', sans-serif;
+  font-size: 15px; outline: none; transition: border-color 0.2s;
+}
+.search-box:focus { border-color: rgba(0,229,255,0.3); }
+.search-box::placeholder { color: var(--muted); }
 
-.empty{text-align:center;padding:3rem;color:var(--muted);font-family:var(--mono);
-  font-size:.75rem;letter-spacing:.06em}
-.empty .icon{font-size:2.5rem;margin-bottom:.75rem}
+/* ENDPOINT GRID */
+.endpoint-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
 
-/* CONFIG */
-.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
-.cfg-card{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:1.5rem}
-.cfg-card h3{font-family:var(--cond);font-size:1rem;font-weight:900;text-transform:uppercase;
-  letter-spacing:.04em;margin-bottom:1.3rem}
-.cfg-field{margin-bottom:1rem}
-.cfg-field label{display:block;font-family:var(--mono);font-size:.6rem;font-weight:600;
-  color:var(--muted);margin-bottom:.38rem;letter-spacing:.1em;text-transform:uppercase}
-.cfg-field input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:4px;
-  padding:.62rem .85rem;color:var(--text);font-family:var(--mono);font-size:.82rem;
-  outline:none;transition:border-color .2s;letter-spacing:.04em}
-.cfg-field input:focus{border-color:var(--cyan)}
-.cfg-field .hint{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.28rem;
-  letter-spacing:.04em;line-height:1.5}
-.btn-save{background:var(--cyan);color:#000;border:none;border-radius:4px;
-  padding:.6rem 1.6rem;font-family:var(--cond);font-weight:900;font-size:.9rem;
-  letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
-  box-shadow:0 0 18px rgba(0,240,255,.2);transition:all .2s;margin-top:.5rem}
-.btn-save:hover{box-shadow:0 0 32px rgba(0,240,255,.4)}
+.endpoint-card {
+  padding: 22px; border-radius: 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  transition: border-color 0.25s, transform 0.25s;
+  position: relative; overflow: hidden;
+}
+.endpoint-card:hover {
+  border-color: rgba(0,229,255,0.2);
+  transform: translateY(-3px);
+}
+.endpoint-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(600px at var(--mx,50%) var(--my,50%), rgba(0,229,255,0.03), transparent 70%);
+  pointer-events: none;
+}
 
-/* INFO */
-.info-card{background:var(--s1);border:1px solid var(--border);border-radius:8px;
-  padding:1.8rem;max-width:700px}
-.info-card h3{font-family:var(--cond);font-size:1rem;font-weight:900;text-transform:uppercase;
-  letter-spacing:.04em;margin-bottom:1.2rem}
-.info-body{font-family:var(--mono);font-size:.72rem;color:var(--muted);line-height:2;
-  letter-spacing:.03em}
-.info-body strong{color:var(--text)}
-.info-body code{background:var(--s2);padding:.1rem .45rem;border-radius:3px;
-  color:var(--cyan);font-size:.7rem}
-.info-body .warn{color:var(--yellow)}
-.info-body hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
+.card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.method-badge {
+  padding: 5px 12px; border-radius: 999px;
+  font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+}
+.method-get { background: rgba(0,255,170,0.1); color: var(--green); }
+.status-dot { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--green); }
 
-/* MODAL */
-.overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.9);backdrop-filter:blur(16px);
-  display:flex;align-items:center;justify-content:center;padding:1rem;
-  opacity:0;pointer-events:none;transition:opacity .25s}
-.overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--s1);border:1px solid var(--border);border-radius:10px;
-  width:100%;max-width:440px;padding:1.8rem;position:relative;
-  transform:scale(.96) translateY(20px);transition:transform .25s}
-.overlay.open .modal{transform:none}
-.mx{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);
-  color:var(--muted);width:28px;height:28px;border-radius:4px;cursor:pointer;
-  font-size:.8rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.mx:hover{border-color:var(--red);color:var(--red)}
-.modal h3{font-family:var(--cond);font-size:1.2rem;font-weight:900;text-transform:uppercase;
-  letter-spacing:.04em;margin-bottom:1.2rem}
-.cred-row{margin-bottom:.8rem}
-.cred-k{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;
-  text-transform:uppercase;margin-bottom:.22rem}
-.cred-v{font-family:var(--mono);font-size:.85rem;color:var(--green);background:var(--s2);
-  border:1px solid var(--border);border-radius:4px;padding:.42rem .75rem;
-  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
-  transition:border-color .2s;word-break:break-all}
-.cred-v:hover{border-color:var(--green)}
-.cred-cp{font-size:.65rem;color:var(--muted);flex-shrink:0;margin-left:.5rem}
+.card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.card-desc { color: var(--muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+
+.code-chip {
+  background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+  padding: 12px 14px; border-radius: 12px;
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--cyan); margin-bottom: 16px;
+  word-break: break-all;
+}
+
+.card-actions { display: flex; gap: 10px; }
+.btn-copy, .btn-try {
+  flex: 1; padding: 12px; border: none; border-radius: 12px;
+  cursor: pointer; font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700; transition: all 0.2s;
+}
+.btn-copy {
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  color: white;
+}
+.btn-copy:hover { opacity: 0.85; }
+.btn-try {
+  background: rgba(255,255,255,0.04); color: var(--cyan);
+  border: 1px solid rgba(0,229,255,0.15);
+}
+.btn-try:hover { background: rgba(0,229,255,0.08); }
+
+/* API TESTER */
+.tester { margin-top: 70px; }
+
+.tester-bar {
+  display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.tester-bar input {
+  flex: 1; min-width: 200px;
+  padding: 16px 18px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; color: white; font-family: 'Space Mono', monospace;
+  font-size: 13px; outline: none; transition: border-color 0.2s;
+}
+.tester-bar input:focus { border-color: rgba(0,229,255,0.3); }
+.tester-bar button {
+  padding: 16px 28px; border: none; border-radius: 14px;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  color: white; cursor: pointer; font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700; transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.tester-bar button:hover { opacity: 0.85; }
+.tester-bar button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.response-panel {
+  border: 1px solid var(--border); border-radius: 20px; overflow: hidden;
+}
+.response-topbar {
+  padding: 14px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.2);
+}
+.response-topbar span { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
+.res-status { font-family: 'Space Mono', monospace; font-size: 12px; }
+.res-status.ok { color: var(--green); }
+.res-status.err { color: #f87171; }
+
+.response-body {
+  padding: 24px; min-height: 200px; max-height: 420px;
+  overflow: auto; position: relative;
+}
+
+#res-json {
+  font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.8;
+  color: var(--green); white-space: pre-wrap; word-break: break-all;
+}
+
+/* Image result */
+#res-image {
+  display: none; margin-top: 16px;
+}
+#res-image img {
+  max-width: 100%; max-height: 320px; border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.loader {
+  display: none;
+  position: absolute; inset: 0;
+  background: rgba(4,6,15,0.6);
+  align-items: center; justify-content: center;
+}
+.loader.show { display: flex; }
+.spinner {
+  width: 32px; height: 32px;
+  border: 2px solid var(--border);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TERMINAL */
+.terminal {
+  margin-top: 48px; border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+.term-header {
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border);
+}
+.term-dot { width: 10px; height: 10px; border-radius: 50%; }
+.term-dot.r { background: #ff5f56; }
+.term-dot.y { background: #ffbd2e; }
+.term-dot.g { background: #27c93f; }
+.term-title { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-left: 8px; }
+.term-body {
+  padding: 20px 24px; min-height: 180px; max-height: 220px;
+  overflow-y: auto; background: rgba(0,0,0,0.2);
+}
+.term-line {
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--green); margin-bottom: 6px; opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+.term-line .prompt { color: var(--cyan); }
+.term-line .ts { color: var(--muted); margin-right: 12px; }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* FOOTER */
+footer {
+  padding: 60px 4%; text-align: center;
+  border-top: 1px solid var(--border); margin-top: 60px;
+}
+.footer-logo {
+  font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+}
+footer p { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+.socials { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.socials a {
+  padding: 12px 22px; border-radius: 12px; text-decoration: none;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); font-size: 13px; font-weight: 600;
+  transition: all 0.2s;
+}
+.socials a:hover { border-color: rgba(0,229,255,0.3); color: var(--cyan); }
 
 /* TOAST */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;
-  background:var(--s2);border:1px solid var(--green);color:var(--text);
-  padding:.75rem 1.2rem;border-radius:5px;font-family:var(--mono);font-size:.72rem;
-  opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;
-  box-shadow:0 0 22px rgba(0,255,127,.1);max-width:280px;letter-spacing:.03em}
-.toast.err{border-color:var(--red)}
-.toast.show{opacity:1;transform:none}
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+  padding: 14px 24px; border-radius: 14px;
+  background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25);
+  color: var(--cyan); font-family: 'Space Mono', monospace; font-size: 13px;
+  z-index: 9997; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
 
-@media(max-width:768px){
-  .config-grid{grid-template-columns:1fr}
-  .stats-row{grid-template-columns:1fr 1fr}
-  table{font-size:.75rem}
-  td,th{padding:.6rem .7rem}
-  .container{padding:1.5rem 1rem}
+@media (max-width: 768px) {
+  nav ul { display: none; }
+  .tester-bar { flex-direction: column; }
+  .tester-bar input { width: 100%; }
 }
 </style>
 </head>
 <body>
 
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<div class="bg-noise"></div>
+<div class="bg-grid"></div>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+
 <nav>
-  <div class="logo">NEX<b>HOST</b><small>ADMIN</small></div>
-  <a href="index.html" class="nav-back">← Kembali ke Toko</a>
+  <div class="logo">AETHERIA</div>
+  <ul>
+    <li><a href="#api">Endpoints</a></li>
+    <li><a href="#tester">Tester</a></li>
+    <li><a href="#terminal">Logs</a></li>
+  </ul>
+  <button class="nav-btn" onclick="showToast('Dashboard coming soon...')">DASHBOARD</button>
 </nav>
 
-<div class="container">
-  <div class="page-title">Dashboard Admin</div>
-  <div class="page-sub">Kelola order · Buat server Pterodactyl · Konfigurasi panel</div>
-
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-val blue" id="s_total">0</div><div class="stat-lbl">Total Order</div></div>
-    <div class="stat-card"><div class="stat-val yellow" id="s_pending">0</div><div class="stat-lbl">Menunggu Bayar</div></div>
-    <div class="stat-card"><div class="stat-val green" id="s_active">0</div><div class="stat-lbl">Server Aktif</div></div>
-    <div class="stat-card"><div class="stat-val red" id="s_expired">0</div><div class="stat-lbl">Kadaluarsa</div></div>
-    <div class="stat-card"><div class="stat-val green" id="s_revenue">Rp 0</div><div class="stat-lbl">Total Revenue</div></div>
-  </div>
-
-  <div class="tabs">
-    <div class="tab active" onclick="showTab('orders')">Order</div>
-    <div class="tab" onclick="showTab('config')">Konfigurasi</div>
-    <div class="tab" onclick="showTab('info')">Panduan API</div>
-  </div>
-
-  <!-- ORDERS -->
-  <div id="tab_orders">
-    <div class="table-wrap">
-      <div class="table-top">
-        <h3>Daftar Order</h3>
-        <input class="search" placeholder="Cari nama / email / ID..." oninput="filterOrders(this.value)">
-      </div>
-      <div id="tableArea">
-        <table>
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th>Email / Username</th>
-              <th>Paket</th>
-              <th>Metode</th>
-              <th>Status</th>
-              <th>Tanggal</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="ordersBody"></tbody>
-        </table>
-        <div class="empty" id="emptyState" style="display:none">
-          <div class="icon">📭</div>
-          Belum ada order masuk
-        </div>
-      </div>
+<section class="hero">
+  <div class="hero-content">
+    <div class="badge">⚡ PREMIUM REST API PLATFORM</div>
+    <h1>Build The Future With<br><span class="gradient">Aetheria API</span></h1>
+    <div class="typing-wrap">
+      <span id="typing-text"></span><span class="typing-cursor">|</span>
+    </div>
+    <div class="hero-buttons">
+      <a href="#api" class="btn btn-primary">Explore Endpoints</a>
+      <a href="#tester" class="btn btn-secondary">Try Live Tester</a>
     </div>
   </div>
+</section>
 
-  <!-- CONFIG -->
-  <div id="tab_config" style="display:none">
-    <div class="config-grid">
-      <div class="cfg-card">
-        <h3>🦅 Pterodactyl</h3>
-        <div class="cfg-field">
-          <label>Panel URL</label>
-          <input type="url" id="cfg_panelUrl" placeholder="https://panel.yourdomain.com">
-          <div class="hint">URL panel tanpa slash di akhir</div>
-        </div>
-        <div class="cfg-field">
-          <label>Application API Key</label>
-          <input type="password" id="cfg_apiKey" placeholder="ptla_xxxxxxxxxxxxxxxxxxxx">
-          <div class="hint">Settings → Application API → Create</div>
-        </div>
-        <div class="cfg-field">
-          <label>Node ID</label>
-          <input type="number" id="cfg_nodeId" placeholder="1">
-          <div class="hint">ID node tempat server dibuat</div>
-        </div>
-        <div class="cfg-field">
-          <label>Allocation ID</label>
-          <input type="number" id="cfg_allocId" placeholder="1">
-          <div class="hint">ID allocation port yang tersedia di node</div>
-        </div>
-        <div class="cfg-field">
-          <label>Egg ID</label>
-          <input type="number" id="cfg_eggId" placeholder="1">
-          <div class="hint">ID egg di Nests → pilih nest → pilih egg</div>
-        </div>
-        <button class="btn-save" onclick="saveConfig()">💾 Simpan</button>
-      </div>
-
-      <div class="cfg-card">
-        <h3>💳 Pakasir</h3>
-        <div class="cfg-field">
-          <label>Project Slug</label>
-          <input type="text" id="cfg_pakSlug" placeholder="your-project-slug">
-          <div class="hint">Lihat di app.pakasir.com → Project Settings</div>
-        </div>
-        <div class="cfg-field">
-          <label>API Key Pakasir</label>
-          <input type="password" id="cfg_pakKey" placeholder="pak_xxxxxxxxxxxx">
-          <div class="hint">Untuk polling status transaksi</div>
-        </div>
-
-        <h3 style="margin-top:1.5rem;margin-bottom:1.3rem">🏪 Toko</h3>
-        <div class="cfg-field">
-          <label>Nama Toko</label>
-          <input type="text" id="cfg_shopName" placeholder="NexHost">
-        </div>
-        <div class="cfg-field">
-          <label>WhatsApp Admin</label>
-          <input type="text" id="cfg_waAdmin" placeholder="628123456789">
-          <div class="hint">Format internasional tanpa + (628xxxxxxx)</div>
-        </div>
-        <div class="cfg-field">
-          <label>Info Rekening (opsional)</label>
-          <input type="text" id="cfg_bankInfo" placeholder="BCA 1234567890 a.n. Nama">
-        </div>
-        <button class="btn-save" onclick="saveConfig()">💾 Simpan</button>
-      </div>
-    </div>
+<div class="stats">
+  <div class="stat-card">
+    <h2 id="req-count">0</h2>
+    <p>Total API Requests</p>
   </div>
-
-  <!-- INFO -->
-  <div id="tab_info" style="display:none">
-    <div class="info-card">
-      <h3>📖 Panduan Setup API</h3>
-      <div class="info-body">
-        <p><strong>1. Pterodactyl — Application API Key</strong></p>
-        <p>Login panel sebagai admin → Settings → API → Application API → Create New</p>
-        <p>Format: <code>ptla_xxxxxxxxxxxxxxxxx</code></p>
-        <br>
-        <p><strong>2. Node ID &amp; Allocation ID</strong></p>
-        <p>Buka Nodes → klik node → lihat ID di URL.<br>
-        Untuk Allocation ID: klik tab Allocation di halaman node, lihat ID kolom pertama.</p>
-        <br>
-        <p><strong>3. Egg ID</strong></p>
-        <p>Buka Nests → klik nest → klik egg → lihat ID di URL atau tab Configuration.</p>
-        <br>
-        <hr>
-        <br>
-        <p><strong>4. Pakasir</strong></p>
-        <p>Daftar di <code>app.pakasir.com</code> → buat project → salin slug & API key.</p>
-        <p>Pastikan metode pembayaran yang ingin kamu pakai sudah diaktifkan di dashboard Pakasir.</p>
-        <br>
-        <hr>
-        <br>
-        <p class="warn">⚠ API key Pterodactyl memberikan akses penuh ke panel. Jangan bagikan ke siapapun.</p>
-        <br>
-        <p><strong>5. Alur Otomatis</strong></p>
-        <p>Customer bayar → Pakasir kirim notifikasi / polling terdeteksi lunas → sistem buat user Pterodactyl → buat server → tampilkan kredensial ke customer.</p>
-        <p>Jika API Pterodactyl gagal (CORS/network), order tetap tercatat sebagai <em>active</em> di admin dan kamu bisa buat server manual dari dashboard Pterodactyl.</p>
-      </div>
-    </div>
+  <div class="stat-card">
+    <h2 id="dev-count">0</h2>
+    <p>Active Developers</p>
+  </div>
+  <div class="stat-card">
+    <h2>99.99%</h2>
+    <p>Uptime SLA</p>
+  </div>
+  <div class="stat-card">
+    <h2>120+</h2>
+    <p>Available Endpoints</p>
   </div>
 </div>
 
-<!-- CREDENTIALS MODAL (lihat kredensial order) -->
-<div class="overlay" id="credOv">
-  <div class="modal">
-    <button class="mx" onclick="document.getElementById('credOv').classList.remove('open')">✕</button>
-    <h3>🔑 Kredensial Server</h3>
-    <div class="cred-row">
-      <div class="cred-k">URL Panel</div>
-      <div class="cred-v" id="vc_panel" onclick="cpTxt(this.dataset.v,this)"><span></span><span class="cred-cp">📋</span></div>
+<section id="api">
+  <div class="section-label">// ENDPOINTS</div>
+  <h2 class="section-title">Premium API Endpoints</h2>
+  <p class="section-sub">Modern REST API ecosystem — hit real endpoints, get real results.</p>
+
+  <div class="search-wrap">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input class="search-box" type="text" id="search" placeholder="Search endpoints..." oninput="filterCards()">
+  </div>
+
+  <div class="endpoint-grid" id="endpoint-grid">
+
+    <div class="endpoint-card" data-name="AI Chat">
+      <div class="card-top">
+        <span class="method-badge method-get">GET</span>
+        <span class="status-dot">● ONLINE</span>
+      </div>
+      <div class="card-title">AI Chat</div>
+      <div class="card-desc">AI chatbot response endpoint. Send any text and get intelligent replies.</div>
+      <div class="code-chip">/api/ai/chat?text=hello</div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/ai/chat?text=hello')">Copy URL</button>
+        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/ai/chat?text=hello')">Try →</button>
+      </div>
     </div>
-    <div class="cred-row">
-      <div class="cred-k">Email</div>
-      <div class="cred-v" id="vc_email" onclick="cpTxt(this.dataset.v,this)"><span></span><span class="cred-cp">📋</span></div>
+
+    <div class="endpoint-card" data-name="Anime Waifu">
+      <div class="card-top">
+        <span class="method-badge method-get">GET</span>
+        <span class="status-dot">● ONLINE</span>
+      </div>
+      <div class="card-title">Anime Waifu</div>
+      <div class="card-desc">Random anime waifu image. Returns image URL from the Aetheria anime database.</div>
+      <div class="code-chip">/api/anime/waifu</div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/anime/waifu')">Copy URL</button>
+        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/anime/waifu')">Try →</button>
+      </div>
     </div>
-    <div class="cred-row">
-      <div class="cred-k">Password</div>
-      <div class="cred-v" id="vc_pass" onclick="cpTxt(this.dataset.v,this)"><span></span><span class="cred-cp">📋</span></div>
+
+    <div class="endpoint-card" data-name="TikTok Downloader">
+      <div class="card-top">
+        <span class="method-badge method-get">GET</span>
+        <span class="status-dot">● ONLINE</span>
+      </div>
+      <div class="card-title">TikTok Downloader</div>
+      <div class="card-desc">Download TikTok videos without watermark. Pass the video URL as parameter.</div>
+      <div class="code-chip">/api/downloader/tiktok?url=...</div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/downloader/tiktok?url=')">Copy URL</button>
+        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/downloader/tiktok?url=https://tiktok.com')">Try →</button>
+      </div>
     </div>
-    <div class="cred-row">
-      <div class="cred-k">Username</div>
-      <div class="cred-v" id="vc_user" onclick="cpTxt(this.dataset.v,this)"><span></span><span class="cred-cp">📋</span></div>
+
+    <div class="endpoint-card" data-name="Random Quote">
+      <div class="card-top">
+        <span class="method-badge method-get">GET</span>
+        <span class="status-dot">● ONLINE</span>
+      </div>
+      <div class="card-title">Random Quote</div>
+      <div class="card-desc">Get an inspirational or random quote from our curated database.</div>
+      <div class="code-chip">/api/random/quote</div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/random/quote')">Copy URL</button>
+        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/random/quote')">Try →</button>
+      </div>
+    </div>
+
+    <div class="endpoint-card" data-name="Image Generator">
+      <div class="card-top">
+        <span class="method-badge method-get">GET</span>
+        <span class="status-dot">● ONLINE</span>
+      </div>
+      <div class="card-title">Image Generator</div>
+      <div class="card-desc">Generate images from text prompts using AI image generation models.</div>
+      <div class="code-chip">/api/image/generate?prompt=...</div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/image/generate?prompt=anime+girl')">Copy URL</button>
+        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/image/generate?prompt=anime+girl')">Try →</button>
+      </div>
+    </div>
+
+    <div class="endpoint-card" data-name="Google Search">
+      <div class="card-top">
+        <span class="method-badge method-get">GET</span>
+        <span class="status-dot">● ONLINE</span>
+      </div>
+      <div class="card-title">Google Search</div>
+      <div class="card-desc">Scrape Google search results and return structured JSON data.</div>
+      <div class="code-chip">/api/search/google?q=...</div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyText('https://api.aetheria.my.id/api/search/google?q=aetheria')">Copy URL</button>
+        <button class="btn-try" onclick="tryEndpoint('https://api.aetheria.my.id/api/search/google?q=aetheria')">Try →</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TESTER -->
+  <div class="tester" id="tester">
+    <div class="section-label">// LIVE TESTER</div>
+    <h2 class="section-title" style="margin-bottom:24px">API Tester</h2>
+
+    <div class="tester-bar">
+      <input type="text" id="api-input" value="https://api.aetheria.my.id/api/anime/waifu" placeholder="Enter full URL...">
+      <button id="exec-btn" onclick="runApi()">⚡ Execute</button>
+    </div>
+
+    <div class="response-panel">
+      <div class="response-topbar">
+        <span>RESPONSE</span>
+        <span class="res-status" id="res-status">—</span>
+      </div>
+      <div class="response-body">
+        <div class="loader" id="loader"><div class="spinner"></div></div>
+        <pre id="res-json">// Hit Execute to call the API...</pre>
+        <div id="res-image">
+          <p style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px;">// IMAGE RESULT</p>
+          <img id="res-img-el" src="" alt="API Image Result">
+        </div>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- TERMINAL -->
+  <div class="terminal" id="terminal">
+    <div class="term-header">
+      <div class="term-dot r"></div>
+      <div class="term-dot y"></div>
+      <div class="term-dot g"></div>
+      <span class="term-title">aetheria-api — live request log</span>
+    </div>
+    <div class="term-body" id="term-body">
+      <div class="term-line"><span class="prompt">$</span> system initialized → Aetheria API Platform v3.0</div>
+      <div class="term-line"><span class="prompt">$</span> all endpoints online → ready</div>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <div class="footer-logo">AETHERIA</div>
+  <p>Premium Cyber Futuristic REST API Platform</p>
+  <div class="socials">
+    <a href="https://t.me/aetheriashopp" target="_blank">✈ Telegram</a>
+    <a href="https://youtube.com/@aetheriaoffc" target="_blank">▶ YouTube</a>
+  </div>
+</footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
-let allOrders=[];
-
-// ============================================================
-// LOAD & RENDER ORDERS
-// ============================================================
-function loadOrders(){
-  allOrders = JSON.parse(localStorage.getItem('nexhost_orders')||'[]');
-  renderOrders(allOrders);
-  updateStats();
-}
-
-function updateStats(){
-  const pending  = allOrders.filter(o=>o.status==='pending_payment').length;
-  const active   = allOrders.filter(o=>o.status==='active').length;
-  const expired  = allOrders.filter(o=>o.status==='expired').length;
-  const revenue  = allOrders.filter(o=>o.status==='active').reduce((s,o)=>s+o.plan.price,0);
-  document.getElementById('s_total').textContent   = allOrders.length;
-  document.getElementById('s_pending').textContent = pending;
-  document.getElementById('s_active').textContent  = active;
-  document.getElementById('s_expired').textContent = expired;
-  document.getElementById('s_revenue').textContent = 'Rp '+revenue.toLocaleString('id');
-}
-
-function renderOrders(orders){
-  const tbody = document.getElementById('ordersBody');
-  const empty = document.getElementById('emptyState');
-  if(orders.length===0){ tbody.innerHTML=''; empty.style.display=''; return; }
-  empty.style.display='none';
-  tbody.innerHTML = orders.map(o=>`
-    <tr>
-      <td><span class="order-id">${o.id}</span></td>
-      <td>
-        <div class="cust-name">${esc(o.customer.name)}</div>
-        <div class="cust-wa">${esc(o.customer.wa)}</div>
-      </td>
-      <td>
-        ${esc(o.customer.email)}<br>
-        <span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">@${esc(o.customer.username)}</span>
-      </td>
-      <td>
-        <div class="plan-name">${esc(o.plan.name)}</div>
-        <div class="plan-price">Rp ${o.plan.price.toLocaleString('id')}</div>
-      </td>
-      <td><span class="pay-method">${esc(o.customer.payment||'—')}</span></td>
-      <td>${statusBadge(o.status)}</td>
-      <td style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">
-        ${new Date(o.createdAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}
-      </td>
-      <td>
-        <div class="abtn-row">
-          ${o.status==='pending_payment'?`<button class="abtn confirm" onclick="confirmOrder('${o.id}')">✓ Konfirmasi</button>`:''}
-          ${o.status==='confirmed'?`<button class="abtn create" onclick="createServer('${o.id}')">⚡ Buat Server</button>`:''}
-          ${o.status==='active'?`<button class="abtn confirm" onclick="showCreds('${o.id}')">🔑 Creds</button>`:''}
-          <button class="abtn wa" onclick="contactWA('${o.id}')">💬 WA</button>
-          <button class="abtn del" onclick="deleteOrder('${o.id}')">🗑</button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function statusBadge(status){
-  const map={
-    pending_payment:['pending','⏳ Menunggu Bayar'],
-    confirmed:      ['confirmed','✅ Dikonfirmasi'],
-    active:         ['active','🟢 Aktif'],
-    expired:        ['expired','🔴 Expired'],
-  };
-  const [cls,lbl]=map[status]||['pending',status];
-  return `<span class="sbadge ${cls}">${lbl}</span>`;
-}
-
-function filterOrders(q){
-  const f=q.toLowerCase();
-  renderOrders(allOrders.filter(o=>
-    o.customer.name.toLowerCase().includes(f)||
-    o.customer.email.toLowerCase().includes(f)||
-    o.customer.username.toLowerCase().includes(f)||
-    o.id.toLowerCase().includes(f)
-  ));
-}
-
-// ============================================================
-// ORDER ACTIONS
-// ============================================================
-function confirmOrder(id){
-  const orders=getOrders();
-  const idx=orders.findIndex(o=>o.id===id);
-  if(idx===-1)return;
-  orders[idx].status='confirmed';
-  saveOrders(orders);
-  toast('✅ Order dikonfirmasi');
-  loadOrders();
-}
-
-async function createServer(id){
-  const orders=getOrders();
-  const idx=orders.findIndex(o=>o.id===id);
-  if(idx===-1)return;
-  const o=orders[idx];
-
-  const panelUrl = localStorage.getItem('cfg_panelUrl')||'';
-  const apiKey   = localStorage.getItem('cfg_apiKey')||'';
-  if(!apiKey||!panelUrl) return toast('⚠ Konfigurasi Pterodactyl belum diisi!',true);
-
-  toast('⏳ Membuat server di Pterodactyl...');
-
-  try {
-    // Buat user
-    const parts=o.customer.name.trim().split(' ');
-    const res1=await fetch(`${panelUrl}/api/application/users`,{
-      method:'POST',
-      headers:{'Authorization':`Bearer ${apiKey}`,'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({
-        email:o.customer.email,username:o.customer.username,
-        first_name:parts[0],last_name:parts.slice(1).join(' ')||'User',
-        password:o.password
-      })
-    });
-    const d1=await res1.json();
-    if(!res1.ok) throw new Error(d1.errors?.[0]?.detail||'Gagal buat user');
-    const uid=d1.attributes.id;
-
-    // Buat server
-    const p=o.plan;
-    const eggId=parseInt(localStorage.getItem('cfg_eggId')||'1');
-    const allocId=parseInt(localStorage.getItem('cfg_allocId')||'1');
-    const res2=await fetch(`${panelUrl}/api/application/servers`,{
-      method:'POST',
-      headers:{'Authorization':`Bearer ${apiKey}`,'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({
-        name:o.customer.serverName||o.customer.username+'-server',
-        user:uid,egg:eggId,
-        docker_image:'ghcr.io/pterodactyl/yolks:java_17',
-        startup:'java -Xms128M -Xmx{{SERVER_MEMORY}}M -jar server.jar',
-        environment:{SERVER_JARFILE:'server.jar',MC_VERSION:'latest',BUILD_NUMBER:'latest'},
-        limits:{memory:p.ram,swap:0,disk:p.disk,io:500,cpu:p.cpu},
-        feature_limits:{databases:p.db,backups:p.bkp,allocations:1},
-        allocation:{default:allocId}
-      })
-    });
-    const d2=await res2.json();
-    if(!res2.ok) throw new Error(d2.errors?.[0]?.detail||'Gagal buat server');
-
-    orders[idx].status='active';
-    orders[idx].serverId=d2.attributes.id;
-    saveOrders(orders);
-    toast('🚀 Server berhasil dibuat & aktif!');
-  } catch(err){
-    toast('❌ '+err.message, true);
-    return;
-  }
-  loadOrders();
-}
-
-function showCreds(id){
-  const o=getOrders().find(x=>x.id===id);
-  if(!o)return;
-  const panelUrl=localStorage.getItem('cfg_panelUrl')||'—';
-  setVC('vc_panel',panelUrl);
-  setVC('vc_email',o.customer.email);
-  setVC('vc_pass', o.password||'(tidak tersimpan)');
-  setVC('vc_user', o.customer.username);
-  document.getElementById('credOv').classList.add('open');
-}
-function setVC(id,val){
-  const el=document.getElementById(id);
-  el.dataset.v=val;el.querySelector('span').textContent=val;
-}
-
-function contactWA(id){
-  const o=getOrders().find(x=>x.id===id);
-  if(!o)return;
-  const waAdmin=localStorage.getItem('cfg_waAdmin')||'628123456789';
-  const msg=`Halo ${o.customer.name}, order kamu (${o.id}) paket ${o.plan.name} sudah kami proses!`;
-  window.open(`https://wa.me/${o.customer.wa}?text=${encodeURIComponent(msg)}`, '_blank');
-}
-
-function deleteOrder(id){
-  if(!confirm('Hapus order ini? Tindakan tidak bisa dibatalkan.'))return;
-  let orders=getOrders().filter(o=>o.id!==id);
-  saveOrders(orders);
-  loadOrders();
-  toast('🗑 Order dihapus');
-}
-
-// ============================================================
-// TABS
-// ============================================================
-function showTab(name){
-  ['orders','config','info'].forEach(t=>{
-    document.getElementById('tab_'+t).style.display=t===name?'':'none';
-  });
-  document.querySelectorAll('.tab').forEach((el,i)=>{
-    el.classList.toggle('active',['orders','config','info'][i]===name);
-  });
-  if(name==='config') loadConfig();
-}
-
-// ============================================================
-// CONFIG
-// ============================================================
-const CFG_FIELDS=['panelUrl','apiKey','nodeId','allocId','eggId','pakSlug','pakKey','shopName','waAdmin','bankInfo'];
-
-function loadConfig(){
-  CFG_FIELDS.forEach(f=>{
-    const el=document.getElementById('cfg_'+f);
-    if(el) el.value=localStorage.getItem('cfg_'+f)||'';
-  });
-}
-
-function saveConfig(){
-  CFG_FIELDS.forEach(f=>{
-    const el=document.getElementById('cfg_'+f);
-    if(el&&el.value.trim()) localStorage.setItem('cfg_'+f, el.value.trim());
-  });
-  toast('✅ Konfigurasi disimpan!');
-}
-
-// ============================================================
-// HELPERS
-// ============================================================
-function getOrders(){ return JSON.parse(localStorage.getItem('nexhost_orders')||'[]') }
-function saveOrders(a){ localStorage.setItem('nexhost_orders',JSON.stringify(a)) }
-function esc(s){ return String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;') }
-function cpTxt(t,el){ navigator.clipboard.writeText(t).then(()=>toast('✅ Disalin!')) }
-function toast(msg,err=false){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast'+(err?' err':'')+' show';
-  setTimeout(()=>t.className='toast',3500);
-}
-
-document.getElementById('credOv').addEventListener('click',e=>{
-  if(e.target===document.getElementById('credOv'))
-    document.getElementById('credOv').classList.remove('open');
+// ── CURSOR ──────────────────────────────────────────────
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = (mx - 5) + 'px'; cur.style.top = (my - 5) + 'px';
+});
+setInterval(() => {
+  rx += (mx - rx) * 0.12; ry += (my - ry) *.12;
+  ring.style.left = (rx - 18) + 'px'; ring.style.top = (ry - 18) + 'px';
+}, 16);
+document.querySelectorAll('button, a, input').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.style.transform = 'scale(3)');
+  el.addEventListener('mouseleave', () => cur.style.transform = 'scale(1)');
 });
 
-loadOrders();
-loadConfig();
+// ── CARD GLOW ON MOUSE ──────────────────────────────────
+document.querySelectorAll('.endpoint-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+  });
+});
+
+// ── TYPING ──────────────────────────────────────────────
+const phrases = [
+  'Cyber Futuristic APIs ⚡',
+  'Powering 120+ Endpoints',
+  'Real-time REST API calls',
+  'Built for Developers 🛠️',
+];
+let pi = 0, ci = 0, del = false;
+const typEl = document.getElementById('typing-text');
+setInterval(() => {
+  const phrase = phrases[pi];
+  if (!del) {
+    typEl.textContent = phrase.slice(0, ++ci);
+    if (ci === phrase.length) { del = true; setTimeout(() => {}, 1200); }
+  } else {
+    typEl.textContent = phrase.slice(0, --ci);
+    if (ci === 0) { del = false; pi = (pi + 1) % phrases.length; }
+  }
+}, del ? 40 : 80);
+
+// ── COUNTER ─────────────────────────────────────────────
+function animCount(el, target, suffix = '') {
+  let n = 0; const step = Math.ceil(target / 60);
+  const t = setInterval(() => {
+    n = Math.min(n + step, target);
+    el.textContent = n.toLocaleString() + suffix;
+    if (n >= target) clearInterval(t);
+  }, 20);
+}
+animCount(document.getElementById('req-count'), 1284902, '+');
+animCount(document.getElementById('dev-count'), 48231, '+');
+
+// ── SEARCH FILTER ───────────────────────────────────────
+function filterCards() {
+  const q = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.endpoint-card').forEach(c => {
+    c.style.display = c.dataset.name.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── COPY ────────────────────────────────────────────────
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('URL copied to clipboard!'));
+}
+
+// ── TRY → fills tester ──────────────────────────────────
+function tryEndpoint(url) {
+  document.getElementById('api-input').value = url;
+  document.getElementById('tester').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(runApi, 600);
+}
+
+// ── MAIN API RUNNER ─────────────────────────────────────
+async function runApi() {
+  const url = document.getElementById('api-input').value.trim();
+  if (!url) return showToast('Please enter a URL');
+
+  const btn = document.getElementById('exec-btn');
+  const loader = document.getElementById('loader');
+  const resJson = document.getElementById('res-json');
+  const resStatus = document.getElementById('res-status');
+  const resImage = document.getElementById('res-image');
+  const resImg = document.getElementById('res-img-el');
+
+  btn.disabled = true;
+  loader.classList.add('show');
+  resJson.textContent = '';
+  resImage.style.display = 'none';
+  resStatus.textContent = 'Loading...';
+  resStatus.className = 'res-status';
+
+  addLog(`GET ${url}`);
+
+  try {
+    const start = Date.now();
+    const res = await fetch(url);
+    const elapsed = Date.now() - start;
+
+    resStatus.textContent = `${res.status} ${res.ok ? 'OK' : 'ERROR'} — ${elapsed}ms`;
+    resStatus.className = 'res-status ' + (res.ok ? 'ok' : 'err');
+
+    // Try to detect content type
+    const contentType = res.headers.get('content-type') || '';
+
+    if (contentType.includes('image')) {
+      // Direct image response
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      resJson.textContent = `// Image received (${(blob.size/1024).toFixed(1)} KB)`;
+      resImg.src = objectUrl;
+      resImage.style.display = 'block';
+      addLog(`✓ image received → ${(blob.size/1024).toFixed(1)} KB`);
+    } else {
+      const data = await res.json();
+      resJson.textContent = JSON.stringify(data, null, 2);
+
+      // Auto-detect image URL in response
+      const imgUrl = findImageUrl(data);
+      if (imgUrl) {
+        resImg.src = imgUrl;
+        resImg.onerror = () => { resImage.style.display = 'none'; };
+        resImg.onload = () => { resImage.style.display = 'block'; };
+        addLog(`✓ image URL detected → rendering`);
+      }
+
+      addLog(`✓ response received → ${JSON.stringify(data).length} bytes`);
+    }
+
+    addLog(`✓ done in ${elapsed}ms`);
+
+  } catch (err) {
+    resStatus.textContent = 'FAILED';
+    resStatus.className = 'res-status err';
+    resJson.textContent = `// Error: ${err.message}\n\n// Tip: API mungkin butuh CORS header atau tidak bisa diakses dari browser.\n// Coba dari bot / server-side saja.`;
+    addLog(`✗ error → ${err.message}`);
+  } finally {
+    loader.classList.remove('show');
+    btn.disabled = false;
+  }
+}
+
+// ── FIND IMAGE URL IN JSON ───────────────────────────────
+function findImageUrl(obj, depth = 0) {
+  if (depth > 5 || !obj) return null;
+  if (typeof obj === 'string' && /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(obj)) return obj;
+  if (typeof obj === 'string' && obj.startsWith('http') && obj.match(/(image|img|picture|photo|waifu)/i)) return obj;
+  if (Array.isArray(obj)) {
+    for (const item of obj) { const r = findImageUrl(item, depth+1); if (r) return r; }
+  } else if (typeof obj === 'object') {
+    const keys = ['url', 'image', 'img', 'picture', 'photo', 'src', 'link', 'result'];
+    for (const k of keys) {
+      if (obj[k]) { const r = findImageUrl(obj[k], depth+1); if (r) return r; }
+    }
+    for (const v of Object.values(obj)) {
+      const r = findImageUrl(v, depth+1); if (r) return r;
+    }
+  }
+  return null;
+}
+
+// ── TERMINAL ─────────────────────────────────────────────
+function addLog(msg) {
+  const body = document.getElementById('term-body');
+  const line = document.createElement('div');
+  line.className = 'term-line';
+  const now = new Date();
+  const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  line.innerHTML = `<span class="ts">[${ts}]</span><span class="prompt">$</span> ${msg}`;
+  body.appendChild(line);
+  body.scrollTop = body.scrollHeight;
+  // Keep max 50 lines
+  while (body.children.length > 50) body.removeChild(body.firstChild);
+}
+
+const autoLogs = [
+  'GET /api/ai/chat → 200 OK',
+  'GET /api/anime/waifu → 200 OK',
+  'GET /api/downloader/tiktok → 200 OK',
+  'GET /api/search/google → 200 OK',
+  'GET /api/random/quote → 200 OK',
+  'GET /api/image/generate → 200 OK',
+];
+setInterval(() => {
+  addLog(autoLogs[Math.floor(Math.random() * autoLogs.length)]);
+}, 4500);
+
+// ── TOAST ────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── ENTER KEY ────────────────────────────────────────────
+document.getElementById('api-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runApi();
+});
 </script>
 </body>
 </html>
