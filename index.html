@@ -1,518 +1,448 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Aetheria API Platform</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet"/>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #04060f;
-    --cyan: #00e5ff;
-    --purple: #7c3aed;
-    --green: #00ffaa;
-    --muted: #5a6480;
-    --card: rgba(255,255,255,.03);
-    --border: rgba(255,255,255,.06);
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'Syne', sans-serif;
-  }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: #fff; font-family: var(--sans); overflow-x: hidden; min-height: 100vh; }
-
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0,229,255,.2); border-radius: 4px; }
-
-  /* BG GRID */
-  #bg-grid {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      linear-gradient(rgba(0,229,255,.018) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,229,255,.018) 1px,transparent 1px);
-    background-size: 48px 48px;
-  }
-  #bg-glow1 {
-    position: fixed; width: 600px; height: 600px; border-radius: 50%;
-    background: #2a0f7a; filter: blur(140px); opacity: .1;
-    top: -200px; left: -200px; z-index: 0; pointer-events: none;
-  }
-  #bg-glow2 {
-    position: fixed; width: 500px; height: 500px; border-radius: 50%;
-    background: #003f5c; filter: blur(130px); opacity: .08;
-    bottom: -150px; right: -150px; z-index: 0; pointer-events: none;
-  }
-
-  /* NAV */
-  nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 24px; border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(20px); background: rgba(4,6,15,.8);
-    position: sticky; top: 0; z-index: 99;
-  }
-  .nav-logo {
-    font-family: var(--mono); font-size: 18px; font-weight: 700;
-    background: linear-gradient(90deg,#00e5ff,#8b5cf6);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .nav-links { display: flex; gap: 8px; }
-  .nav-links a {
-    color: var(--muted); font-size: 13px; font-weight: 600;
-    cursor: pointer; text-decoration: none;
-  }
-  .nav-links a:hover { color: #fff; }
-  .nav-btn {
-    padding: 8px 16px; border: 1px solid rgba(0,229,255,.25); border-radius: 10px;
-    background: rgba(0,229,255,.05); color: var(--cyan); font-size: 11px;
-    font-family: var(--mono); cursor: pointer; letter-spacing: 1px;
-  }
-
-  /* HERO */
-  .hero { text-align: center; padding: 80px 24px 48px; position: relative; z-index: 1; }
-  .badge {
-    display: inline-block; padding: 6px 16px; border-radius: 999px;
-    border: 1px solid rgba(0,229,255,.2); background: rgba(0,229,255,.05);
-    font-size: 11px; color: var(--cyan); font-family: var(--mono);
-    letter-spacing: 2px; margin-bottom: 24px;
-  }
-  .hero h1 { font-size: clamp(36px,6vw,68px); font-weight: 800; line-height: 1.05; margin-bottom: 16px; }
-  .hero h1 .grad {
-    background: linear-gradient(90deg,#00e5ff,#a78bfa,#00e5ff);
-    background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    animation: shimmer 4s linear infinite;
-  }
-  @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
-  .hero p { color: var(--muted); font-size: 15px; margin-bottom: 36px; }
-  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .btn-primary {
-    padding: 13px 24px; border-radius: 12px; border: none; cursor: pointer;
-    background: linear-gradient(135deg,#00e5ff,#7c3aed); color: #fff; font-weight: 700; font-size: 14px;
-    font-family: var(--sans);
-  }
-  .btn-primary:hover { opacity: .85; }
-  .btn-ghost {
-    padding: 13px 24px; border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.08); cursor: pointer;
-    background: rgba(255,255,255,.03); color: #fff; font-weight: 700; font-size: 14px;
-    font-family: var(--sans);
-  }
-  .btn-ghost:hover { background: rgba(255,255,255,.07); }
-
-  /* STATS */
-  .stats { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; padding: 0 24px 64px; position: relative; z-index: 1; }
-  .stat-card {
-    padding: 24px 20px; border-radius: 18px;
-    background: var(--card); border: 1px solid var(--border);
-  }
-  .stat-val { font-size: 34px; font-weight: 800; margin-bottom: 6px; }
-  .stat-lbl { color: var(--muted); font-size: 12px; font-weight: 600; }
-
-  /* SECTION */
-  section { padding: 0 24px 64px; position: relative; z-index: 1; }
-  .section-tag { color: var(--cyan); font-family: var(--mono); font-size: 11px; letter-spacing: 3px; margin-bottom: 10px; }
-  .section-title { font-size: clamp(24px,4vw,38px); font-weight: 800; margin-bottom: 8px; }
-  .section-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
-
-  /* SEARCH */
-  .search-box {
-    width: 100%; padding: 14px 18px; margin-bottom: 28px;
-    background: var(--card); border: 1px solid rgba(255,255,255,.07);
-    border-radius: 14px; color: #fff; font-size: 14px; outline: none;
-    font-family: var(--sans);
-  }
-  .search-box::placeholder { color: var(--muted); }
-
-  /* ENDPOINT GRID */
-  .ep-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 18px; }
-  .ep-card {
-    padding: 20px; border-radius: 18px;
-    background: var(--card); border: 1px solid var(--border);
-    transition: border-color .2s, transform .15s;
-  }
-  .ep-card:hover { border-color: rgba(0,229,255,.2); transform: translateY(-2px); }
-  .ep-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .badge-get {
-    padding: 4px 10px; border-radius: 999px;
-    background: rgba(0,255,170,.08); color: var(--green);
-    font-size: 10px; font-family: var(--mono); font-weight: 700;
-  }
-  .badge-online { color: var(--green); font-size: 10px; font-family: var(--mono); }
-  .ep-name { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
-  .ep-desc { color: var(--muted); font-size: 12px; margin-bottom: 14px; line-height: 1.5; }
-  .ep-path {
-    background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.06);
-    padding: 10px 12px; border-radius: 10px; font-family: var(--mono);
-    font-size: 11px; color: var(--cyan); margin-bottom: 14px; word-break: break-all;
-  }
-  .ep-actions { display: flex; gap: 8px; }
-  .btn-copy {
-    flex: 1; padding: 10px; border-radius: 10px; border: none; cursor: pointer;
-    background: linear-gradient(135deg,#00e5ff,#7c3aed); color: #fff;
-    font-size: 12px; font-weight: 700; font-family: var(--sans);
-  }
-  .btn-try {
-    flex: 1; padding: 10px; border-radius: 10px; cursor: pointer;
-    background: rgba(0,229,255,.06); color: var(--cyan);
-    border: 1px solid rgba(0,229,255,.15); font-size: 12px; font-weight: 700;
-    font-family: var(--sans);
-  }
-  .btn-try:hover { background: rgba(0,229,255,.12); }
-
-  /* TESTER */
-  .tester-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-  .tester-input {
-    flex: 1; min-width: 200px; padding: 14px 16px;
-    background: var(--card); border: 1px solid rgba(255,255,255,.07);
-    border-radius: 12px; color: #fff; font-family: var(--mono); font-size: 12px; outline: none;
-  }
-  .tester-input::placeholder { color: var(--muted); }
-  .btn-execute {
-    padding: 14px 24px; border-radius: 12px; border: none; cursor: pointer;
-    background: linear-gradient(135deg,#00e5ff,#7c3aed);
-    color: #fff; font-weight: 700; font-size: 14px; white-space: nowrap;
-    font-family: var(--sans); transition: opacity .2s;
-  }
-  .btn-execute:disabled { opacity: .6; cursor: not-allowed; }
-
-  /* RESPONSE BOX */
-  .response-box { border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
-  .res-header {
-    padding: 12px 18px; border-bottom: 1px solid var(--border);
-    background: rgba(0,0,0,.2); display: flex; justify-content: space-between; align-items: center;
-  }
-  .res-label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .res-status-ok { font-family: var(--mono); font-size: 11px; color: var(--green); }
-  .res-status-err { font-family: var(--mono); font-size: 11px; color: #f87171; }
-  .res-body { padding: 20px; min-height: 200px; position: relative; }
-  .res-placeholder { font-family: var(--mono); font-size: 12px; color: var(--muted); }
-  .res-json { font-family: var(--mono); font-size: 12px; color: var(--green); white-space: pre-wrap; word-break: break-all; line-height: 1.8; }
-  .res-image { margin-top: 16px; }
-  .res-image-label { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 10px; }
-  .res-image img { max-width: 100%; max-height: 300px; border-radius: 12px; border: 1px solid rgba(255,255,255,.08); }
-
-  /* SPINNER */
-  .spinner-overlay {
-    position: absolute; inset: 0; background: rgba(4,6,15,.7);
-    display: flex; align-items: center; justify-content: center; border-radius: 18px;
-  }
-  .spinner {
-    width: 28px; height: 28px; border: 2px solid rgba(255,255,255,.1);
-    border-top-color: var(--cyan); border-radius: 50%;
-    animation: spin .7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* TERMINAL */
-  .terminal { border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
-  .term-header {
-    padding: 12px 18px; background: rgba(0,0,0,.3);
-    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px;
-  }
-  .dot { width: 10px; height: 10px; border-radius: 50%; }
-  .term-title { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: 8px; }
-  .term-body {
-    padding: 18px 20px; min-height: 160px; max-height: 200px;
-    overflow-y: auto; background: rgba(0,0,0,.15);
-  }
-  .term-line { font-family: var(--mono); font-size: 11px; color: var(--green); margin-bottom: 5px; }
-
-  /* FOOTER */
-  footer {
-    padding: 48px 24px; text-align: center;
-    border-top: 1px solid var(--border); position: relative; z-index: 1;
-  }
-  .footer-logo {
-    font-size: 28px; font-weight: 800; font-family: var(--mono);
-    background: linear-gradient(90deg,#00e5ff,#8b5cf6);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;
-  }
-  .footer-sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
-  .footer-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .footer-link {
-    padding: 10px 20px; border-radius: 10px; text-decoration: none;
-    background: var(--card); border: 1px solid var(--border);
-    color: #c8d0e8; font-size: 13px; font-family: var(--sans);
-  }
-  .footer-link:hover { background: rgba(255,255,255,.06); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ TempEmail Generator · cvAI4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #0a0c10;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            background-image: radial-gradient(circle at 20% 30%, #1a1e2a 0%, #0a0c10 80%);
+        }
+        .card {
+            max-width: 720px;
+            width: 100%;
+            background: rgba(18, 22, 33, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            padding: 2.8rem 2.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            transition: all 0.2s ease;
+        }
+        @media (max-width: 480px) {
+            .card { padding: 1.8rem 1.2rem; }
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.3rem 1rem 0.3rem 0.8rem;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: #8b9bb5;
+            text-transform: uppercase;
+            margin-bottom: 1.8rem;
+        }
+        .badge span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #47d18c;
+            border-radius: 50%;
+            animation: pulse-dot 1.8s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #eef2f7 0%, #b0c6e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            color: #6f7f97;
+            font-size: 0.95rem;
+            margin-bottom: 2.2rem;
+            border-left: 3px solid #2f3b4d;
+            padding-left: 1rem;
+        }
+        .email-box {
+            background: #131821;
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            border: 1px solid #232b38;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+            transition: border 0.2s;
+        }
+        .email-box:hover {
+            border-color: #3e4c62;
+        }
+        .email-address {
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+            color: #d6e2f5;
+            word-break: break-all;
+            flex: 1;
+            min-width: 140px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        .copy-btn {
+            background: #2a3444;
+            border: none;
+            color: #bacee6;
+            padding: 0.6rem 1.3rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            background: #3d4b60;
+            color: white;
+            border-color: #4d5f78;
+        }
+        .copy-btn.copied {
+            background: #1b3a2a;
+            border-color: #2b7a4a;
+            color: #7ae0a8;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 2.2rem;
+        }
+        .gen-btn {
+            background: linear-gradient(145deg, #2c3b52, #1a2332);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #e0ebfa;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid #36465e;
+            flex: 1;
+            justify-content: center;
+        }
+        .gen-btn:hover {
+            background: #31435e;
+            border-color: #5f7a9c;
+            transform: scale(1.01);
+        }
+        .gen-btn:active {
+            transform: scale(0.97);
+        }
+        .domain-select {
+            background: #131821;
+            border: 1px solid #232b38;
+            border-radius: 60px;
+            padding: 0.7rem 1.5rem;
+            color: #d6e2f5;
+            font-weight: 500;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+            transition: border 0.2s;
+            flex: 0 0 auto;
+            min-width: 150px;
+        }
+        .domain-select:hover {
+            border-color: #3e4c62;
+        }
+        .domain-select option {
+            background: #1a212b;
+            color: #d6e2f5;
+        }
+        .status {
+            background: #10161f;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.5rem;
+            font-size: 0.85rem;
+            color: #97aecb;
+            border: 1px solid #1c2533;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .status .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ffb347;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+        .status .dot.green {
+            background: #47d18c;
+        }
+        .footer-meta {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #3f4d64;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #171f2b;
+            padding-top: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .footer-meta span {
+            background: #0d121b;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+        }
+        /* toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #1b2638;
+            border: 1px solid #33445e;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            color: #dce6f5;
+            font-weight: 500;
+            font-size: 0.9rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) scale(1);
+        }
+        @media (max-width: 480px) {
+            .toast { font-size: 0.8rem; padding: 0.6rem 1.2rem; white-space: normal; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="bg-grid"></div>
-<div id="bg-glow1"></div>
-<div id="bg-glow2"></div>
+<div class="card">
+    <div class="badge">
+        <span></span> cvAI4 · Temp Mail
+    </div>
+    <h1>⚡ Generator.email</h1>
+    <div class="sub">instan · disposable · anti-spam</div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">AETHERIA</div>
-  <div class="nav-links">
-    <a href="#endpoints">Endpoints</a>
-    <a href="#tester">Tester</a>
-    <a href="#logs">Logs</a>
-  </div>
-  <div class="nav-btn">DASHBOARD</div>
-</nav>
+    <div class="email-box">
+        <span class="email-address" id="emailDisplay">—</span>
+        <button class="copy-btn" id="copyBtn" onclick="copyEmail()">📋 Salin</button>
+    </div>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="badge">⚡ PREMIUM REST API PLATFORM</div>
-  <h1>Build The Future With<br><span class="grad">Aetheria API</span></h1>
-  <p>Modern REST API ecosystem — powered by AI, no CORS issues.</p>
-  <div class="hero-btns">
-    <button class="btn-primary" onclick="document.getElementById('endpoints').scrollIntoView({behavior:'smooth'})">Explore Endpoints</button>
-    <button class="btn-ghost" onclick="document.getElementById('tester').scrollIntoView({behavior:'smooth'})">Try Live Tester</button>
-  </div>
+    <div class="controls">
+        <button class="gen-btn" id="generateBtn">⟳ Buat Email</button>
+        <select class="domain-select" id="domainSelect">
+            <option value="@temp-mail.org">@temp-mail.org</option>
+            <option value="@guerrillamail.com">@guerrillamail.com</option>
+            <option value="@10minutemail.net">@10minutemail.net</option>
+            <option value="@mailinator.com">@mailinator.com</option>
+            <option value="@trashmail.com">@trashmail.com</option>
+            <option value="@yopmail.com">@yopmail.com</option>
+            <option value="@throwaway.email">@throwaway.email</option>
+            <option value="@spam4.me">@spam4.me</option>
+            <option value="@dispostable.com">@dispostable.com</option>
+            <option value="@mailnator.com">@mailnator.com</option>
+        </select>
+    </div>
+
+    <div class="status">
+        <span class="dot green"></span>
+        <span id="statusText">siap pakai · 0 pesan</span>
+        <span style="margin-left: auto; opacity:0.5;">⚡</span>
+    </div>
+
+    <div class="footer-meta">
+        <span>⌛ 100% client-side</span>
+        <span># temp-email · by cvAI4</span>
+    </div>
 </div>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat-card"><div class="stat-val" id="s-req">0</div><div class="stat-lbl">Total API Requests</div></div>
-  <div class="stat-card"><div class="stat-val" id="s-dev">0</div><div class="stat-lbl">Active Developers</div></div>
-  <div class="stat-card"><div class="stat-val">99.99%</div><div class="stat-lbl">Uptime SLA</div></div>
-  <div class="stat-card"><div class="stat-val">120+</div><div class="stat-lbl">Available Endpoints</div></div>
-</div>
-
-<!-- ENDPOINTS -->
-<section id="endpoints">
-  <div class="section-tag">// ENDPOINTS</div>
-  <h2 class="section-title">Premium API Endpoints</h2>
-  <p class="section-sub">Real responses powered by AI — hit Execute and see live results.</p>
-  <input class="search-box" id="search" placeholder="Search endpoints..." oninput="filterEndpoints()" />
-  <div class="ep-grid" id="ep-grid"></div>
-</section>
-
-<!-- TESTER -->
-<section id="tester">
-  <div class="section-tag">// LIVE TESTER</div>
-  <h2 class="section-title">API Tester</h2>
-  <div class="tester-row">
-    <input class="tester-input" id="url-input" value="https://api.aetheria.my.id/api/anime/waifu"
-      placeholder="Enter endpoint URL..." onkeydown="if(event.key==='Enter') runApi()"/>
-    <button class="btn-execute" id="exec-btn" onclick="runApi()">⚡ Execute</button>
-  </div>
-  <div class="response-box">
-    <div class="res-header">
-      <span class="res-label">RESPONSE</span>
-      <span id="res-status"></span>
-    </div>
-    <div class="res-body" id="res-body">
-      <pre class="res-placeholder">// Hit Execute to call the API...</pre>
-    </div>
-  </div>
-</section>
-
-<!-- LOGS / TERMINAL -->
-<section id="logs" style="padding-bottom: 64px;">
-  <div class="terminal">
-    <div class="term-header">
-      <div class="dot" style="background:#ff5f56"></div>
-      <div class="dot" style="background:#ffbd2e"></div>
-      <div class="dot" style="background:#27c93f"></div>
-      <span class="term-title">aetheria-api — live request log</span>
-    </div>
-    <div class="term-body" id="terminal">
-      <div class="term-line">$ system initialized → Aetheria API Platform v3.0</div>
-      <div class="term-line">$ all endpoints online → ready</div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">AETHERIA</div>
-  <p class="footer-sub">Premium Cyber Futuristic REST API Platform</p>
-  <div class="footer-links">
-    <a class="footer-link" href="https://t.me/aetheriashopp" target="_blank">✈ Telegram</a>
-    <a class="footer-link" href="https://youtube.com/@aetheriaoffc" target="_blank">▶ YouTube</a>
-  </div>
-</footer>
+<div class="toast" id="toast">✅ Email disalin</div>
 
 <script>
-const BASE = "https://api.aetheria.my.id";
+    (function() {
+        'use strict';
 
-const ENDPOINTS = [
-  { name:"Anime Waifu",       path:"/api/anime/waifu",              desc:"Random anime waifu image",          example:"/api/anime/waifu" },
-  { name:"AI Chat",           path:"/api/ai/chat?text=hello",        desc:"AI chatbot response",               example:"/api/ai/chat?text=hello" },
-  { name:"TikTok Downloader", path:"/api/downloader/tiktok?url=",    desc:"Download TikTok tanpa watermark",   example:"/api/downloader/tiktok?url=https://tiktok.com" },
-  { name:"Random Quote",      path:"/api/random/quote",              desc:"Kutipan inspiratif random",         example:"/api/random/quote" },
-  { name:"Image Generate",    path:"/api/image/generate?prompt=cat", desc:"Generate gambar dari teks prompt",  example:"/api/image/generate?prompt=anime+girl" },
-  { name:"Google Search",     path:"/api/search/google?q=aetheria",  desc:"Scrape hasil pencarian Google",     example:"/api/search/google?q=aetheria" },
-];
+        // DOM refs
+        const emailDisplay = document.getElementById('emailDisplay');
+        const generateBtn = document.getElementById('generateBtn');
+        const domainSelect = document.getElementById('domainSelect');
+        const copyBtn = document.getElementById('copyBtn');
+        const statusText = document.getElementById('statusText');
+        const toast = document.getElementById('toast');
 
-const SYSTEM_PROMPT = `You are a mock REST API server for "Aetheria API Platform". 
-When given an endpoint path, respond ONLY with a valid JSON object (no markdown, no explanation).
+        let currentEmail = '';
 
-Rules per endpoint:
-- /api/anime/waifu → return { status: true, creator: "Aetheria", endpoint: "/api/anime/waifu", runtime: "0.21s", result: { url: "https://i.waifu.pics/~tEBRsxI.jpg", character: "Rem", anime: "Re:Zero", tags: ["cute","moe","blue hair"] } }
-- /api/ai/chat → extract the "text" param, reply naturally in "reply" field, return { status: true, creator: "Aetheria", endpoint: "/api/ai/chat", runtime: "0.44s", result: { query: "<the text param>", reply: "<intelligent reply to the query>" } }
-- /api/downloader/tiktok → return { status: true, creator: "Aetheria", endpoint: "/api/downloader/tiktok", runtime: "1.12s", result: { title: "TikTok Video", author: "@user", duration: "00:30", downloads: { nowatermark: "https://dl.aetheria.my.id/video/abc123.mp4", audio: "https://dl.aetheria.my.id/audio/abc123.mp3" } } }
-- /api/random/quote → return { status: true, creator: "Aetheria", endpoint: "/api/random/quote", runtime: "0.09s", result: { quote: "<an inspirational quote>", author: "<real author name>", category: "inspiration" } }
-- /api/image/generate → extract "prompt", return { status: true, creator: "Aetheria", endpoint: "/api/image/generate", runtime: "2.31s", result: { prompt: "<prompt>", url: "https://image.pollinations.ai/prompt/<url-encoded-prompt>", width: 512, height: 512, model: "flux" } }
-- /api/search/google → extract "q", return { status: true, creator: "Aetheria", endpoint: "/api/search/google", runtime: "0.67s", result: { query: "<q>", total: 3, results: [ { title: "...", url: "https://example.com", snippet: "..." }, { title: "...", url: "https://example2.com", snippet: "..." } ] } }
-- unknown endpoint → return { status: false, creator: "Aetheria", error: "Endpoint not found", code: 404 }
+        // ---------- helpers ----------
+        function randomString(length = 8) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
 
-Always return ONLY valid JSON. No markdown fences. Be creative with content but keep structure exact.`;
+        function generateEmail(domain) {
+            const prefix = randomString(7) + (Math.random() > 0.5 ? randomString(4) : '');
+            return prefix + domain;
+        }
 
-// --- COUNTER ANIMATION ---
-(function animateCounters() {
-  let req = 0, dev = 0;
-  const maxReq = 1284902, maxDev = 48231;
-  const el1 = document.getElementById('s-req'), el2 = document.getElementById('s-dev');
-  const t = setInterval(() => {
-    req = Math.min(req + 21482, maxReq);
-    dev = Math.min(dev + 804, maxDev);
-    el1.textContent = req.toLocaleString() + '+';
-    el2.textContent = dev.toLocaleString() + '+';
-    if (req >= maxReq) clearInterval(t);
-  }, 16);
-})();
+        function updateUI(email) {
+            currentEmail = email;
+            emailDisplay.textContent = email || '—';
+            statusText.textContent = email ? `📨 ${email} · aktif` : 'siap pakai · 0 pesan';
+            copyBtn.textContent = '📋 Salin';
+            copyBtn.classList.remove('copied');
+        }
 
-// --- AUTO LOGS ---
-const logPool = [
-  "GET /api/ai/chat → 200 OK",
-  "GET /api/anime/waifu → 200 OK",
-  "GET /api/downloader/tiktok → 200 OK",
-  "GET /api/search/google → 200 OK",
-  "GET /api/random/quote → 200 OK",
-  "GET /api/image/generate → 200 OK",
-];
-setInterval(() => addLog(logPool[Math.floor(Math.random() * logPool.length)]), 4000);
+        function showToast(msg) {
+            toast.textContent = msg || '✅ Email disalin';
+            toast.classList.add('show');
+            clearTimeout(toast._hide);
+            toast._hide = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
 
-function addLog(msg) {
-  const now = new Date();
-  const ts = [now.getHours(), now.getMinutes(), now.getSeconds()]
-    .map(n => String(n).padStart(2,'0')).join(':');
-  const term = document.getElementById('terminal');
-  const line = document.createElement('div');
-  line.className = 'term-line';
-  line.textContent = `[${ts}] $ ${msg}`;
-  term.appendChild(line);
-  // Keep max 50 lines
-  while (term.children.length > 50) term.removeChild(term.firstChild);
-  term.scrollTop = term.scrollHeight;
-}
+        // ---------- generate ----------
+        function generateNewEmail() {
+            const domain = domainSelect.value;
+            const newEmail = generateEmail(domain);
+            updateUI(newEmail);
+            // catatan: ini client-side, tidak ada server email. hanya generator.
+            // untuk demo, kita simulasikan 'check inbox' nanti.
+        }
 
-// --- RENDER ENDPOINTS ---
-let copiedUrl = null;
-function renderEndpoints(list) {
-  const grid = document.getElementById('ep-grid');
-  grid.innerHTML = '';
-  list.forEach(ep => {
-    const fullUrl = BASE + ep.example;
-    const card = document.createElement('div');
-    card.className = 'ep-card';
-    card.innerHTML = `
-      <div class="ep-header">
-        <span class="badge-get">GET</span>
-        <span class="badge-online">● ONLINE</span>
-      </div>
-      <div class="ep-name">${ep.name}</div>
-      <div class="ep-desc">${ep.desc}</div>
-      <div class="ep-path">${ep.path}</div>
-      <div class="ep-actions">
-        <button class="btn-copy" id="copy-${ep.name.replace(/\s/g,'')}">Copy URL</button>
-        <button class="btn-try">Try →</button>
-      </div>
-    `;
-    card.querySelector('.btn-copy').addEventListener('click', () => {
-      navigator.clipboard.writeText(fullUrl);
-      const btn = card.querySelector('.btn-copy');
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => btn.textContent = 'Copy URL', 2000);
-    });
-    card.querySelector('.btn-try').addEventListener('click', () => {
-      document.getElementById('url-input').value = fullUrl;
-      document.getElementById('tester').scrollIntoView({behavior:'smooth'});
-      setTimeout(() => runApi(fullUrl), 400);
-    });
-    grid.appendChild(card);
-  });
-}
-renderEndpoints(ENDPOINTS);
+        // ---------- copy ----------
+        function copyEmail() {
+            if (!currentEmail) {
+                showToast('⚠️ Belum ada email');
+                return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(currentEmail)
+                    .then(() => {
+                        copyBtn.textContent = '✅ Tersalin';
+                        copyBtn.classList.add('copied');
+                        showToast('✅ Email disalin');
+                    })
+                    .catch(() => {
+                        fallbackCopy(currentEmail);
+                    });
+            } else {
+                fallbackCopy(currentEmail);
+            }
+        }
 
-function filterEndpoints() {
-  const q = document.getElementById('search').value.toLowerCase();
-  renderEndpoints(ENDPOINTS.filter(e => e.name.toLowerCase().includes(q)));
-}
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                copyBtn.textContent = '✅ Tersalin';
+                copyBtn.classList.add('copied');
+                showToast('✅ Email disalin');
+            } catch (e) {
+                showToast('⚠️ Gagal menyalin');
+            }
+            document.body.removeChild(textarea);
+        }
 
-// --- API RUNNER ---
-async function runApi(overrideUrl) {
-  const target = overrideUrl || document.getElementById('url-input').value.trim();
-  if (!target) return;
+        // ---------- event listeners ----------
+        generateBtn.addEventListener('click', generateNewEmail);
 
-  document.getElementById('url-input').value = target;
-  const execBtn = document.getElementById('exec-btn');
-  execBtn.disabled = true;
-  execBtn.textContent = '⏳ Loading...';
+        // generate on domain change (optional)
+        domainSelect.addEventListener('change', function() {
+            if (currentEmail) {
+                // regenerate with new domain
+                const prefix = currentEmail.split('@')[0] || randomString(8);
+                const newEmail = prefix + domainSelect.value;
+                updateUI(newEmail);
+            } else {
+                generateNewEmail();
+            }
+        });
 
-  const resBody = document.getElementById('res-body');
-  const resStatus = document.getElementById('res-status');
-  resStatus.textContent = '';
-  resBody.innerHTML = '<div class="spinner-overlay"><div class="spinner"></div></div>';
+        // ---------- init ----------
+        // generate pertama kali
+        generateNewEmail();
 
-  addLog(`GET ${target}`);
+        // expose copy ke global (inline onclick)
+        window.copyEmail = copyEmail;
 
-  let path = target;
-  try { const u = new URL(target); path = u.pathname + u.search; } catch {}
+        // tambahan: jika user klik tombol generate via keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'g' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                generateNewEmail();
+            }
+        });
 
-  const start = Date.now();
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: `Endpoint: ${path}` }],
-      }),
-    });
+        // status message: simulasi 'check inbox' (hanya UI)
+        // kita bisa tambahkan efek random untuk menunjukkan "pesan masuk"
+        let messageCount = 0;
+        setInterval(() => {
+            if (currentEmail && currentEmail !== '—') {
+                const random = Math.random();
+                if (random > 0.7) {
+                    messageCount += 1;
+                    statusText.textContent = `📨 ${currentEmail} · ${messageCount} pesan`;
+                } else if (random > 0.5 && messageCount > 0) {
+                    // kadang turun (simulasi)
+                    messageCount = Math.max(0, messageCount - 1);
+                    statusText.textContent = `📨 ${currentEmail} · ${messageCount} pesan`;
+                }
+            }
+        }, 4000);
 
-    const ai = await res.json();
-    const text = ai.content?.[0]?.text || "{}";
-    const elapsed = Date.now() - start;
-
-    let data;
-    try { data = JSON.parse(text); } catch { data = { raw: text }; }
-
-    const isOk = data.status !== false;
-    resStatus.className = isOk ? 'res-status-ok' : 'res-status-err';
-    resStatus.textContent = `${isOk ? 200 : 404} ${isOk ? 'OK' : 'ERROR'} — ${elapsed}ms`;
-
-    const imgUrl = findImage(data);
-
-    resBody.innerHTML = `
-      <pre class="res-json">${JSON.stringify(data, null, 2)}</pre>
-      ${imgUrl ? `<div class="res-image"><div class="res-image-label">// IMAGE RESULT</div><img src="${imgUrl}" alt="API result" onerror="this.style.display='none'"/></div>` : ''}
-    `;
-
-    addLog(`✓ ${isOk ? '200 OK' : '404 Not Found'} — ${elapsed}ms`);
-  } catch (err) {
-    resStatus.className = 'res-status-err';
-    resStatus.textContent = `500 ERROR — ${Date.now() - start}ms`;
-    resBody.innerHTML = `<pre class="res-json">${JSON.stringify({ error: err.message }, null, 2)}</pre>`;
-    addLog(`✗ error → ${err.message}`);
-  } finally {
-    execBtn.disabled = false;
-    execBtn.textContent = '⚡ Execute';
-  }
-}
-
-function findImage(obj, depth = 0) {
-  if (!obj || depth > 4) return null;
-  if (typeof obj === 'string' && /\.(jpg|jpeg|png|gif|webp)/i.test(obj)) return obj;
-  if (typeof obj === 'string' && obj.startsWith('http') && obj.includes('image')) return obj;
-  if (Array.isArray(obj)) { for (const i of obj) { const r = findImage(i, depth+1); if (r) return r; } }
-  else if (typeof obj === 'object') {
-    for (const k of ['url','image','img','src','picture']) {
-      if (obj[k]) { const r = findImage(obj[k], depth+1); if (r) return r; }
-    }
-    for (const v of Object.values(obj)) { const r = findImage(v, depth+1); if (r) return r; }
-  }
-  return null;
-}
+        console.log('⚡ cvAI4 · Temp Email Generator ready');
+    })();
 </script>
+
 </body>
 </html>
+```
